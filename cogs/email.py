@@ -5,15 +5,20 @@ import httpx
 
 from database.database import DBConnection
 from cogs.utils.fetchInbox import fetchInbox
-from views.buttons.button_refresh import ButtonRefresh
+from cogs.utils.emailView import emailView
 
 class email(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.command(name="email", description="Shows the inbox of your email")
-    async def email(self, interaction: discord.Interaction, email: str):
+    @commands.Cog.listener()
+    async def on_ready(self):
+        group = self.bot.tree.get_command("mail")
+        group.add_command(self.emailInbox)
 
+    @app_commands.command(name="inbox", description="Shows the inbox of your email")
+    async def emailInbox(self, interaction: discord.Interaction, email: str):
+        
         if interaction.user.id not in self.bot.admins:
             await interaction.response.send_message("You do not have permission to execute this command!", ephemeral=True)
             return
@@ -22,8 +27,14 @@ class email(commands.Cog):
             password = db.getEmailPassword(email)
 
             if not password:
-                await interaction.response.send_message("This email has not been found.", ephemeral=True)
-        
+                await interaction.response.send_message(
+                    embed = discord.Embed(
+                        description = "This email has not been found",
+                        color = 0xFF5C5C
+                    ),
+                    ephemeral=True
+                )
+                return
         
         async with httpx.AsyncClient(timeout=None) as session:
 
@@ -41,14 +52,27 @@ class email(commands.Cog):
 
             token = data.json()["token"]
         
-        getEmails = await fetchInbox(token, email, password[0])
+        emails = await fetchInbox(token)
+        index = 0
 
-        interaction = await interaction.response.send_message(
-            embed = getEmails,
-            view = ButtonRefresh(token, email, password[0], interaction),
-            ephemeral=True
+        if not emails:
+            await interaction.response.send_message(
+                embed = discord.Embed(
+                    title = "No Emails Found",
+                    description = "You don't have any emails stored",
+                    color = 0xFF5C5C
+                )
+            )
+            return
+        
+        view = emailView(emails)
+        await interaction.response.send_message(
+            embed=view.getEmbed(),
+            view=view,
+            ephemeral = True
         )
-        return
+           
+        
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(email(bot))

@@ -13,7 +13,7 @@ class accounts(commands.Cog):
             await interaction.response.send_message("You do not have permission to execute this command!", ephemeral=True)
             return
 
-        await interaction.response.send_message(f"**This command is still in progress.**", ephemeral=True)
+        await interaction.response.send_message(f"**This command is still in progress**", ephemeral=True)
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(accounts(bot))

@@ -3,7 +3,9 @@
 
     ],
     "tokens" : {
-        "bot_token": ""
+        "bot_token": "",
+        "hypixel_key": "",
+        "donut_key": ""
     },
     
     "discord" : {

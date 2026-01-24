@@ -1,0 +1,4 @@
+discord.py
+httpx
+mailslurp_client
+jishaku

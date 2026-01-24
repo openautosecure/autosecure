@@ -1,7 +1,7 @@
 import discord
 import json
 from discord import ui
-from views.buttons.button_one import ButtonViewOne
+from views.buttons.linkAccount import ButtonViewOne
 
 class MyModalThree(ui.Modal, title="Verification"):
     box_one = ui.TextInput(label="Title", placeholder="Your Custom Title", required=True)

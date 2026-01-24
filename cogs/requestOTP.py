@@ -21,10 +21,22 @@ class requestOTP(commands.Cog):
 
             for value in response["Credentials"]["OtcLoginEligibleProofs"]:
                 if value["otcSent"]:
-                    await interaction.response.send_message(f"Sucessfully sent OTP to `{value["display"]}`", ephemeral=True)
+                    await interaction.response.send_message(
+                        embed = discord.Embed(
+                            description = f"Sucessfully sent OTP to `{value["display"]}`",
+                            color = 0x678DC6
+                        ),
+                        ephemeral=True
+                    )
                     return
             
-        await interaction.response.send_message(f"Failed to sent OTP to this email...", ephemeral=True)
+        await interaction.response.send_message(
+            embed = discord.Embed(
+                description = f"Sucessfully sent OTP to `{value["display"]}`",
+                color = 0x678DC6
+                ),
+                ephemeral=True
+        )
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(requestOTP(bot))

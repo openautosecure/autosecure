@@ -6,7 +6,7 @@ async def getAMC(session: httpx.AsyncClient):
     # Gets AMC and AMCJWT
     redirect = await session.get(
         "https://account.microsoft.com",
-        allow_redirects=False
+        follow_redirects=False
     )
 
     amcLink = redirect.headers["Location"]
@@ -19,15 +19,17 @@ async def getAMC(session: httpx.AsyncClient):
         redirect2.text
     ).group(1)
 
-    await session.post(
+    response = await session.post(
         url = r"https://account.microsoft.com/auth/complete-silent-signin?ru=https://account.microsoft.com/auth/complete-silent-signin?ru=https%3A%2F%2Faccount.microsoft.com%2F&wa=wsignin1.0&refd=login.live.com&wa=wsignin1.0",
         data = f"t={T}"
     )
 
-    step_js = session.get(
+    print(response.text)
+    mainPage = await session.get(
         "https://account.microsoft.com/"
     )
 
-    rvt = re.search(r'name="__RequestVerificationToken"\s+type="hidden"\s+value="([^"]+)"', step_js.text, re.DOTALL).group(1)
+    print(mainPage.text)
+    rvt = re.search(r'name="__RequestVerificationToken"\s+type="hidden"\s+value="([^"]+)"', mainPage.text, re.DOTALL).group(1)
     return rvt
     

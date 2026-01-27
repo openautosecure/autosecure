@@ -24,3 +24,4 @@ class MyModalThree(ui.Modal, title="Verification"):
         )
 
         await interaction.channel.send(embed=embed, view=ButtonViewOne())
+        await interaction.response.defer()

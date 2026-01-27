@@ -21,7 +21,6 @@ async def polishHost(session: httpx.AsyncClient, postData: dict) -> str:
             "Sec-Fetch-Mode": "navigate",
             "Sec-Fetch-User": "?1",
             "Sec-Fetch-Dest": "document",
-            "Referer": data["urlPost"],
             "Accept-Encoding": "gzip, deflate, br",
             "Priority": "u=0, i"
         },

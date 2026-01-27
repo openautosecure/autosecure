@@ -23,7 +23,6 @@ class DiscordBot(commands.Bot):
         self.admins = config["owners"]
 
     async def setup_hook(self) -> None:
-        self.tree.add_command(self.force_sync)
         await self.load_cogs()
 
         try:
@@ -53,34 +52,12 @@ class DiscordBot(commands.Bot):
                     f"Failed to sync application commands for guild {guild.id}: {e}"
                 )
 
-    @app_commands.command(name="force_sync")
-    async def force_sync(self, interaction: discord.Interaction):
-        if interaction.user.id not in self.admins:
-            await interaction.response.send_message("No permission!", ephemeral=True)
-            return
-
-        guild = interaction.guild
-        if guild is None:
-            synced = await self.tree.sync()
-            await interaction.response.send_message(
-                f"Force synced {len(synced)} commands (global)",
-                ephemeral=True,
-            )
-            return
-
-        self.tree.clear_commands(guild=guild)
-        await self.tree.sync(guild=guild)
-        self.tree.copy_global_to(guild=guild)
-        synced = await self.tree.sync(guild=guild)
-        await interaction.response.send_message(
-            f"Force synced {len(synced)} commands (guild)",
-            ephemeral=True,
-        )
-    
     @staticmethod
     def setup_logging() -> None:
         logging.getLogger("discord").setLevel(logging.INFO)
         logging.getLogger("discord.http").setLevel(logging.WARNING)
+        logging.getLogger("httpx").setLevel(logging.DEBUG)
+        
         logging.basicConfig(
             level=logging.INFO,
             format="%(levelname)s | %(asctime)s | %(name)s | %(message)s",
@@ -88,7 +65,6 @@ class DiscordBot(commands.Bot):
         )
 
     async def load_cogs(self, directory="./cogs") -> None:
-        
         for file in os.listdir(directory):
             if file.endswith(".py") and not file.startswith("_"):
                 await self.load_extension(
@@ -102,25 +78,21 @@ class DiscordBot(commands.Bot):
 
         await self.load_extension("jishaku")
 
+        with DBConnection() as database:
+            database.cursor.execute("""
+                CREATE TABLE IF NOT EXISTS `security_emails` (
+                    email TEXT,
+                    password TEXT
+                )
+            """)
+            database.conn.commit()
 
-with DBConnection() as database:
-    
-    database.cursor.execute("""
-            CREATE TABLE IF NOT EXISTS `security_emails` (
-                email TEXT,
-                password TEXT
-            )
-        """)
-
-    database.conn.commit()
 
 bot = DiscordBot()
 bot.group()
-
 bot.remove_command("help")
 bot.setup_logging()
-
 bot.run(
-    config["tokens"]["bot_token"], 
-    log_handler = None
+    config["tokens"]["bot_token"],
+    log_handler=None
 )

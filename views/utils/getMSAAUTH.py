@@ -27,7 +27,8 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, dat
                 "psRNGCSLK": flowToken,
                 "type": "21",
                 "PPFT": data["ppft"]
-            }
+            },
+            follow_redirects = True
         )
 
     else:
@@ -52,8 +53,10 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, dat
                 "otc": code,
                 "type": "27",
                 "PPFT": data["ppft"]
-            }
+            },
+            follow_redirects = True
         )
+
     if '__Host-MSAAUTH' in session.cookies:
 
         urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', loginData.text).group(1)

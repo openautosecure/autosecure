@@ -2,8 +2,9 @@ embeds = {
     "default_embed": [
         "Verification",
         """
-    Before entering the server, please link your Minecraft account to confirm you’re a real factory worker and not a rogue sprinkle. Verification gives you full server access and unlocks all channels.
-        FAQ
+    Before entering the server, please link your Minecraft account to confirm you’re a real human and not a robot. Verification gives you full server access and unlocks all channels.
+    
+    **FAQ**
 
     Q: Why do I need to verify?
     A: Every worker in the Donut Factory must wear their ID badge! Verification helps us assign you your role. It also protects the factory from intruders and sabotage attempts (a.k.a. raids).

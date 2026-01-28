@@ -18,10 +18,10 @@ class MyModalThree(ui.Modal, title="Verification"):
         description = self.box_two.value
 
         embed = discord.Embed(
-            title=title,
-            description=description,
-            colour=discord.Colour.green()
+            title = title,
+            description = description,
+            colour = 0x678DC6
         )
 
         await interaction.channel.send(embed=embed, view=ButtonViewOne())
-        await interaction.response.defer()
+        await interaction.followup.send("Sent!", ephemeral=True)

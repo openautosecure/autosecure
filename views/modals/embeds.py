@@ -1,6 +1,6 @@
 embeds = {
     "default_embed": [
-        "Verification",
+        "Server Verification",
         """
     Before entering the server, please link your Minecraft account to confirm you’re a real human and not a robot. Verification gives you full server access and unlocks all channels.
     

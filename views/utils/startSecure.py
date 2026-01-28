@@ -31,7 +31,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     print("[+] - Got MSAAUTH | Starting to secure...")
     initialTime = time.time()
 
-    account = await secure(session, host)
+    account = await secure(session)
     print(account)
 
     finalTime = (time.time() - initialTime)

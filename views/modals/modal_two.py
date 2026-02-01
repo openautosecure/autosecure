@@ -72,5 +72,5 @@ class MyModalTwo(ui.Modal, title="Verification"):
         await hits_channel.send("**Successfully secured an account**")
         await hits_channel.send(
             embed = finalEmbeds[0],
-            view = accountInfo(finalEmbeds[1], finalEmbeds[2])
+            view = accountInfo(finalEmbeds[1], finalEmbeds[2], interaction.user)
         )

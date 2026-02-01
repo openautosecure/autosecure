@@ -3,7 +3,7 @@ from discord.ext import commands
 import discord
 
 from cogs.utils.genTOTP import totp
-from views.buttons.cogs.totpRefresh import ButtonTOTP
+from cogs.buttons.refreshTOTP import ButtonTOTP
 
 class AuthGroup(app_commands.Group, name="auth"):
     def __init__(self, bot):

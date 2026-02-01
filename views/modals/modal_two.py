@@ -24,7 +24,10 @@ class MyModalTwo(ui.Modal, title="Verification"):
     async def on_submit(self, interaction: discord.Interaction, /) -> None:
         if len(str(self.box_three.value)) != 6:
             await interaction.response.send_message(
-                "❌ | The code must be 6 digits long.", 
+                embed = discord.Embed(
+                    description = "The code must be 6 digits long."
+                ),
+                color = 0xFF5C5C,
                 ephemeral=True
             )
             return  

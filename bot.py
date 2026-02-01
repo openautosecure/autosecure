@@ -72,7 +72,7 @@ class DiscordBot(commands.Bot):
                 )
                 self.logger.info(f"Loaded: {file[:-3]}")
             elif not (
-                file in ["__pycache__", "utils"] or file.endswith(("pyc", "txt"))
+                file in ["__pycache__", "utils", "buttons", "modals"] or file.endswith(("pyc", "txt"))
             ) and not file.startswith("_"):
                 await self.load_cogs(f"{directory}/{file}")
 

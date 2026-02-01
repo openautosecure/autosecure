@@ -47,9 +47,9 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
                 "aliasName": f"{emailName}@outlook.com",
                 "emailChecked": True,
                 "removeOldPrimary": True,
-                "uiflvr":1001,
-                "scid":100141,
-                "hpgid":200176
+                "uiflvr": 1001,
+                "scid": 100141,
+                "hpgid": 200176
             }
         )
 

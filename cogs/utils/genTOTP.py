@@ -20,5 +20,5 @@ async def totp(secret: str) -> str | None:
         code = struct.unpack(">I", h[o:o+4])[0] & 0x7fffffff
         return f"{code % 1000000:06d}"
         
-    except Exception as e:
+    except Exception:
         return None

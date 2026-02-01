@@ -3,11 +3,12 @@ from discord.ext import commands
 import discord
 import json
 
-class setChannel(commands.Cog):
+class setChannel(app_commands.Group, name="set"):
     def __init__(self, bot):
+        super().__init__()
         self.bot = bot
     
-    @app_commands.command(name="set_channel", description="Sets your channel IDs")
+    @app_commands.command(name="channel", description="Sets your channel ID")
     @app_commands.choices(
         choice=[
             app_commands.Choice(name="Logs", value="logs_channel"),
@@ -33,5 +34,10 @@ class setChannel(commands.Cog):
         
         await interaction.response.send_message(f"Successfully set {choice.name} channel!", ephemeral=True)
 
+class channelCog(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.bot.tree.add_command(setChannel(bot))
+
 async def setup(bot: commands.Bot) -> None:
-    await bot.add_cog(setChannel(bot))
+    await bot.add_cog(channelCog(bot))

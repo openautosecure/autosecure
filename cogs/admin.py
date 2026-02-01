@@ -19,9 +19,7 @@ class Admin(commands.Cog):
         )
 
     @reload.autocomplete(name="cog")
-    async def autocomplete_callback(
-        self, interaction: discord.Interaction, current: str
-    ):
+    async def autocomplete_callback(self, interaction: discord.Interaction, current: str):
         options = [cog for cog in self.bot.extensions.keys()]
         return [
             app_commands.Choice(name=option, value=option)

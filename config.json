@@ -14,6 +14,7 @@
     },
 
     "autosecure": {
-        "replace_main_alias": true
+        "replace_main_alias": true,
+        "enable_2fa": false
     }
 }

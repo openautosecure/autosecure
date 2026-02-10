@@ -4,13 +4,18 @@ import re
 
 async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicanary: str) -> bool:
 
+    # To be fixed aka add extra redirects handling
     try:
+
         getCanary = await session.get(
             url = "https://account.live.com/AddAssocId",
             headers = {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
         )
+
+        if getCanary.status_code == 302:
+            pass
 
         canary = urllib.parse.quote(
             re.search(

@@ -102,7 +102,7 @@ async def secure(session: httpx.AsyncClient):
             else:
                 print(f"[+] - Got profile (Has Minecraft Java)")
                 accountInfo["SSID"] = ssid
-                accountInfo["Name"] = profile
+                accountInfo["name"] = profile
                 
                 usernameInfo = await getUsernameInfo(ssid)
                 if type(usernameInfo) is bool:
@@ -119,7 +119,7 @@ async def secure(session: httpx.AsyncClient):
 
     else:
         print("[x] - Failed to get XBL (Account has no Xbox Profile)")
-        accountInfo["Name"] = "No Minecraft"
+        accountInfo["name"] = "No Minecraft"
 
     # Security Steps
     await getAMRP(session, T)

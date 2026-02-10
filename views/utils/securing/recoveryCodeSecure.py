@@ -122,4 +122,4 @@ async def recoveryCodeSecure(email: str, recoveryCode: str, new_email: str, new_
                 if "recoveryCode" in finishJson:
                     return finishJson["recoveryCode"]
                 
-            return None
+        return None

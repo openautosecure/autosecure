@@ -26,15 +26,15 @@ class emailView(ui.View):
         if self.index > 0:
             self.index -= 1
             self.updateButtons()
-            await interaction.response.edit_message(embed=self.get_embed(), view=self)
+            await interaction.response.edit_message(embed=self.getEmbed(), view=self)
     
     @discord.ui.button(label="🔄 Refresh", style=discord.ButtonStyle.green)
     async def refresh_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.edit_message(embed=self.get_embed(), view=self)
+        await interaction.response.edit_message(embed=self.getEmbed(), view=self)
 
     @discord.ui.button(label="Next ▶️", style=discord.ButtonStyle.primary)
     async def next_button(self, interaction: discord.Interaction, button: discord.ui.Button):
         if self.index < self.mindex:
             self.index += 1
             self.updateButtons()
-            await interaction.response.edit_message(embed=self.get_embed(), view=self)
+            await interaction.response.edit_message(embed=self.getEmbed(), view=self)

@@ -1,14 +1,13 @@
 from discord import ui
 import discord
 
-from views.modals.dmEmbed import dmEmbed
-
 class accountInfo(ui.View):
     def __init__(self, embeds: dict, discord_user):
         super().__init__(timeout=None)
         self.ssid = embeds["ssid_embed"]
         self.dob = embeds["info_embed"]
-        self.details = embeds["account_details"]
+        self.details = embeds["account_details"],
+        self.inbox = embeds["inbox"]
         self.duser = discord_user
 
     # @discord.ui.button(label="Minecraft", style=discord.ButtonStyle.primary, custom_id="persistent:button_mc")
@@ -36,6 +35,14 @@ class accountInfo(ui.View):
     async def showInfo(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.send_message(
             self.details,
+            ephemeral = True
+        )
+
+    @discord.ui.button(label="✉️ Inbox", style=discord.ButtonStyle.grey, custom_id="persistent:button_inbox")
+    async def showInbox(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message(
+            embed = self.inbox["embed"],
+            view = self.inbox["view"],
             ephemeral = True
         )
 

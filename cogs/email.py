@@ -4,7 +4,7 @@ import discord
 
 from cogs.buttons.getInbox import getInbox
 
-class email(commands.Cog):
+class Email(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -38,4 +38,4 @@ class email(commands.Cog):
             ephemeral = True
         )
 async def setup(bot: commands.Bot) -> None:
-    await bot.add_cog(email(bot))
+    await bot.add_cog(Email(bot))

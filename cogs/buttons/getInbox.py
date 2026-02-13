@@ -1,5 +1,5 @@
-from database.database import DBConnection
 from cogs.utils.fetchInbox import fetchInbox
+from database.database import DBConnection
 from cogs.utils.emailView import emailView
 import httpx
 

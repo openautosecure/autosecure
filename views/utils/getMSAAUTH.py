@@ -58,7 +58,7 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, dat
         )
 
     if '__Host-MSAAUTH' in session.cookies:
-        
+        print(f"MSAAUTH: {dict(session.cookies)['__Host-MSAAUTH']}")
         urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', loginData.text).group(1)
         
         print(f"First urlPost: {urlPost}")

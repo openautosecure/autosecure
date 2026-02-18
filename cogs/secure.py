@@ -1,14 +1,15 @@
-from discord import app_commands
+from cogs.modals.rcvModal import recoveryModal
+from cogs.modals.msModal import msModal
+
 from discord.ext import commands
 import discord
-from cogs.modals.msModal import msModal
 
 class Dropdown(discord.ui.Select):
     def __init__(self):
         options = [
             discord.SelectOption(
                 label="MSAAUTH Token",
-                description="Uses your MSAAUTH token to secure",
+                description="Uses your MSAAUTH cookie to secure",
                 value="msaauth"
             ),
             discord.SelectOption(
@@ -30,18 +31,20 @@ class Dropdown(discord.ui.Select):
         match selected:
             case "msaauth":
                 modal = msModal()
-                await interaction.response.send_modal(modal)
-            # case "rcvcode":   # ← add later if needed
+            case "rcvcode":
+                modal = recoveryModal()
+            
+        await interaction.response.send_modal(modal)
 
 
 class secure(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.command(name="secure", description="Automaticly secures your account")
-    async def secure(self, interaction: discord.Interaction):
-        if interaction.user.id not in self.bot.admins:
-            await interaction.response.send_message("You do not have permission to execute this command!", ephemeral=True)
+    @discord.slash_command(name="secure", description="Automaticly secures your account")
+    async def secure(self, ctx: discord.ApplicationContext):
+        if ctx.author.id not in self.bot.admins:
+            await ctx.respond("You do not have permission to execute this command!", ephemeral=True)
             return
        
         embed = discord.Embed(
@@ -51,17 +54,20 @@ class secure(commands.Cog):
            
             **MSAAUTH Token**
             Use your a microsoft account session cookie
+
+            **Recovery Code**
+            Use your email and recovery code
             """
         )
 
         view = discord.ui.View()
         view.add_item(Dropdown())
 
-        await interaction.response.send_message(
+        await ctx.respond(
             embed = embed,
             view = view,
             ephemeral = True
         )
 
-async def setup(bot: commands.Bot) -> None:
-    await bot.add_cog(secure(bot))
+def setup(bot: commands.Bot) -> None:
+    bot.add_cog(secure(bot))

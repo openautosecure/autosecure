@@ -12,7 +12,7 @@ class ButtonRefresh(ui.View):
         self.embed = embed
 
     @discord.ui.button(label="🔄 Refresh", style=discord.ButtonStyle.green, custom_id="persistent:button_refresh")
-    async def button_one(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def button_one(self, button: discord.ui.Button, interaction: discord.Interaction):
 
         getEmails = await fetchInbox(self.token, self.email, self.pwd)
 

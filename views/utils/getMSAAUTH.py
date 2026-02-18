@@ -57,9 +57,11 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, dat
             follow_redirects = True
         )
 
+    print(loginData.text)
+    print(loginData.headers)
     if '__Host-MSAAUTH' in session.cookies:
         print(f"MSAAUTH: {dict(session.cookies)['__Host-MSAAUTH']}")
-        urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', loginData.text).group(1)
+        urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', loginData.text)
         
         print(f"First urlPost: {urlPost}")
         if not urlPost:
@@ -94,7 +96,7 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, dat
             print(response.headers)
             print(response.text)
 
-            urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response.text).group(1)
+            urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response.text)
             ppft = quote(re.search(r'"sFT"\s*:\s*"([^"]+)"', response.text).group(1), safe='-*')
         
         else:
@@ -102,7 +104,7 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, dat
             ppft = quote(re.search(r'"sFT"\s*:\s*"([^"]+)"', loginData.text).group(1), safe='-*')
 
         return {
-            "urlPost" : urlPost,
+            "urlPost" : urlPost.group(1),
             "PPFT": ppft
         }
     

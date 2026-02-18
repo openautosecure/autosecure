@@ -23,7 +23,7 @@ async def polishHost(session: httpx.AsyncClient, postData: dict) -> str:
             "Accept-Encoding": "gzip, deflate, br",
             "Priority": "u=0, i"
         },
-        data = f"PPFT={postData["PPFT"]}&canary=&LoginOptions=3&type=28&hpgrequestid=&ctx="
+        data = f"PPFT={postData['PPFT']}&canary=&LoginOptions=3&type=28&hpgrequestid=&ctx="
     )
     
     print(data.cookies)

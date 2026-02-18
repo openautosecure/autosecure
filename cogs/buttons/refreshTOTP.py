@@ -10,7 +10,7 @@ class ButtonTOTP(ui.View):
         self.interaction = interaction
 
     @discord.ui.button(label="🔄 Refresh Code", style=discord.ButtonStyle.green, custom_id="persistent:button_refresh")
-    async def button_one(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def button_one(self, button: discord.ui.Button, interaction: discord.Interaction):
 
         getTOTP = await totp(self.secret)
 

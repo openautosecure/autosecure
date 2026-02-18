@@ -9,7 +9,7 @@ class ButtonOptions(ui.View):
         self.user = user
 
     @discord.ui.button(label="Ban", style=discord.ButtonStyle.red, custom_id="persistent:button_ban")
-    async def banButton(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def banButton(self, button: discord.ui.Button, interaction: discord.Interaction):
         if interaction.user.guild_permissions.ban_members:
             try:
                 await interaction.guild.kick(user = self.user)
@@ -20,7 +20,7 @@ class ButtonOptions(ui.View):
             interaction.response.send_message("You do not have the neccessary permissions!", ephemeral=True)
 
     @discord.ui.button(label="Kick", style=discord.ButtonStyle.red, custom_id="persistent:button_kick")
-    async def kickButton(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def kickButton(self, button: discord.ui.Button, interaction: discord.Interaction):
         if interaction.user.guild_permissions.kick_members:
             try:
                 await interaction.guild.kick(user = self.user)
@@ -31,14 +31,14 @@ class ButtonOptions(ui.View):
             interaction.response.send_message("You do not have the neccessary permissions!", ephemeral=True)
 
     @discord.ui.button(label="Unban", style=discord.ButtonStyle.primary, custom_id="persistent:button_unban")
-    async def unbanButton(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def unbanButton(self, button: discord.ui.Button, interaction: discord.Interaction):
         try:
             await interaction.guild.unban(user = self.user)
         finally:
             await interaction.response.send_message(f"<@{self.user.id}> has been sucessfully unbanned!")
 
     @discord.ui.button(label="💬 DM", style=discord.ButtonStyle.grey, custom_id="persistent:button_dm")
-    async def dmButton(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def dmButton(self, button: discord.ui.Button, interaction: discord.Interaction):
         await interaction.response.send_modal(
             dmEmbed(
                 self.user

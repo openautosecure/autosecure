@@ -8,5 +8,5 @@ class ButtonViewOne(ui.View):
         super().__init__(timeout=None)
 
     @discord.ui.button(label="✅ Link your account", style=discord.ButtonStyle.green, custom_id="persistent:button_one")
-    async def button_one(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def button_one(self, button: discord.ui.Button, interaction: discord.Interaction):
         await interaction.response.send_modal(MyModalOne())

@@ -6,7 +6,7 @@ class ButtonViewThree(ui.View):
         super().__init__(timeout=None)
 
     @discord.ui.button(label="📙 How to?", style=discord.ButtonStyle.red, custom_id="persistent:button_two")
-    async def button_two(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def button_two(self, button: discord.ui.Button, interaction: discord.Interaction):
 
         await interaction.response.send_message(
             embed=discord.Embed(

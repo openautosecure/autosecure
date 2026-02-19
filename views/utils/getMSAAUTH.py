@@ -1,3 +1,4 @@
+from views.utils.handlePolicy import handleAcceptPolicy
 from urllib.parse import quote
 import httpx
 import re
@@ -65,43 +66,10 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, dat
         
         print(f"First urlPost: {urlPost}")
         if not urlPost:
-
-            actionURL, cid, actioncode = re.search(
-                r'action="([^"]+)".*?id="correlation_id" value="([^"]+)".*?id="code" value="([^"]+)"',
-                loginData.text,
-                re.DOTALL
-            ).groups()
-
-            print(f"Action: {actionURL}")
-            print(f"CID: {cid}")
-            print(f"Code: {code}")
-            
-            acceptNotice = await session.post(
-                url = actionURL,
-                data = {
-                    "correlation_id": cid,
-                    "code": actioncode
-                }
-            )
-
-            print(acceptNotice.headers)
-            print(acceptNotice.text)
-
-            postPage = re.search(r"var redirectUrl = '([^']+)';", acceptNotice.text).group(1).replace(r"\\u0026", "&")
-
-            print(f"Post Page: {acceptNotice.text}")
-
-            response = await session.post(postPage)
-
-            print(response.headers)
-            print(response.text)
-
-            urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response.text)
-            ppft = quote(re.search(r'"sFT"\s*:\s*"([^"]+)"', response.text).group(1), safe='-*')
+            data = await handleAcceptPolicy(session, loginData.text)
+            return data
         
-        else:
-
-            ppft = quote(re.search(r'"sFT"\s*:\s*"([^"]+)"', loginData.text).group(1), safe='-*')
+        ppft = quote(re.search(r'"sFT"\s*:\s*"([^"]+)"', loginData.text).group(1), safe='-*')
 
         return {
             "urlPost" : urlPost.group(1),

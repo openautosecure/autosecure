@@ -8,7 +8,6 @@ async def getCapes(xbl: str) :
             url = "https://emerald.xboxservices.com/xboxcomfd/settings/privacyonlinesafety",
             headers = {
                 "authorization": f"XBL3.0 x={xbl}",
-                "ms-cv": "dona",
                 "content-type": "application/json",
                 "accept": "*/*",
                 "dnt": "1",

@@ -2,10 +2,14 @@ from urllib.parse import quote
 import httpx
 import re
 
-async def handleAcceptPolicy(session: httpx.AsyncClient, page_response: str) -> dict:
+async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dict:
 
-    actionURL, cid, actioncode = re.search(
-        r'action="([^"]+)".*?id="correlation_id" value="([^"]+)".*?id="code" value="([^"]+)"',
+    actionURL = re.search(r'action="([^"]+)"', page_response).group(1)
+    if "family" in actionURL:
+        return "Family"
+    
+    cid, actioncode = re.search(
+        r'id="correlation_id"\s+value="([^"]+)".*?id="code"\s+value="([^"]+)"',
         page_response,
         re.DOTALL
     ).groups()

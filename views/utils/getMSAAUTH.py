@@ -1,4 +1,4 @@
-from views.utils.handlePolicy import handleAcceptPolicy
+from views.utils.handleRedirects import handleRedirects
 from urllib.parse import quote
 import httpx
 import re
@@ -59,14 +59,13 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, dat
         )
 
     print(loginData.text)
-    print(loginData.headers)
     if '__Host-MSAAUTH' in session.cookies:
         print(f"MSAAUTH: {dict(session.cookies)['__Host-MSAAUTH']}")
         urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', loginData.text)
         
         print(f"First urlPost: {urlPost}")
         if not urlPost:
-            data = await handleAcceptPolicy(session, loginData.text)
+            data = await handleRedirects(session, loginData.text)
             return data
         
         ppft = quote(re.search(r'"sFT"\s*:\s*"([^"]+)"', loginData.text).group(1), safe='-*')

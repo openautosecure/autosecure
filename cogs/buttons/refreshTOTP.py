@@ -21,4 +21,4 @@ class ButtonTOTP(ui.View):
             )
         )
 
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)

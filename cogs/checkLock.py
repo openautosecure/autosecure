@@ -5,17 +5,19 @@ import json
 from views.utils.checkLocked import checkLocked
 
 class checkLock(commands.Cog):
+    check = discord.SlashCommandGroup("check")
+
     def __init__(self, bot):
         self.bot = bot
 
-    @discord.slash_command(name="check_locked", description="Checks if an account is locked")
+    @check.command(name="locked", description="Checks if an account is locked")
     async def checkLock(self, ctx: discord.ApplicationContext, email: str):
 
         if ctx.author.id not in self.bot.admins:
             await ctx.respond("You do not have permission to execute this command!", ephemeral=True)
             return
 
-        await ctx.defer()
+        await ctx.defer(ephemeral=True)
 
         lockedInfo = await checkLocked(email)
         

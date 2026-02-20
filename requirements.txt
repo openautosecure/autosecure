@@ -2,3 +2,4 @@ py-cord
 httpx
 mailslurp_client
 jishaku
+millify

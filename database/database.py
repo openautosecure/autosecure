@@ -5,7 +5,7 @@ class DBConnection:
         self.conn = sqlite3.connect("database/database.db")
         self.cursor = self.conn.cursor()
 
-    def __enter__(self):
+    def __enter__(self) -> None:
         return self
     
     def __exit__(self, *args) -> None:

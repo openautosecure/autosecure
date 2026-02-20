@@ -13,7 +13,7 @@ class recoveryModal(ui.Modal):
         email = self.children[0].value
         rcvc = self.children[1].value
         
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)
 
         account = await recoverySecure(email, rcvc)
         if account == "invalid":
@@ -21,7 +21,7 @@ class recoveryModal(ui.Modal):
                 embed = discord.Embed(
                     title = "Failed to secure account",
                     description = "Invalid Recovery Code",
-                    color = 0xFF5C5C
+                    color = 0x2765F5
                 ),
                 ephemeral = True
             )
@@ -32,13 +32,11 @@ class recoveryModal(ui.Modal):
                 embed = discord.Embed(
                     title = "Failed to secure account",
                     description = "Cannot secure with 2FA enabled",
-                    color = 0xFF5C5C
+                    color = 0x2765F5
                 ),
                 ephemeral = True
             )
             return
-
-        
 
         pass
 

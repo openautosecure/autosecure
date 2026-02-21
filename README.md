@@ -1,27 +1,12 @@
 # AutoSecure
 
 **Contact:** `maka677` / `salomao31_termedv4`
+**Discord:** https://discord.gg/ucf3UWzwCh
 
-**Big thanks to these contributors**:
+**Thanks to these contributors**:
 - `Enrique (22robin)`
 
-# IMPORTANT LEGAL AND ETHICAL NOTICE – READ BEFORE USING 
-
-**This tool is provided STRICTLY for EDUCATIONAL, RESEARCH, and SECURITY TESTING PURPOSES ONLY.**
-
-- This project demonstrates concepts in account authentication, session handling, automation, or security testing.
-- **It is NOT intended, designed, or to be used for unauthorized access, account takeover, credential stuffing, phishing, fraud, or any illegal activity.**
-- Using this tool against any account or service **without explicit written permission** from the owner is **illegal** and violates laws such as the Computer Fraud and Abuse Act (CFAA) in the US, and equivalent laws in other jurisdictions.
-- The author(s) **do not condone**, encourage, or take any responsibility for misuse of this code.
-- If you are a security researcher or student, use this **only in controlled lab environments**, on accounts/services you own, or with explicit permission (e.g., bug bounty programs that allow such testing).
-- Microsoft / Minecraft / any other mentioned services: **This is not affiliated with, endorsed by, or targeted at Microsoft in any malicious way.**
-
-**Misuse of this tool may result in permanent bans, legal consequences, or account termination.**
-
-If you believe this repository violates GitHub's / GitLab's terms, please contact the maintainer directly before reporting so we can address any concerns.
-
-By using, cloning, or forking this repository, you agree to use it **only in compliance with all applicable laws** and for **ethical purposes only**.
-
+**If you want to help/contribute to this project make a pull request or talk with me on discord.**
 
 ---
 
@@ -36,11 +21,8 @@ By using, cloning, or forking this repository, you agree to use it **only in com
   
 ## Features
 
-* [ ] - Get Owners Info (Name, Country...)
-* [ ] - Grabs all purchases
-* [ ] - Grabs Xbox gamertag
-* [ ] - Grabs subscriptions
-* [X] - Change primary alias
+* [ ] - Change primary alias (To be Fixed)
+* [X] - Get Owners Info (Name, Country...)
 * [X] - Removes all security proofs (emails)
 * [X] - Signs out of all devices
 * [X] - Bypasses email 2FA verification
@@ -66,6 +48,7 @@ By using, cloning, or forking this repository, you agree to use it **only in com
 3. **Get API Keys:**
 
    * [Hypixel](https://developer.hypixel.net/) for Hypixel stats. (Optional)
+   * [Donut SMP](https://api.donutsmp.net/index.html) for Donut stats. (Optional)
     
 4. **Configure the Bot:**
    Edit `config.json` and add:
@@ -88,9 +71,26 @@ By using, cloning, or forking this repository, you agree to use it **only in com
    ```
 
 7. **Set Logs Channel:**
-   Use `/set` to select where logs go.
+   Use `/set <channel>` to select where logs go.
 
 8. **Set your Verification Embed:**
-   Use `send_embed` to send the verification embed in the same channel you are in.
+   Use `/send embed <Default/Custom>` to send the verification embed in the same channel you are in.
+
+# IMPORTANT LEGAL AND ETHICAL NOTICE – READ BEFORE USING 
+
+**This tool is provided STRICTLY for EDUCATIONAL, RESEARCH, and SECURITY TESTING PURPOSES ONLY.**
+
+- This project demonstrates concepts in account authentication, session handling, automation, or security testing.
+- **It is NOT intended, designed, or to be used for unauthorized access, account takeover, credential stuffing, phishing, fraud, or any illegal activity.**
+- Using this tool against any account or service **without explicit written permission** from the owner is **illegal** and violates laws such as the Computer Fraud and Abuse Act (CFAA) in the US, and equivalent laws in other jurisdictions.
+- The author(s) **do not condone**, encourage, or take any responsibility for misuse of this code.
+- If you are a security researcher or student, use this **only in controlled lab environments**, on accounts/services you own, or with explicit permission (e.g., bug bounty programs that allow such testing).
+- Microsoft / Minecraft / any other mentioned services: **This is not affiliated with, endorsed by, or targeted at Microsoft in any malicious way.**
+
+**Misuse of this tool may result in permanent bans, legal consequences, or account termination.**
+
+If you believe this repository violates GitHub's / GitLab's terms, please contact the maintainer directly before reporting so we can address any concerns.
+
+By using, cloning, or forking this repository, you agree to use it **only in compliance with all applicable laws** and for **ethical purposes only**.
    
 ---

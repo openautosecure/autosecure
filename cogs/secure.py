@@ -8,11 +8,6 @@ class Dropdown(discord.ui.Select):
     def __init__(self):
         options = [
             discord.SelectOption(
-                label="MSAAUTH Token",
-                description="Uses your MSAAUTH cookie to secure",
-                value="msaauth"
-            ),
-            discord.SelectOption(
                 label="Recovery Code",
                 description="Uses email + recovery code",
                 value="rcvcode"
@@ -29,8 +24,6 @@ class Dropdown(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction):
         selected = self.values[0]
         match selected:
-            case "msaauth":
-                modal = msModal()
             case "rcvcode":
                 modal = recoveryModal()
             
@@ -52,9 +45,6 @@ class secure(commands.Cog):
             description = """
             Choose how you want to authenticate:
            
-            **MSAAUTH Token**
-            Use your a microsoft account session cookie
-
             **Recovery Code**
             Use your email and recovery code
             """

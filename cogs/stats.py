@@ -31,18 +31,24 @@ class Stats(commands.Cog):
         result = donut_stats["result"]
         print(result)
         await ctx.followup.send(
-        f"**Money:** {millify(result['money'])}\n"
-        f"**Shards:** {result['shards']}\n"
-        f"**Kills:** {result['kills']}\n"
-        f"**Deaths:** {result['deaths']}\n"
-        f"**Playtime:** {timedelta(milliseconds=int(float(result['playtime']))).days} days\n"
-        f"**Placed Blocks:** {result['placed_blocks']}\n"
-        f"**Broken Blocks:** {result['broken_blocks']}\n"
-        f"**Mobs Killed:** {result['mobs_killed']}\n"
-        f"**Money Spent on Shop:** {millify(result['money_spent_on_shop'])}\n"
-        f"**Money Made from Sell:** {millify(result['money_made_from_sell'])}",
-        ephemeral=True
-    )
+            embed = discord.Embed(
+                title = f"{username.capitalize()}s Stats",
+                description = f"""
+                    **Money:** {millify(result['money'])}
+                    **Shards:** {result['shards']}
+                    **Kills:** {result['kills']}
+                    **Deaths:** {result['deaths']}
+                    **Playtime:** {timedelta(milliseconds=int(float(result['playtime']))).days} days
+                    **Placed Blocks:** {result['placed_blocks']}
+                    **Broken Blocks:** {result['broken_blocks']}
+                    **Mobs Killed:** {result['mobs_killed']}
+                    **Money Spent on Shop:** {millify(result['money_spent_on_shop'])}
+                    **Money Made from Sell:** {millify(result['money_made_from_sell'])}
+                """,
+                color = 0x2765F5
+            ).set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/128"),
+            ephemeral=True
+        )
 
 def setup(bot: commands.Bot) -> None:
     bot.add_cog(Stats(bot))

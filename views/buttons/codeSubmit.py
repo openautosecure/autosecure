@@ -14,7 +14,7 @@ class ButtonViewTwo(ui.View):
     async def button_two(self, button: discord.ui.Button, interaction: discord.Interaction):
         await interaction.response.send_modal(
             MyModalTwo(
-                self.username,
+                str(self.username),
                 self.email,
                 self.flowtoken
             )

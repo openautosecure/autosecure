@@ -2,7 +2,7 @@ from views.utils.parsers.decode import decode
 import httpx
 import re
 
-# Gets amsc too
+# Gets AMSC too
 async def getCookies(session: httpx.AsyncClient):
         
     data = await session.get(

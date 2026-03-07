@@ -14,7 +14,6 @@ class Stats(commands.Cog):
 
     @stats.command(name="donut", description="Checks your donut stats")
     async def donut(self, ctx: discord.ApplicationContext, username: str):
-
         if ctx.author.id not in self.bot.admins:
             await ctx.respond("You do not have permission to execute this command!", ephemeral=True)
             return
@@ -63,7 +62,6 @@ class Stats(commands.Cog):
 
     @stats.command(name="hypixel", description="Checks your Hypixel stats")
     async def hypixel(self, ctx: discord.ApplicationContext, username: str):
-
         if ctx.author.id not in self.bot.admins:
             await ctx.respond("You do not have permission to execute this command!", ephemeral=True)
             return
@@ -80,8 +78,30 @@ class Stats(commands.Cog):
 
         result = hypixel_stats["result"]
 
+        try:
+            bw_kd = round(result['bw_kills'] / result['bw_deaths'], 2) if result['bw_deaths'] > 0 else result['bw_kills']
+            sw_kd = round(result['sw_kills'] / result['sw_deaths'], 2) if result['sw_deaths'] > 0 else result['sw_kills']
+        except Exception:
+            bw_kd = sw_kd = "N/A"
+
         embed = discord.Embed(
             title=f"🟡 Hypixel — {username.capitalize()}",
+            description=(
+                f"⭐ **Level** • `{result['level']}`\n"
+                f"✨ **Karma** • `{millify(result['karma'])}`\n"
+                f"🏆 **Achievement Points** • `{millify(result['achievement_points'])}`\n"
+                f"\n"
+                f"🛏️ **BW Wins** • `{millify(result['bw_wins'])}`\n"
+                f"💀 **BW Deaths** • `{millify(result['bw_deaths'])}`\n"
+                f"⚔️ **BW Kills** • `{millify(result['bw_kills'])}`\n"
+                f"🎯 **BW Final Kills** • `{millify(result['bw_final_kills'])}`\n"
+                f"📊 **BW K/D** • `{bw_kd}`\n"
+                f"\n"
+                f"🌀 **SW Wins** • `{millify(result['sw_wins'])}`\n"
+                f"💀 **SW Deaths** • `{millify(result['sw_deaths'])}`\n"
+                f"⚔️ **SW Kills** • `{millify(result['sw_kills'])}`\n"
+                f"📊 **SW K/D** • `{sw_kd}`\n"
+            ),
             color=0xFFAA00
         )
         embed.set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/128")

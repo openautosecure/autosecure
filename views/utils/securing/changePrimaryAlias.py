@@ -15,7 +15,9 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
         )
 
         if getCanary.status_code == 302:
-            pass
+            
+            print(f"Response: {getCanary.text}")
+            print(f"Headers: {getCanary.headers}")
 
         canary = urllib.parse.quote(
             re.search(

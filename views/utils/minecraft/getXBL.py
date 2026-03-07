@@ -37,12 +37,16 @@ async def getXBL(session: httpx.AsyncClient) -> dict:
         uhs = json_data[0].get('Item2',{}).get('DisplayClaims',{}).get('xui',[{}])[0].get('uhs')
         
         xsts = ""
+        gtg = None
         for item in json_data:
             if item.get('Item1') == "rp://api.minecraftservices.com/":
                 xsts = item.get('Item2', {}).get('Token', '')
-                break
+            elif item.get('Item1') == "http://xboxlive.com":
+                xui = item.get('Item2', {}).get('DisplayClaims', {}).get('xui', [{}])[0]
+                if xui:
+                    gtg = xui.get('gtg')
             
-        return {"xbl": f"XBL3.0 x={uhs};{xsts}"}
+        return {"xbl": f"XBL3.0 x={uhs};{xsts}", "gtg": gtg}
     
     except Exception:
         return None

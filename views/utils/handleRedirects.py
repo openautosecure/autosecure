@@ -35,7 +35,7 @@ async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dic
     print(f"Response Headers: {response.headers}")
     print(f"Response HTML: {response.text}")
 
-    urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response.text)
+    urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response.text).group(1)
     ppft = quote(re.search(r'"sFT"\s*:\s*"([^"]+)"', response.text).group(1), safe='-*')
 
     return {

@@ -3,4 +3,3 @@ pycord
 httpx
 jishaku
 millify
-fake-useragent

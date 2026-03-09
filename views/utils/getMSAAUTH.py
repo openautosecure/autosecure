@@ -4,12 +4,15 @@ import httpx
 import re
 
 # Gets __Host-MSAAUTH
-async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, data: dict, code: str) -> dict | None:
+async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, odata: dict, code: str) -> dict | None:
 
+    print(f"Data: {odata}")
+    print(f"Code: {code}") 
+    
     if not code:
         
         loginData = await session.post(
-            url = data["urlPost"],
+            url = odata["urlPost"],
             headers = {
                 "host": "login.live.com",
                 "Accept-Language": "en-US,en;q=0.5",
@@ -27,41 +30,55 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, dat
                 "slk": flowToken,
                 "psRNGCSLK": flowToken,
                 "type": "21",
-                "PPFT": data["ppft"]
+                "PPFT": odata["ppft"]
             },
             follow_redirects = True
         )
 
     else:
+        
+        payload = {
+            "login": email,
+            "loginfmt": email,
+            "SentProofIDE": flowToken,
+            "otc": code,
+            "PPFT": odata["ppft"]
+        }
 
-        loginData = await session.post(
-            url = data["urlPost"],
-            headers = {
-                "host": "login.live.com",
-                "Accept-Language": "en-US,en;q=0.5",
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Origin": "https://login.live.com",
-                "Referer": "https://login.live.com/",
-                "Sec-Fetch-Dest": "document",
-                "Sec-Fetch-Mode": "navigate",
-                "Sec-Fetch-Site": "same-origin",
-                "Priority": "u=0, i"
-            },
-            data = {
-                "login": email,
-                "loginfmt": email,
-                "SentProofIDE": flowToken,
-                "otc": code,
-                "type": "27",
-                "PPFT": data["ppft"]
-            },
-            follow_redirects = True
-        )
+        for i in range(2):
+
+            match i:
+                case 0:
+                    payload["type"] = "27"
+                case 1:
+                    payload["type"] = "24"
+
+            loginData = await session.post(
+                url = odata["urlPost"],
+                headers = {
+                    "host": "login.live.com",
+                    "Accept-Language": "en-US,en;q=0.5",
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Origin": "https://login.live.com",
+                    "Referer": "https://login.live.com/",
+                    "Sec-Fetch-Dest": "document",
+                    "Sec-Fetch-Mode": "navigate",
+                    "Sec-Fetch-Site": "same-origin",
+                    "Priority": "u=0, i"
+                },
+                data = payload,
+                follow_redirects = False
+            )
+
+            print(f"Attempt {i+1} - {loginData.text}")
+            urlPost = re.search(r'"urlPost"\s*:\s*"([^\"]+)"', loginData.text)
+            if not urlPost:
+                continue
+            
 
     print(loginData.text)
     if '__Host-MSAAUTH' in session.cookies:
         print(f"MSAAUTH: {dict(session.cookies)['__Host-MSAAUTH']}")
-        urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', loginData.text)
         
         print(f"First urlPost: {urlPost}")
         if not urlPost:
@@ -72,7 +89,7 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, dat
 
         return {
             "urlPost" : urlPost.group(1),
-            "PPFT": ppft
+            "ppft": ppft
         }
     
     return None

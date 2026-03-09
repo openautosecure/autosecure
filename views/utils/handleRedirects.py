@@ -40,5 +40,5 @@ async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dic
 
     return {
         "urlPost": urlPost,
-        "PPFT": ppft
+        "ppft": ppft
     }

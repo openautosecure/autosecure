@@ -3,3 +3,7 @@ pycord
 httpx
 jishaku
 millify
+python-dateutil
+# after that run pip uninstall pycord py-cord discord.py -y
+# and
+# pip install py-cord

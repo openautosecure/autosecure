@@ -1,6 +1,6 @@
 import httpx
 
-async def sendAuth(session: httpx.AsyncClient, email: str) -> dict:
+async def sendAuth(session: httpx.AsyncClient, email: str, forceotc: bool = False) -> dict:
 
     sendAuth = await session.post(
         url = "https://login.live.com/GetCredentialType.srf",
@@ -15,11 +15,13 @@ async def sendAuth(session: httpx.AsyncClient, email: str) -> dict:
             "country": "",
             "federationFlags": 3,
             "flowToken": "-DgAlkPotvHRxxasQViSq!n6!RCUSpfUm9bdVClpM6KR98HGq7plohQHfFANfGn4P7PN2GnUuAtn6Nu3dwU!Tisic5PrgO7w8Rn*LCKKQhcTDUPMM2QJJdjr4QkcdUXmPnuK!JOqW7GdIx3*icazjg5ZaS8w1ily5GLFRwdvobIOBDZP11n4dWICmPafkNpj5fKAMg3!ZY2EhKB7pVJ8ir4A$",
-            "forceotclogin": False,
+            "forceotclogin": forceotc,
             "isCookieBannerShown": True,
             "isExternalFederationDisallowed": True,
             "isFederationDisabled": True,
-            "isFidoSupported": False,
+            # Keep True so we can detect FIDO accounts; when forceotc=True we
+            # set it False to prevent Microsoft returning FidoParams again.
+            "isFidoSupported": not forceotc,
             "isOtherIdpSupported": False,
             "isRemoteConnectSupported": False,
             "isRemoteNGCSupported": True,

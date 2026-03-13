@@ -1,49 +1,35 @@
 import httpx
 
-async def sendAuth(session: httpx.AsyncClient, email: str) -> dict:
+async def getOwnerInfo(session: httpx.AsyncClient, verificationToken: str):
 
-    # First payload triggers authenticator entropy and second triggers email OTP if exists
-    payload = {
-        "checkPhones": True,
-        "country": "",
-        "federationFlags": 3,
-        "flowToken": "-DgAlkPotvHRxxasQViSq!n6!RCUSpfUm9bdVClpM6KR98HGq7plohQHfFANfGn4P7PN2GnUuAtn6Nu3dwU!Tisic5PrgO7w8Rn*LCKKQhcTDUPMM2QJJdjr4QkcdUXmPnuK!JOqW7GdIx3*icazjg5ZaS8w1ily5GLFRwdvobIOBDZP11n4dWICmPafkNpj5fKAMg3!ZY2EhKB7pVJ8ir4A$",
-        "forceotclogin": False,
-        "isCookieBannerShown": True,
-        "isExternalFederationDisallowed": True,
-        "isFederationDisabled": True,
-        "isFidoSupported": False,
-        "isOtherIdpSupported": False,
-        "isRemoteConnectSupported": False,
-        "isRemoteNGCSupported": True,
-        "isSignup": False,
-        "otclogindisallowed": False,
-        "username": email
-    }
+    try:
 
-    for _ in range(2):
-
-        sendAuth = await session.post(
-            url = "https://login.live.com/GetCredentialType.srf",
-            headers = {
-                "Accept": "application/json",
+        getInfo = await session.get(
+            "https://account.microsoft.com/profile/api/v1/personal-info",
+            headers={
+                "Accept": "application/json, text/plain, */*",
                 "Accept-Encoding": "gzip, deflate, br, zstd",
-                "Content-Type": "application/json; charset=utf-8",
-                "Cookie": "MSPOK=$uuid-899fc7db-4aba-4e53-b33b-7b3268c26691",
-                "Referer": "https://login.live.com/",
-                "hpgact": "0",
-                "hpgid": "33"
-            },
-            json = payload
+                "X-Requested-With": "XMLHttpRequest",
+                "MS-CV": "LbJd6i44UUmIn7so.5.63",
+                "__RequestVerificationToken": verificationToken,
+                "Correlation-Context": "v=1,ms.b.tel.market=pt-PT,ms.b.qos.rootOperationName=GLOBAL.HOME.PROFILE.GETPERSONALINFO",
+                "Connection": "keep-alive",
+                "Referer": "https://account.microsoft.com/profile",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            }
         )
-        
-        emailInfo = sendAuth.json()
-        
-        if "RemoteNgcParams" in emailInfo["Credentials"]:
-            return emailInfo
-    
-        payload["forceotclogin"] = True
-    
-    return emailInfo
 
-
+        response = getInfo.json()
+        print(getInfo.text)
+        return {
+            "Fname" : response["firstName"],
+            "Lname" : response["lastName"],
+            "region": response["region"],
+            "birthday": response["birthday"]
+        }
+    
+    except Exception as e:
+        print(f"Exception: {e}")
+        return None

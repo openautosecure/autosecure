@@ -19,7 +19,7 @@ async def sendAuth(session: httpx.AsyncClient, email: str) -> dict:
             "isCookieBannerShown": True,
             "isExternalFederationDisallowed": True,
             "isFederationDisabled": True,
-            "isFidoSupported": True,
+            "isFidoSupported": False,
             "isOtherIdpSupported": False,
             "isRemoteConnectSupported": False,
             "isRemoteNGCSupported": True,
@@ -31,6 +31,3 @@ async def sendAuth(session: httpx.AsyncClient, email: str) -> dict:
     )
     
     return sendAuth.json()
-
-
-

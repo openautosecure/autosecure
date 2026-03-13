@@ -18,7 +18,7 @@
   
 ## Features
 
-* [ ] - Change primary alias (To be Fixed)
+* [X] - Change primary alias
 * [X] - Get Owners Info (Name, Country...)
 * [X] - Removes all security proofs (emails)
 * [X] - Signs out of all devices

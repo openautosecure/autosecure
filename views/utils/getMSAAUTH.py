@@ -45,8 +45,13 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, oda
             "PPFT": odata["ppft"]
         }
 
-        for i, type in enumerate(["27", "24"]):
-            payload["type"] = type
+        for i in range(2):
+
+            match i:
+                case 0:
+                    payload["type"] = "27"
+                case 1:
+                    payload["type"] = "24"
 
             loginData = await session.post(
                 url = odata["urlPost"],
@@ -67,8 +72,8 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, oda
 
             print(f"Attempt {i+1} - {loginData.text}")
             urlPost = re.search(r'"urlPost"\s*:\s*"([^\"]+)"', loginData.text)
-            if not urlPost:
-                continue
+            if urlPost:
+                break
             
 
     print(loginData.text)

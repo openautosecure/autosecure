@@ -26,7 +26,7 @@ class MyModalOne(ui.Modal):
         self.add_item(ui.InputText(label="Minecraft Email", required = True))
 
     async def callback(self, interaction: discord.Interaction) -> None: 
-        username = quote(self.children[0].value, safe='')
+        username = quote(self.children[0].value)
         email = self.children[1].value
 
         # Check if email is valid

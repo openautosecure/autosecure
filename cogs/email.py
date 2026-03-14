@@ -16,8 +16,9 @@ class Email(commands.Cog):
             await ctx.respond("You do not have permission to execute this command!", ephemeral=True)
             return
         
+        await ctx.response.defer(ephemeral=True)
         inbox = await getInbox(email)
-        print(f"Inbox for {email}: {inbox}")
+
         if not inbox:
             await ctx.respond(
                 embed = discord.Embed(

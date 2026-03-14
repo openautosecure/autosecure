@@ -13,8 +13,8 @@ class ButtonRefresh(ui.View):
 
     @discord.ui.button(label="🔄 Refresh", style=discord.ButtonStyle.green, custom_id="persistent:button_refresh")
     async def button_one(self, button: discord.ui.Button, interaction: discord.Interaction):
+        await interaction.response.defer()
 
         getEmails = await fetchInbox(self.token, self.email, self.pwd)
 
-        await self.embed.edit_original_response(embed = getEmails)
-        await interaction.response.defer(ephemeral=True)
+        await interaction.message.edit(embed=getEmails['embed'], view=getEmails['view'])

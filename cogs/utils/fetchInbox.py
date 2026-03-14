@@ -16,15 +16,12 @@ async def fetchInbox(token: str) -> list | None:
             }
         )
         
-        response_data = getEmails.json()
+        emails = getEmails.json()
         emailsText = []
 
-        # Handle paginated response structure
-        emails_list = response_data.get("hydra:member", response_data) if isinstance(response_data, dict) else response_data
-        
-        if emails_list and len(emails_list) > 0:
+        if emails:
 
-            for email in emails_list:
+            for email in getEmails.json():
 
                 response = await session.get(
                     url = f"https://api.mail.tm/messages/{email["id"]}",

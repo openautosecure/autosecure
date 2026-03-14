@@ -17,10 +17,21 @@ class Email(commands.Cog):
             return
         
         inbox = await getInbox(email)
+        print(f"Inbox for {email}: {inbox}")
         if not inbox:
             await ctx.respond(
                 embed = discord.Embed(
                         description = "This email has not been found",
+                        color = 0xFF5C5C
+                    ),
+                ephemeral=True
+            )
+            return
+        
+        if len(inbox)  == 0:
+            await ctx.respond(
+                embed = discord.Embed(
+                        description = "No emails found in inbox.",
                         color = 0xFF5C5C
                     ),
                 ephemeral=True

@@ -42,11 +42,8 @@ async def sendAuth(session: httpx.AsyncClient, email: str) -> dict:
         if "RemoteNgcParams" in emailInfo["Credentials"]:
             return emailInfo
         
-        if "OtcLoginEligibleProofs" in emailInfo["Credentials"]:
-            return emailInfo
-        
         payload["forceotclogin"] = True
     
-    return None
+    return emailInfo
 
 

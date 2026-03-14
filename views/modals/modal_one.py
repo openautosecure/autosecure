@@ -1,3 +1,4 @@
+from urllib.parse import quote
 from discord import ui, Embed
 import datetime
 import discord
@@ -25,7 +26,7 @@ class MyModalOne(ui.Modal):
         self.add_item(ui.InputText(label="Minecraft Email", required = True))
 
     async def callback(self, interaction: discord.Interaction) -> None: 
-        username = self.children[0].value
+        username = quote(self.children[0].value, safe='')
         email = self.children[1].value
 
         # Check if email is valid

@@ -72,8 +72,8 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, oda
 
             print(f"Attempt {i+1} - {loginData.text}")
             urlPost = re.search(r'"urlPost"\s*:\s*"([^\"]+)"', loginData.text)
-            if not urlPost:
-                continue
+            if urlPost:
+                break
             
 
     print(loginData.text)

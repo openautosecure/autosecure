@@ -1,9 +1,8 @@
+from urllib.parse import quote
 from discord import ui
 import datetime
 import discord
-import httpx
 import json
-from urllib.parse import quote
 
 from views.buttons.embedOptions import ButtonOptions
 from views.buttons.accountInfo import accountInfo

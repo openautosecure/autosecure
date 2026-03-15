@@ -14,15 +14,10 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
             follow_redirects = True
         )
         
-        code_match = re.search(r'<input[^>]*name="code"[^>]*value="([^"]+)"', getCanary.text)
-        state_match = re.search(r'<input[^>]*name="state"[^>]*value="([^"]+)"', getCanary.text)
-
-        if not code_match or not state_match:
-            print("[X] - changePrimaryAlias: could not find code/state in AddAssocId response")
-            return False
-
-        code = unquote(code_match.group(1))
-        state = unquote(state_match.group(1))
+        print(f"GETCANARY PRIMARY TEXT - {getCanary.text}")
+        print(f"GETCANARY PRIMARY COOKIES - {dict(getCanary.cookies)}")
+        code = unquote(re.search(r'<input[^>]*name="code"[^>]*value="([^"]+)"', getCanary.text).group(1))
+        state = unquote(re.search(r'<input[^>]*name="state"[^>]*value="([^"]+)"', getCanary.text).group(1))
 
         response = await session.post(
             url = "https://account.live.com/auth/redirect",
@@ -60,7 +55,7 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
         )
 
         # Add Email
-        addEmail = await session.post(
+        await session.post(
             url="https://account.live.com/AddAssocId?ru=&cru=&fl=",
             headers={
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -114,6 +109,7 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
             print(f"[X] - Failed to change Primary Alias - {pinfo.text}")
             return False
         return True
+    
     except Exception as e:
         print(f"[X] - Failed to change Primary Alias - {e}")
         return False

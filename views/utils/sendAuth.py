@@ -40,7 +40,7 @@ async def sendAuth(session: httpx.AsyncClient, email: str, forceotc: bool = Fals
         print(f"SendAuth Response: {sendAuth.text}")
         emailInfo = sendAuth.json()
         
-        if "RemoteNgcParams" in emailInfo["Credentials"]:
+        if "Credentials" in emailInfo and "RemoteNgcParams" in emailInfo["Credentials"]:
             return emailInfo
         
         payload["forceotclogin"] = True

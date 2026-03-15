@@ -14,8 +14,15 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
             follow_redirects = True
         )
         
-        code = unquote(re.search(r'<input[^>]*name="code"[^>]*value="([^"]+)"', getCanary.text).group(1))
-        state = unquote(re.search(r'<input[^>]*name="state"[^>]*value="([^"]+)"', getCanary.text).group(1))
+        code_match = re.search(r'<input[^>]*name="code"[^>]*value="([^"]+)"', getCanary.text)
+        state_match = re.search(r'<input[^>]*name="state"[^>]*value="([^"]+)"', getCanary.text)
+
+        if not code_match or not state_match:
+            print("[X] - changePrimaryAlias: could not find code/state in AddAssocId response")
+            return False
+
+        code = unquote(code_match.group(1))
+        state = unquote(state_match.group(1))
 
         response = await session.post(
             url = "https://account.live.com/auth/redirect",
@@ -38,13 +45,19 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
             }
         )
 
+        canary_match = re.search(
+            r'name="canary" value="([^"]+)"', 
+            getCanary.text
+        )
+
+        if not canary_match:
+            print("[X] - changePrimaryAlias: could not find canary in second AddAssocId response")
+            return False
+
         canary = urllib.parse.quote(
-            re.search(
-                r'name="canary" value="([^"]+)"', 
-                getCanary.text
-            ).group(1),
+            canary_match.group(1),
             safe = ""
-        ) 
+        )
 
         # Add Email
         addEmail = await session.post(

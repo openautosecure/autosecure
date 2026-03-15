@@ -23,6 +23,7 @@ class MyModalTwo(ui.Modal):
     async def callback(self, interaction: discord.Interaction) -> None:
         code = self.children[0].value
 
+        print(f"Usernameo: {self.username}")
         logs_channel = await interaction.client.fetch_channel(config["discord"]["logs_channel"])
         hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
 

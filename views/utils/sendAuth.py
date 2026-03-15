@@ -37,6 +37,7 @@ async def sendAuth(session: httpx.AsyncClient, email: str) -> dict:
             json = payload
         )
         
+        print(f"SendAuth Response: {sendAuth.text}")
         emailInfo = sendAuth.json()
         
         if "RemoteNgcParams" in emailInfo["Credentials"]:

@@ -10,10 +10,24 @@ class emailView(ui.View):
         self.updateButtons()
     
     def updateButtons(self):
+        if not self.emails:
+            self.children[0].disabled = True
+            self.children[1].disabled = True
+            self.children[2].disabled = True
+            return
+        
         self.children[0].disabled = self.index == 0  
         self.children[1].disabled = self.index >= self.mindex
     
     def getEmbed(self):
+        if not self.emails:
+            embed = discord.Embed(
+                title="Email Inbox (0/0)",
+                description="No emails found in inbox.",
+                color=0x678DC6,
+            )
+            return embed
+        
         embed = discord.Embed(
             title=f"Email Inbox ({self.index + 1}/{len(self.emails)})",
             description=self.emails[self.index],

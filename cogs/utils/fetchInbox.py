@@ -35,9 +35,7 @@ async def fetchInbox(token: str) -> list | None:
                 emailData = response.json()
                 emailsText.append(emailData["text"])
         
-            return emailsText
-    
-        return None
+    return emailsText
 
 
                 

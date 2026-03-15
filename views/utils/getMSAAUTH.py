@@ -35,6 +35,8 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, oda
             follow_redirects = True
         )
 
+        urlPost = re.search(r'"urlPost"\s*:\s*"([^\"]+)"', loginData.text)
+
     else:
         
         payload = {
@@ -66,17 +68,14 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, oda
                     "Sec-Fetch-Site": "same-origin",
                     "Priority": "u=0, i"
                 },
-                data = payload,
-                follow_redirects = False
+                data = payload
             )
 
-            print(f"Attempt {i+1} - {loginData.text}")
+            print(f"Attemp Number {i} \n Response: {loginData.text}")
             urlPost = re.search(r'"urlPost"\s*:\s*"([^\"]+)"', loginData.text)
             if urlPost:
                 break
-            
 
-    print(loginData.text)
     if '__Host-MSAAUTH' in session.cookies:
         print(f"MSAAUTH: {dict(session.cookies)['__Host-MSAAUTH']}")
         

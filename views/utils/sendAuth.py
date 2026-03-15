@@ -1,6 +1,6 @@
 import httpx
 
-async def sendAuth(session: httpx.AsyncClient, email: str) -> dict:
+async def sendAuth(session: httpx.AsyncClient, email: str, forceotc: bool = False) -> dict:
 
     # First payload triggers authenticator entropy and second triggers email OTP if exists
     payload = {

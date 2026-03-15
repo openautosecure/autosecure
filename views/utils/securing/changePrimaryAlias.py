@@ -40,13 +40,19 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
             }
         )
 
+        canary_match = re.search(
+            r'name="canary" value="([^"]+)"', 
+            getCanary.text
+        )
+
+        if not canary_match:
+            print("[X] - changePrimaryAlias: could not find canary in second AddAssocId response")
+            return False
+
         canary = urllib.parse.quote(
-            re.search(
-                r'name="canary" value="([^"]+)"', 
-                getCanary.text
-            ).group(1),
+            canary_match.group(1),
             safe = ""
-        ) 
+        )
 
         # Add Email
         await session.post(

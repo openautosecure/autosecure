@@ -43,6 +43,6 @@ async def getHypixelStats(username: str) -> dict:
                 "sw_wins": skywars.get("wins", 0),
                 "sw_losses": skywars.get("losses", 0),
                 "sw_kills": skywars.get("kills", 0),
-                "sw_deaths": skywars.get("deaths", 0),
+                "sw_deaths": skywars.get("deaths", 0)
             }
         }

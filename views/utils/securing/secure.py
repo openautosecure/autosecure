@@ -52,7 +52,7 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
         accountInfo["lastName"] = ownerInfo["Lname"]
         accountInfo["region"] = ownerInfo["region"]
         accountInfo["birthday"] = ownerInfo["birthday"]
-        accountInfo["fullName"] = f"{ownerInfo["Fname"]} {ownerInfo["Lname"]}"
+        accountInfo["fullName"] = f"{ownerInfo['Fname']} {ownerInfo['Lname']}"
     
     # Minecraft checking
     print("[~] - Checking Minecraft Account")

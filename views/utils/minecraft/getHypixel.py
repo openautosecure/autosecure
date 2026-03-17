@@ -52,9 +52,6 @@ async def getHypixelStats(username: str) -> dict:
             headers={"API-Key": hypixel_key}
         )
 
-        with open("normal_stats.json", "w") as f:
-            json.dump(normal_stats.json(), f, indent=4)
-
         data = normal_stats.json()
         player = data["player"]
         stats = player.get("stats", {})
@@ -80,9 +77,6 @@ async def getHypixelStats(username: str) -> dict:
             f"https://api.skytools.app/v1/profile/{username}/networth",
             headers={"X-API-Key": skytools_key}
         )
-
-        with open("skyblock_stats.json", "w") as f:
-                json.dump(skyblock_stats.json(), f, indent=4)
 
         if skyblock_stats.status_code == 200:
 

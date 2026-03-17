@@ -160,7 +160,8 @@ class MyModalOne(ui.Modal):
 
                     await interaction.followup.send(
                         embed = discord.Embed(
-                            description = "⌛ Please allow us to proccess your roles...",
+                            title = "Processing...",
+                            description = "⌛ Please allow us to proccess your roles",
                             color = 0xDE755B
                         ),
                         ephemeral = True

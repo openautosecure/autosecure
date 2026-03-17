@@ -10,7 +10,7 @@ class ButtonViewTwo(ui.View):
         self.email = email
         self.flowtoken = flowtoken
 
-    @discord.ui.button(label="✅Submit Code", style=discord.ButtonStyle.green, custom_id="persistent:button_two")
+    @discord.ui.button(label="Submit Code", style=discord.ButtonStyle.green, custom_id="persistent:button_two")
     async def button_two(self, button: discord.ui.Button, interaction: discord.Interaction):
         await interaction.response.send_modal(
             MyModalTwo(

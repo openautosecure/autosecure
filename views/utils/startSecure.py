@@ -31,7 +31,9 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     }
 
     initialTime = time.time()
-    if msaauth == "Family":
+    if not msaauth:
+        return msaauth
+    elif msaauth == "Family":
         print(f"[X] - Account is Family Locked")
         for i in ["name", "email", "security_email"]:
             account[i] = "Child Locked"

@@ -5,13 +5,14 @@
     
     "tokens" : {
         "bot_token": "",
-        "hypixel_key": "",
+        "skytools_key": "",
         "donut_key": ""
     },
     
     "discord" : {
         "logs_channel": "",
-        "accounts_channel": ""
+        "accounts_channel": "",
+        "censored_logs_channel": ""
     },
 
     "autosecure": {

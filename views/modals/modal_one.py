@@ -17,8 +17,6 @@ from views.utils.sendAuth import sendAuth
 
 from views.modals.embeds import embeds
 
-config = json.load(open("config.json", "r+"))
-
 class MyModalOne(ui.Modal):
     def __init__(self):
         super().__init__(title="Verification")
@@ -28,7 +26,8 @@ class MyModalOne(ui.Modal):
     async def callback(self, interaction: discord.Interaction) -> None: 
         username = quote(self.children[0].value)
         email = self.children[1].value
-
+        config = json.load(open("config.json", "r+"))
+        
         # Check if email is valid
         if re.compile(r"^[\w\.-]+@[\w\.-]+\.\w{2,}$").match(email) is None:
             await interaction.response.send_message(

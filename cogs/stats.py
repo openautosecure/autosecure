@@ -40,7 +40,7 @@ class Stats(commands.Cog):
             description=(
                 f"💰 **Balance** • `${simplify(result['money'])}`\n"
                 f"💎 **Shards** • `{simplify(result['shards'])}`\n"
-                f"⏱️ **Playtime** • `{timedelta(milliseconds=int(float(result['playtime']))).days} days`\n"
+                f"⏱️ **Playtime** • `{timedelta(milliseconds=int(float(result['playtime']))).days if result['playtime'] else '0'} days`\n"
                 f"\n"
                 f"⚔️ **Kills** • `{simplify(result['kills'])}`\n"
                 f"💀 **Deaths** • `{simplify(result['deaths'])}`\n"
@@ -70,7 +70,7 @@ class Stats(commands.Cog):
 
         hypixel_stats = await getHypixelStats(username)
         if not hypixel_stats:
-            await ctx.followup.send("Make sure you setup your Hypixel and Skytools key first!", ephemeral=True)
+            await ctx.followup.send("Make sure you setup your Skytools key first!", ephemeral=True)
             return
         
         elif hypixel_stats == "Failed":
@@ -86,28 +86,27 @@ class Stats(commands.Cog):
         embed = discord.Embed(
             title=f"{hypixel_stats['rank']} Rank — {username.capitalize()}",
             description=(
-                f"⭐ **Hypixel Level** • `{hypixel_stats['hlevel']}`\n"
+                f"⭐ **Hypixel Level** • `{hypixel_stats['level']}`\n"
                 f"🎁 **Gifted Ranks** • `{hypixel_stats['gifted']}`\n"
                 f"🌌 **SkyBlock Level** • `{hypixel_stats['slevel']}`\n"
-                f"💰 **Networth** • `${simplify(hypixel_stats['networth'])}`\n"
+                f"💰 **Networth** • `{simplify(hypixel_stats['networth'])} Coins`\n"
                 f"\n"
                 f"✨ **Karma** • `{simplify(hypixel_stats['karma'])}`\n"
                 f"🏆 **Achievement Points** • `{simplify(hypixel_stats['achievement_points'])}`\n"
                 f"\n"
-                f"🛏️ **BW Wins** • `{simplify(hypixel_stats['bw_wins'])}`\n"
-                f"💀 **BW Deaths** • `{simplify(hypixel_stats['bw_deaths'])}`\n"
-                f"⚔️ **BW Kills** • `{simplify(hypixel_stats['bw_kills'])}`\n"
-                f"🎯 **BW Final Kills** • `{simplify(hypixel_stats['bw_final_kills'])}`\n"
+                f"🛏️ **BW Wins** • `{hypixel_stats['bw_wins']}`\n"
+                f"💀 **BW Deaths** • `{hypixel_stats['bw_deaths']}`\n"
+                f"⚔️ **BW Kills** • `{hypixel_stats['bw_kills']}`\n"
+                f"🎯 **BW Final Kills** • `{hypixel_stats['bw_final_kills']}`\n"
                 f"📊 **BW K/D** • `{bw_kd}`\n"
                 f"\n"
-                f"🌀 **SW Wins** • `{simplify(hypixel_stats['sw_wins'])}`\n"
-                f"💀 **SW Deaths** • `{simplify(hypixel_stats['sw_deaths'])}`\n"
-                f"⚔️ **SW Kills** • `{simplify(hypixel_stats['sw_kills'])}`\n"
+                f"🌀 **SW Wins** • `{hypixel_stats['sw_wins']}`\n"
+                f"💀 **SW Deaths** • `{hypixel_stats['sw_deaths']}`\n"
+                f"⚔️ **SW Kills** • `{hypixel_stats['sw_kills']}`\n"
                 f"📊 **SW K/D** • `{sw_kd}`\n"
             ),
             color=0xFFAA00
-        )
-        embed.set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/128")
+        ).set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/128")
 
         await ctx.followup.send(embed=embed, ephemeral=True)
 

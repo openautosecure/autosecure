@@ -2,22 +2,10 @@ import httpx
 import json
 
 config = json.load(open("config.json", "r+"))
-hypixel_key = config["tokens"]["hypixel_key"]
 skytools_key = config["tokens"]["skytools_key"]
 
-def getRank(player):
-    if player.get("rank") and player["rank"] != "NORMAL":
-        return player["rank"]
-    if player.get("monthlyPackageRank") == "SUPERSTAR":
-        return "MVP++"
-    if player.get("newPackageRank") and player["newPackageRank"] != "NONE":
-        return player["newPackageRank"].replace("_PLUS", "+")
-    if player.get("packageRank") and player["packageRank"] != "NONE":
-        return player["packageRank"].replace("_PLUS", "+")
-    return "Non"
-
 async def getHypixelStats(username: str) -> dict:
-    if not (hypixel_key or skytools_key):
+    if not skytools_key:
         return None
 
     result = {
@@ -47,31 +35,50 @@ async def getHypixelStats(username: str) -> dict:
 
         uuid = mojang.json()["id"]
 
-        normal_stats = await session.get(
-            f"https://api.hypixel.net/player?uuid={uuid}",
-            headers={"API-Key": hypixel_key}
+        headers = {
+            "X-API-Key": skytools_key
+        }
+
+        hypixel_stats = await session.get(
+            f"https://api.skytools.app/v1/player/{username}",
+            headers = headers
         )
+        response = hypixel_stats.json()
 
-        data = normal_stats.json()
-        player = data["player"]
-        stats = player.get("stats", {})
-        bedwars = stats.get("Bedwars", {})
-        skywars = stats.get("SkyWars", {})
+        if response["success"]:
+        
+            result["level"] = response["data"]["level"]
+            result["karma"] = response["data"]["karma"]
+            result["achievement_points"] = response["data"]["achievementPoints"]
+            result["gifted"] = response["data"]["ranksGiven"]
+            result["rank"] = response["data"]["rankFormatted"]
 
-        result["level"] = int(player.get("networkExp", 0) ** 0.5 / 10) + 1
-        result["karma"] = player.get("karma", 0)
-        result["achievement_points"] = player.get("achievementPoints", 0)
-        result["gifted"] = player.get("giftingMeta", {}).get("ranksGiven", 0)
-        result["rank"] = getRank(player)
-        result["bw_wins"] = bedwars.get("wins_bedwars", 0)
-        result["bw_losses"] = bedwars.get("losses_bedwars", 0)
-        result["bw_kills"] = bedwars.get("kills_bedwars", 0)
-        result["bw_deaths"] = bedwars.get("deaths_bedwars", 0)
-        result["bw_final_kills"] = bedwars.get("final_kills_bedwars", 0)
-        result["sw_wins"] = skywars.get("wins", 0)
-        result["sw_losses"] = skywars.get("losses", 0)
-        result["sw_kills"] = skywars.get("kills", 0)
-        result["sw_deaths"] = skywars.get("deaths", 0)
+        bedwars_stats = await session.get(
+            f"https://api.skytools.app/v1/player/{username}/bedwars",
+            headers = headers
+        )
+        response = bedwars_stats.json()
+
+        if response["success"]:
+
+            result["bw_wins"] = response["data"]["overall"]["wins"]
+            result["bw_losses"] = response["data"]["overall"]["losses"]
+            result["bw_kills"] = response["data"]["overall"]["kills"]
+            result["bw_deaths"] = response["data"]["overall"]["deaths"]
+            result["bw_final_kills"] = response["data"]["overall"]["finalKills"]
+        
+        skywars_stats = await session.get(
+            f"https://api.skytools.app/v1/player/{username}/bedwars",
+            headers = headers
+        )
+        response = skywars_stats.json()
+
+        if response["success"]:
+
+            result["sw_wins"] = response["data"]["overall"]["wins"]
+            result["sw_losses"] = response["data"]["overall"]["losses"]
+            result["sw_kills"] = response["data"]["overall"]["kills"]
+            result["sw_deaths"] = response["data"]["overall"]["deaths"]
 
         skyblock_stats = await session.get(
             f"https://api.skytools.app/v1/profile/{username}/networth",

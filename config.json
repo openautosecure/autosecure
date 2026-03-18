@@ -5,7 +5,6 @@
     
     "tokens" : {
         "bot_token": "",
-        "hypixel_key": "",
         "skytools_key": "",
         "donut_key": ""
     },

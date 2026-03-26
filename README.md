@@ -1,9 +1,9 @@
 # AutoSecure
 
-**This project has been deprecated and will no longer receive updates**
-**For help understand the code or the flow of microsofts login and endpoints feel free to contact me at: salomao31_termedv6 in discord**
+* **This project has been deprecated and will no longer receive updates.**
+* **For help understand the code or the flow of microsofts login and endpoints feel free to contact me at: salomao31_termedv6 in discord.**
 
-**I will not help you config / update / setup this project**
+**I will not help you config / update / setup this project.**
 ---
 
 ## Overview

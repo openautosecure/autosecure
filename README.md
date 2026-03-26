@@ -1,10 +1,5 @@
 # AutoSecure
 
-**Contact:** `maka677` / `salomao31_termedv4`
-**Discord:** https://discord.gg/ucf3UWzwCh
-
-**If you want to help/contribute to this project make a pull request or talk with me on discord.**
-
 ---
 
 ## Overview
@@ -18,7 +13,7 @@
   
 ## Features
 
-* [X] - Change primary alias
+* [ ] - Change primary alias
 * [X] - Get Owners Info (Name, Country...)
 * [X] - Removes all security proofs (emails)
 * [X] - Signs out of all devices

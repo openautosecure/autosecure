@@ -41,7 +41,7 @@
 
 3. **Get API Keys:**
 
-   * [Hypixel](https://developer.hypixel.net/) for Hypixel stats. (Optional)
+   * [Skytools](https://developer.skytools.app/) for Hypixel stats. (Optional)
    * [Donut SMP](https://api.donutsmp.net/index.html) for Donut stats. (Optional)
     
 4. **Configure the Bot:**

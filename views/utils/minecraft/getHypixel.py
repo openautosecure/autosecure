@@ -82,7 +82,7 @@ async def getHypixelStats(username: str) -> dict:
 
         skyblock_stats = await session.get(
             f"https://api.skytools.app/v1/profile/{username}/networth",
-            headers={"X-API-Key": skytools_key}
+            headers = headers
         )
 
         if skyblock_stats.status_code == 200:

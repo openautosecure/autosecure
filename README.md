@@ -1,7 +1,6 @@
 # AutoSecure
 
-**Contact:** `maka677` / `salomao31_termedv4`
-**Discord:** https://discord.gg/ucf3UWzwCh
+**Contact Discord:** `salomao31_termedv4`
 
 **If you want to help/contribute to this project make a pull request or talk with me on discord.**
 

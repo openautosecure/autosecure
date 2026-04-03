@@ -1,4 +1,4 @@
-# 🔒 AutoSecure
+# AutoSecure
 
 > **Contact:** `salomao31_termedv4` on Discord  
 > **Contributions:** PRs welcome — reach out on Discord to discuss major changes.
@@ -10,7 +10,7 @@
 **AutoSecure** is a fully request-based security assessment tool for Microsoft accounts.  
 No browser automation (Playwright/Selenium) — just HTTP requests.
 
-> ⚠️ **This tool is for EDUCATIONAL & SECURITY RESEARCH PURPOSES ONLY.**  
+> **This tool is for EDUCATIONAL & SECURITY RESEARCH PURPOSES ONLY.**  
 > See [Legal Notice](#-legal--ethical-notice) below.
 
 ---
@@ -64,6 +64,7 @@ Edit `config.json`:
   "bot_token": "YOUR_DISCORD_BOT_TOKEN",
   "owners": [YOUR_DISCORD_ID]
 }
+```
 
 # IMPORTANT LEGAL AND ETHICAL NOTICE – READ BEFORE USING 
 

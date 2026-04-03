@@ -1,8 +1,5 @@
 # AutoSecure
 
-## ⚠️ Deprecated
-**This will no longer receive updates.**
-
 ## 📩 Contact
 For help understanding the code or the flow of Microsoft's login and endpoints, feel free to contact:
 

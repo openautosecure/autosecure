@@ -2,7 +2,7 @@ from views.utils.securing.generateEmail import generateEmail
 from views.utils.securing.getEmailCode import getEmailCode
 from views.utils.securing.recovery import recover
 
-from views.utils.startSecure import startSecuringAccount
+from views.utils.startSecure import secure
 from views.utils.initialSession import getSession
 from views.utils.sendAuth import sendAuth
 

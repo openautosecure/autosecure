@@ -1,12 +1,9 @@
 # AutoSecure
 
-## 📩 Contact
-For help understanding the code or the flow of Microsoft's login and endpoints, feel free to contact:
+**Contact:** `maka677` / `salomao31_termedv4`
+**Discord:** https://discord.gg/ucf3UWzwCh
 
-- Discord: **salomao31_termedv6**
-
-## 🚫 Support Policy
-**I will not help you config / update / setup this project.**
+**If you want to help/contribute to this project make a pull request or talk with me on discord.**
 
 ---
 
@@ -21,7 +18,7 @@ For help understanding the code or the flow of Microsoft's login and endpoints, 
   
 ## Features
 
-* [ ] - Change primary alias
+* [X] - Change primary alias
 * [X] - Get Owners Info (Name, Country...)
 * [X] - Removes all security proofs (emails)
 * [X] - Signs out of all devices
@@ -49,7 +46,7 @@ For help understanding the code or the flow of Microsoft's login and endpoints, 
 
 3. **Get API Keys:**
 
-   * [Skytools](https://developer.skytools.app/) for Hypixel stats. (Optional)
+   * [Hypixel](https://developer.hypixel.net/) for Hypixel stats. (Optional)
    * [Donut SMP](https://api.donutsmp.net/index.html) for Donut stats. (Optional)
     
 4. **Configure the Bot:**

@@ -1,5 +1,4 @@
 py-cord
-pycord
 httpx
 jishaku
 millify

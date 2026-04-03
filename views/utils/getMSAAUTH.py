@@ -43,7 +43,6 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, oda
             "login": email,
             "loginfmt": email,
             "SentProofIDE": flowToken,
-            "otc": code,
             "PPFT": odata["ppft"]
         }
 
@@ -51,8 +50,11 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, oda
 
             match i:
                 case 0:
+                    payload["otc"] = code
                     payload["type"] = "27"
                 case 1:
+                    payload.pop("otc")
+                    payload["npotc"] = code
                     payload["type"] = "24"
 
             loginData = await session.post(
@@ -71,11 +73,12 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, oda
                 data = payload
             )
 
-            print(f"Attemp Number {i} \n Response: {loginData.text}")
+            print(f"Attemp Number {i} \n Response: {loginData.text} \nHeaders: {loginData.headers}")
             urlPost = re.search(r'"urlPost"\s*:\s*"([^\"]+)"', loginData.text)
-            if urlPost:
+            if '__Host-MSAAUTH' in session.cookies:
                 break
-
+    
+    # None of the requests got MSAAUTH
     if '__Host-MSAAUTH' in session.cookies:
         print(f"MSAAUTH: {dict(session.cookies)['__Host-MSAAUTH']}")
         

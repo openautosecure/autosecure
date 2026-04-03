@@ -2,6 +2,7 @@ from urllib.parse import unquote
 import urllib.parse
 import httpx
 import re
+
 async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicanary: str) -> bool:
 
     # Fixed unc

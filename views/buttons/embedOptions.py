@@ -1,3 +1,4 @@
+from database.database import DBConnection
 from discord import ui
 import discord
 
@@ -36,6 +37,22 @@ class ButtonOptions(ui.View):
             await interaction.guild.unban(user = self.user)
         finally:
             await interaction.response.send_message(f"<@{self.user.id}> has been sucessfully unbanned!")
+
+    @discord.ui.button(label="Blacklist", style=discord.ButtonStyle.red, custom_id="persistent:button_blacklist")
+    async def blacklistUser(self, button: discord.ui.Button, interaction: discord.Interaction):
+        with DBConnection() as database:
+            database.addBlacklistedUser(self.user.id)
+            database.conn.commit()
+
+        await interaction.response.send_message(f"Successfully blacklisted {self.user.mention}!", ephemeral=True)
+
+    @discord.ui.button(label="Unblacklist", style=discord.ButtonStyle.primary, custom_id="persistent:button_unblacklist")
+    async def unblacklistUser(self, button: discord.ui.Button, interaction: discord.Interaction):
+        with DBConnection() as database:
+            database.removeBlacklistedUser(self.user.id)
+            database.conn.commit()
+
+        await interaction.response.send_message(f"Successfully unblacklisted {self.user.mention}!", ephemeral=True)
 
     @discord.ui.button(label="💬 DM", style=discord.ButtonStyle.grey, custom_id="persistent:button_dm")
     async def dmButton(self, button: discord.ui.Button, interaction: discord.Interaction):

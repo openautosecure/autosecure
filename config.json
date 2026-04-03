@@ -2,21 +2,16 @@
     "owners": [
 
     ],
-    
-    "tokens" : {
+    "tokens": {
         "bot_token": "",
         "skytools_key": "",
         "donut_key": ""
     },
-    
-    "discord" : {
+    "discord": {
         "logs_channel": "",
-        "accounts_channel": "",
-        "censored_logs_channel": ""
+        "accounts_channel": ""
     },
-
     "autosecure": {
-        "replace_main_alias": true,
-        "enable_2fa": false
+        "replace_main_alias": true
     }
 }

@@ -63,14 +63,19 @@ class DiscordBot(commands.Bot):
 
 
         with DBConnection() as database:
-            database.cursor.execute("""
+            database.cursor.executescript("""
                 CREATE TABLE IF NOT EXISTS `security_emails` (
                     email TEXT,
                     password TEXT
-                )
+                );
+                                          
+                CREATE TABLE IF NOT EXISTS `blacklisted_users` (
+                    id INTEGER
+                );
             """)
             database.conn.commit()
 
+asyncio.set_event_loop(asyncio.new_event_loop())
 bot = DiscordBot()
 
 async def main():

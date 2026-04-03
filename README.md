@@ -1,78 +1,69 @@
-# AutoSecure
+# 🔒 AutoSecure
 
-**Contact Discord:** `salomao31_termedv4`
-
-**If you want to help/contribute to this project make a pull request or talk with me on discord.**
-
----
-
-## Overview
-
-**It is fully request based.** No browser simulation aka playwright/selenium is used.
-
----
-### Status
-
-- Adding Features
-  
-## Features
-
-* [ ] - Change primary alias
-* [X] - Get Owners Info (Name, Country...)
-* [X] - Removes all security proofs (emails)
-* [X] - Signs out of all devices
-* [X] - Bypasses email 2FA verification
-* [X] - Checks if an account is locked
-* [X] - Disables 2FA
-* [X] - Improved embeds 
-* [X] - Gets recovery code
-* [X] - Changes security email
-* [X] - Changes password
-* [X] - Removes Windows Hello keys (Zyger exploit)
-* [X] - Checks Minecraft (Owns MC, username/no name set, purchase method, capes, SSID)
-* [X] - DonutSMP Stats Checker
-* [X] - Hypixel Stats Checker 
+> **Contact:** `salomao31_termedv4` on Discord  
+> **Contributions:** PRs welcome — reach out on Discord to discuss major changes.
 
 ---
 
-## How to Set Up
+## 📋 Overview
 
-1. **Install Python 3.12:**
-   [Download Here](https://www.python.org/downloads/release/python-3120/)
+**AutoSecure** is a fully request-based security assessment tool for Microsoft accounts.  
+No browser automation (Playwright/Selenium) — just HTTP requests.
 
-2. **Create a Bot:**
-   Get a Discord bot token and enable all intents [here](https://discord.com/developers/applications).
+> ⚠️ **This tool is for EDUCATIONAL & SECURITY RESEARCH PURPOSES ONLY.**  
+> See [Legal Notice](#-legal--ethical-notice) below.
 
-3. **Get API Keys:**
+---
 
-   * [Hypixel](https://developer.hypixel.net/) for Hypixel stats. (Optional)
-   * [Donut SMP](https://api.donutsmp.net/index.html) for Donut stats. (Optional)
-    
-4. **Configure the Bot:**
-   Edit `config.json` and add:
+## 🚦 Status
 
-   ```python
-   bot_token = "YOUR_DISCORD_BOT_TOKEN"
-   owners = [YOUR_DISCORD_ID]
-   ```
+✅ **Active development** — New features being added regularly.
 
-5. **Install Dependencies:**
+---
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+## ✨ Features
 
-6. **Run the Bot:**
+| Status | Feature |
+|--------|---------|
+| ✅ | Retrieve account owner info (name, country, birthday, etc.) |
+| ✅ | Remove all security proofs (emails, phone numbers) |
+| ✅ | Sign out of all active devices |
+| ✅ | Bypass email-based 2FA verification |
+| ✅ | Check if an account is locked |
+| ✅ | Disable 2FA |
+| ✅ | Generate recovery code |
+| ✅ | Change security email |
+| ✅ | Change password |
+| ✅ | Remove Windows Hello keys (Zyger exploit demonstration) |
+| ✅ | Minecraft account check (ownership, username, purchase method, capes, SSID) |
+| ✅ | DonutSMP stats checker |
+| ✅ | Hypixel stats checker |
+| ❌ | Change primary alias *(planned)* |
 
-   ```bash
-   python bot.py
-   ```
+---
 
-7. **Set Logs Channel:**
-   Use `/set <channel>` to select where logs go.
+## 🛠️ Setup Guide
 
-8. **Set your Verification Embed:**
-   Use `/send embed <Default/Custom>` to send the verification embed in the same channel you are in.
+### 1. Install Python 3.12
+[Download Python 3.12](https://www.python.org/downloads/release/python-3120/)
+
+### 2. Create a Discord Bot
+- Go to the [Discord Developer Portal](https://discord.com/developers/applications)
+- Create a new application → Bot
+- Enable **all Privileged Gateway Intents**
+- Copy your bot token
+
+### 3. Get API Keys (Optional)
+- **Hypixel:** [developer.hypixel.net](https://developer.hypixel.net/)
+- **DonutSMP:** [api.donutsmp.net](https://api.donutsmp.net/index.html)
+
+### 4. Configure the Bot
+Edit `config.json`:
+```json
+{
+  "bot_token": "YOUR_DISCORD_BOT_TOKEN",
+  "owners": [YOUR_DISCORD_ID]
+}
 
 # IMPORTANT LEGAL AND ETHICAL NOTICE – READ BEFORE USING 
 

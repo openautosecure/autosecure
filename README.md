@@ -15,13 +15,13 @@ No browser automation (Playwright/Selenium) — just HTTP requests.
 
 ---
 
-## 🚦 Status
+## Status
 
-✅ **Active development** — New features being added regularly.
+**Active development** — New features being added regularly.
 
 ---
 
-## ✨ Features
+## Features
 
 | Status | Feature |
 |--------|---------|

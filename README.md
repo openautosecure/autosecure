@@ -42,7 +42,7 @@ No browser automation (Playwright/Selenium) — just HTTP requests.
 
 ---
 
-## 🛠️ Setup Guide
+## Setup Guide
 
 ### 1. Install Python 3.12
 [Download Python 3.12](https://www.python.org/downloads/release/python-3120/)

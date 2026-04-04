@@ -1,5 +1,5 @@
-import discord
 from discord import ui
+import discord
 
 class dmEmbed(ui.Modal):
     def __init__(self, user):

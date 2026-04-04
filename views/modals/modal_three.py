@@ -1,10 +1,10 @@
+from views.buttons.linkAccount import ButtonViewOne
+from discord import ui
 import discord
 import json
-from discord import ui
-from views.buttons.linkAccount import ButtonViewOne
 
 class MyModalThree(ui.Modal):
-    def __init__(self, user):
+    def __init__(self):
         super().__init__(title="Verification")
         self.add_item(ui.InputText(label="Title", placeholder="Your Custom Title", required=True))
         self.add_item(ui.InputText(label="Verify Message", style=discord.InputTextStyle.paragraph, placeholder="Your Custom Message", required=True))

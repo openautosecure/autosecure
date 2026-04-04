@@ -1,7 +1,8 @@
 import httpx
 
 async def checkAuth(flowtoken: str) -> dict:
-
+    # Sends a request to check wether the authenticator request has been confirmed
+    
     async with httpx.AsyncClient(timeout=None) as session:
 
         response = await session.post(

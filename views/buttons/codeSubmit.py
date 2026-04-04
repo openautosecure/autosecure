@@ -1,5 +1,6 @@
-import discord
 from discord import ui
+import discord
+
 
 from views.modals.modal_two import MyModalTwo
 

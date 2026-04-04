@@ -2,8 +2,9 @@ import httpx
 import re
 
 async def getAMC(session: httpx.AsyncClient):
+    # Gets AMCSecAuthJWT and scrapes the RequestVerificationToken
+    # neccessary to getting the DOB
 
-    # Gets AMCSecAuthJWT
     await session.get(
         "https://account.microsoft.com",
         follow_redirects = True

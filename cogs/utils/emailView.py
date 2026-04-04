@@ -1,5 +1,6 @@
-import discord
 from discord import ui
+import discord
+
 
 class emailView(ui.View):
     def __init__(self, emails: list, index: int = 0):

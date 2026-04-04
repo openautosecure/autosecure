@@ -3,6 +3,7 @@ import httpx
 import re
 
 async def removeServices(session: httpx.AsyncClient):
+    # Removes third party services like minecraft launchers
     
     uatRequest = await session.get(
         url = "https://account.live.com/consent/Manage?guat=1",

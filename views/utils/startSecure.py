@@ -11,6 +11,8 @@ import httpx
 import time
 
 async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: str = None, code: str = None, recovery: bool = True):
+    # Handles the data to be displayed in embeds to discord
+    
     data = await getLiveData(session)
     msaauth = await getMSAAUTH(session, email, device, data, code)
     

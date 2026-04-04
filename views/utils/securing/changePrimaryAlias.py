@@ -4,8 +4,8 @@ import httpx
 import re
 
 async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicanary: str) -> bool:
-
-    # Fixed unc
+    # Changes the primary alias of the account (currently broken)
+    
     try:
         getCanary = await session.get(
             url = "https://account.live.com/AddAssocId",

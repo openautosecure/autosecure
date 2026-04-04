@@ -36,14 +36,6 @@ class accountInfo(ui.View):
             ephemeral = True
         )
 
-    # @discord.ui.button(label="✉️ Inbox", style=discord.ButtonStyle.grey, custom_id="persistent:button_inbox")
-    # async def showInbox(self, button: discord.ui.Button, interaction: discord.Interaction):
-    #     await interaction.response.send_message(
-    #         embed = self.inbox["embed"],
-    #         view = self.inbox["view"],
-    #         ephemeral = True
-    #     )
-
     
 
         

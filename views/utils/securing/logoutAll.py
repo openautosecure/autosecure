@@ -1,6 +1,7 @@
 import httpx
 
 async def logoutAll(session: httpx.AsyncClient, apicanary: str):
+    # Logout of all devices
     
     try:
         remove = await session.post(

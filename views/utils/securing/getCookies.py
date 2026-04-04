@@ -2,9 +2,9 @@ from views.utils.parsers.decode import decode
 import httpx
 import re
 
-# Gets AMSC too
 async def getCookies(session: httpx.AsyncClient):
-        
+    # Gets the cookies and data neccessary for reseting the account
+
     data = await session.get(
         url = "https://account.live.com/password/reset",
         headers = {
@@ -19,6 +19,5 @@ async def getCookies(session: httpx.AsyncClient):
             data.text
         ).group(1)
     )
-    amsc = data.cookies["amsc"]
         
     return apicanary

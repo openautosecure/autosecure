@@ -3,6 +3,7 @@ import httpx
 import re
 
 async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dict:
+    # Handles Microsofts accept notice and family accounts
 
     actionURL = re.search(r'action="([^"]+)"', page_response).group(1)
     if "family" in actionURL:
@@ -13,10 +14,6 @@ async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dic
         page_response,
         re.DOTALL
     ).groups()
-
-    print(f"Action: {actionURL}")
-    print(f"CID: {cid}")
-    print(f"Code: {actioncode}")
     
     acceptNotice = await session.post(
         url = actionURL,
@@ -25,15 +22,8 @@ async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dic
             "code": actioncode
         }
     )
-
-    print(f"Accept Notice Headers: {acceptNotice.headers}")
-    print(f"Accept Notice HTML: {acceptNotice.text}")
-
     postURL = re.search(r"var redirectUrl = '([^']+)';", acceptNotice.text).group(1).replace(r"\\u0026", "&")
-
     response = await session.post(postURL)
-    print(f"Response Headers: {response.headers}")
-    print(f"Response HTML: {response.text}")
 
     urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response.text).group(1)
     ppft = quote(re.search(r'"sFT"\s*:\s*"([^"]+)"', response.text).group(1), safe='-*')

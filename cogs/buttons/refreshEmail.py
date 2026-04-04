@@ -1,5 +1,5 @@
-import discord
 from discord import ui
+import discord
 
 from cogs.utils.fetchInbox import fetchInbox
 

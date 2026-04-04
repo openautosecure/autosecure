@@ -3,7 +3,8 @@ import codecs
 import re
 
 async def removeProof(session: httpx.AsyncClient, apicanary: str):
-
+    # Removes the security emails / Auth apps
+    
     proofs = await session.get(
         "https://account.live.com/proofs/manage/additional?mkt=en-US&refd=account.microsoft.com&refp=security",
         headers = {

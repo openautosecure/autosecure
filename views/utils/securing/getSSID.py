@@ -1,7 +1,8 @@
 import httpx
 
 async def getSSID(xbl: str):
-    
+    # Gets the minecraft session ID / token
+
     async with httpx.AsyncClient(timeout=None) as session:
 
         response = await session.post(

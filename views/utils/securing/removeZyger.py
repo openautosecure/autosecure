@@ -1,7 +1,8 @@
 import httpx
 
 async def removeZyger(session: httpx.AsyncClient, apicanary: str):
-
+    # Removes loggin through pass keys aka Zyger
+    
     remove = await session.post(
         url = "https://account.live.com/API/Proofs/RevokeWindowsHelloProofs",
         headers = {

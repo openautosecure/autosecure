@@ -2,6 +2,7 @@ import httpx
 import re
 
 async def getLiveData(session: httpx.AsyncClient) -> dict:
+    # Neccessary for the login request with neccessary cookies
 
     response = await session.post("https://login.live.com")
 

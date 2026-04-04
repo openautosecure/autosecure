@@ -3,7 +3,8 @@ import asyncio
 import re
 
 async def getEmailCode(token: str) -> str:
-
+    # Scrapes the mail code from mail.tms API
+    
     async with httpx.AsyncClient(timeout=None) as session:
         
         while True:

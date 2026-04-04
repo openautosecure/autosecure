@@ -3,11 +3,9 @@ from urllib.parse import quote
 import httpx
 import re
 
-# Gets __Host-MSAAUTH
-async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, odata: dict, code: str) -> dict | None:
 
-    print(f"Data: {odata}")
-    print(f"Code: {code}") 
+async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, odata: dict, code: str) -> dict | None:
+    # First post request that gets __Host-MSAAUTH
     
     if not code:
         

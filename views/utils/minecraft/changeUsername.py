@@ -1,5 +1,4 @@
 import httpx
-import hypixel
 
 async def changeUsername(ssid: str, current_username: str) -> None:
 

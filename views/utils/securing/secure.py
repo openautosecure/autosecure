@@ -30,7 +30,8 @@ ralias = json.load(open("config.json", "r+"))["autosecure"]["replace_main_alias"
 database = DBConnection()
 
 async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
-
+    # Main file where all processes to securing the account occur
+    
     apicanary = await getCookies(session) 
     
     T = await getT(session)

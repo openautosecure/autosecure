@@ -1,7 +1,8 @@
 import httpx
 
 async def generateEmail(email: str, password: str) -> list:
-
+    # Generates an email through mail.tms API
+    
     async with httpx.AsyncClient(timeout=None) as session:
         
         getDomain = await session.get(

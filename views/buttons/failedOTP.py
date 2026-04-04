@@ -1,5 +1,6 @@
-import discord
 from discord import ui
+import discord
+
 
 class ButtonViewThree(ui.View):
     def __init__(self):

@@ -6,6 +6,7 @@ import json
 import re
 
 async def recover(session: httpx.AsyncClient, email: str, recovery_code: str, new_email: str, new_password: str, email_token: str):
+    # Automates the recovery process through recovery code 
     
     data = await session.get(url=f"https://account.live.com/ResetPassword.aspx?wreply=https://login.live.com/oauth20_authorize.srf&mn={email}")
 

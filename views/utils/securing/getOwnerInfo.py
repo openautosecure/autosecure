@@ -1,7 +1,8 @@
 import httpx
 
 async def getOwnerInfo(session: httpx.AsyncClient, verificationToken: str):
-
+    # Gets the owner info aka DOB
+    
     try:
 
         getInfo = await session.get(

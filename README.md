@@ -1,6 +1,6 @@
 # AutoSecure
 
-> **Contact:** `salomao31_termedv4` on Discord  
+> **Contact:** `salomao31_termedv6` on Discord  
 > **Contributions:** PRs welcome — reach out on Discord to discuss major changes.
 
 ---

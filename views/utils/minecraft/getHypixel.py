@@ -68,7 +68,7 @@ async def getHypixelStats(username: str) -> dict:
             result["bw_final_kills"] = response["data"]["overall"]["finalKills"]
         
         skywars_stats = await session.get(
-            f"https://api.skytools.app/v1/player/{username}/bedwars",
+            f"https://api.skytools.app/v1/player/{username}/skywars",
             headers = headers
         )
         response = skywars_stats.json()

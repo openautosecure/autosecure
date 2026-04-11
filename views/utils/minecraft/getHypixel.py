@@ -24,7 +24,7 @@ async def getHypixelStats(username: str) -> dict:
         "slevel": 0,
         "networth": 0,
         "gifted": 0,
-        "rank": "Non"
+        "rank": "Disabled"
     }
     
     async with httpx.AsyncClient(timeout=None) as session:
@@ -97,5 +97,5 @@ async def getHypixelStats(username: str) -> dict:
                     if member:
                         result["slevel"] = member.get("leveling", {}).get("experience", 0)
 
-        print(result)
-        return result
+    print(result)
+    return result

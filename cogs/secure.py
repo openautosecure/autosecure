@@ -1,5 +1,4 @@
 from cogs.modals.rcvModal import recoveryModal
-from cogs.modals.msModal import msModal
 
 from discord.ext import commands
 import discord

@@ -12,7 +12,6 @@ async def recover(session: httpx.AsyncClient, email: str, recovery_code: str, ne
 
     serverData = json.loads(re.search(r"var\s+ServerData=(.*?)(?=;|$)", data.text).group(1))
     decoded_token = codecs.decode(unquote(serverData["sRecoveryToken"]), "unicode_escape")
-    postUrl = re.search(r'"urlPostSltToLogin":"([^"]+)"', data.text).group(1) 
 
     recToken = await session.post(
         url = "https://account.live.com/API/Recovery/VerifyRecoveryCode",
@@ -113,10 +112,7 @@ async def recover(session: httpx.AsyncClient, email: str, recovery_code: str, ne
             
             if "recoveryCode" in finishJson:
                 return {
-                    "urlPost": postUrl,
                     "recovery_code": finishJson["recoveryCode"]
                 }
-    else:
-        return "invalid"
 
     return None

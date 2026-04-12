@@ -2,6 +2,7 @@ from discord import ui
 import discord
 
 from cogs.utils.fetchInbox import fetchInbox
+from cogs.utils.emailView import emailView
 
 class ButtonRefresh(ui.View):
     def __init__(self, token: str, email: str, password: str, embed: discord.Interaction):
@@ -15,6 +16,7 @@ class ButtonRefresh(ui.View):
     async def button_one(self, button: discord.ui.Button, interaction: discord.Interaction):
         await interaction.response.defer()
 
-        getEmails = await fetchInbox(self.token, self.email, self.pwd)
+        emails = await fetchInbox(self.token)
+        view = emailView(emails)
 
-        await interaction.message.edit(embed=getEmails['embed'], view=getEmails['view'])
+        await interaction.message.edit(embed=view.getEmbed(), view=view)

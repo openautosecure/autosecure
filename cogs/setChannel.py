@@ -22,11 +22,11 @@ class setChannel(commands.Cog):
         
         match choice.lower():
             case "logs":
-                newConfig["discord"]["logs_channel"] = int(ctx.channel_id)
+                newConfig["discord"]["logs_channel"] = ctx.channel_id
             case "logs (censored)":
-                newConfig["discord"]["censored_logs_channel"] = int(ctx.channel_id)
+                newConfig["discord"]["censored_logs_channel"] = ctx.channel_id
             case "hits":
-                newConfig["discord"]["accounts_channel"] = int(ctx.channel_id)
+                newConfig["discord"]["accounts_channel"] = ctx.channel_id
         
         with open("config.json", "w") as config:
             json.dump(newConfig, config, indent=4)

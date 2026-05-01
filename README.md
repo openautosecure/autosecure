@@ -59,7 +59,7 @@ pip install -r requirements.txt
 - Copy your bot token
 
 ### 4. Get API Keys (Optional)
-- **Hypixel:** [developer.hypixel.net](https://developer.hypixel.net/)
+- **Skytools:** [developer.skytools.app](https://developer.skytools.app/)
 - **DonutSMP:** [api.donutsmp.net](https://api.donutsmp.net/index.html)
 
 ### 5. Configure the Bot

@@ -72,7 +72,7 @@ Edit `config.json`:
 ```json
 {
     "owners": [
-      "<YOUR_DISCORD_ID>"
+      <YOUR_DISCORD_ID>
     ],
     "tokens": {
         "bot_token": "<YOUR_BOT_TOKEN>",

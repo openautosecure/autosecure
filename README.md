@@ -1,7 +1,6 @@
 # AutoSecure
 
-> **New Discord Server:** https://discord.gg/HAtMcWJrBU.
-> **Contact:** `salomao31_termedv6` on Discord.
+> **Contact:** `salomao31_termedv6` and `https://discord.gg/HAtMcWJrBU` on Discord.
 > **Contributions:** PRs welcome — reach out on Discord to discuss major changes.
 
 ---

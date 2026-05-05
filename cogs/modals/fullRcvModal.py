@@ -31,7 +31,7 @@ class recoveryModal(ui.Modal):
             await interaction.followup.send(
                 embed = discord.Embed(
                     title = "Failed to secure account",
-                    description = "Cannot secure with 2FA enabled",
+                    description = "Make sure your recovery code is correct and that 2FA is disabled",
                     color = 0x2765F5
                 ),
                 ephemeral = True

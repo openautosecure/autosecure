@@ -1,10 +1,10 @@
 # AutoSecure
 
-> **Contact:** `salomao31_termedv6` or `https://discord.gg/Fn4z2ryvUe` on Discord  
+> **Contact:** `salomao31_termedv6` or `https://discord.gg/HAtMcWJrBU` on Discord  
 > **Contributions:** PRs welcome — reach out on Discord to discuss major changes.
 
 ---
-
+https://discord.gg/HAtMcWJrBU
 ## 📋 Overview
 
 **AutoSecure** is a fully request-based security assessment tool for Microsoft accounts.  

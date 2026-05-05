@@ -108,7 +108,7 @@ python main.py
 - API keys are optional but required for Hypixel/DonutSMP related commands
 - Make sure your bot token is kept private and never shared
 
-# IMPORTANT LEGAL AND ETHICAL NOTICE – READ BEFORE USING 
+## IMPORTANT LEGAL AND ETHICAL NOTICE – READ BEFORE USING 
 
 **This tool is provided STRICTLY for EDUCATIONAL, RESEARCH, and SECURITY TESTING PURPOSES ONLY.**
 

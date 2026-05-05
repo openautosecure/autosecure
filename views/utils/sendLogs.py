@@ -3,16 +3,17 @@ from discord import Embed
 def censorMail(email: str) -> str:
     try:
         user, domain = email.rsplit("@", 1)
-        cu = user[0] + "*" * max(len(user) - 2, 1) + (user[-1] if len(user) > 1 else "")
+
+        def mask(s: str) -> str:
+            if len(s) <= 1:
+                return "*"
+            if len(s) == 2:
+                return s[0] + "*"
+            return s[0] + "*" * (len(s) - 2) + s[-1]
+
         parts = domain.split(".")
-        cd = (
-            parts[0][0]
-            + "*" * max(len(parts[0]) - 2, 1)
-            + (parts[0][-1] if len(parts[0]) > 1 else "")
-            + "."
-            + ".".join(parts[1:])
-        )
-        return f"{cu}@{cd}"
+        cd = mask(parts[0]) + "." + ".".join(parts[1:])
+        return f"{mask(user)}@{cd}"
     except Exception:
         return "***@***"
 

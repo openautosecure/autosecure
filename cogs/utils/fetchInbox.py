@@ -1,7 +1,4 @@
-from datetime import datetime
-from discord import Embed
 import httpx
-import re
 
 async def fetchInbox(token: str) -> list | None:
 

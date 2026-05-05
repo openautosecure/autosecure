@@ -70,7 +70,7 @@ class DiscordBot(commands.Bot):
                 );
                                           
                 CREATE TABLE IF NOT EXISTS `blacklisted_users` (
-                    id INTEGER
+                    id INTEGER UNIQUE
                 );
             """)
             database.conn.commit()

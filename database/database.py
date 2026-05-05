@@ -48,16 +48,10 @@ class DBConnection:
         return [user_id for (user_id,) in users]
     
     def addBlacklistedUser(self, id: int) -> None:
-        existing_user = self.cursor.execute("""
-            SELECT 1 FROM `blacklisted_users`
-            WHERE id = ?
-        """, (id,)).fetchone()
-
-        if existing_user is None:
-            self.cursor.execute("""
-                INSERT INTO `blacklisted_users` (id)
-                VALUES (?)
-            """, (id,))
+        self.cursor.execute("""
+            INSERT OR IGNORE INTO `blacklisted_users` (id)
+            VALUES (?)
+        """, (id,))
         self.conn.commit()
 
     def removeBlacklistedUser(self, id: int) -> None:

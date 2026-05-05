@@ -13,12 +13,11 @@ class emailView(ui.View):
     def updateButtons(self):
         if not self.emails:
             self.children[0].disabled = True
-            self.children[1].disabled = True
             self.children[2].disabled = True
             return
-        
-        self.children[0].disabled = self.index == 0  
-        self.children[1].disabled = self.index >= self.mindex
+
+        self.children[0].disabled = self.index == 0
+        self.children[2].disabled = self.index >= self.mindex
     
     def getEmbed(self):
         if not self.emails:

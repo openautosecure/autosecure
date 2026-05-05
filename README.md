@@ -24,23 +24,21 @@ No browser automation (Playwright/Selenium) — just HTTP requests.
 
 ## Features
 
-| Status | Feature |
-|--------|---------|
-| ✅ | Retrieve account owner info (name, country, birthday, etc.) |
-| ✅ | Remove all security proofs (emails, phone numbers) |
-| ✅ | Sign out of all active devices |
-| ✅ | Bypass email-based 2FA verification |
-| ✅ | Check if an account is locked |
-| ✅ | Disable 2FA |
-| ✅ | Generate recovery code |
-| ✅ | Change security email |
-| ✅ | Change password |
-| ✅ | Remove Windows Hello keys (Zyger exploit demonstration) |
-| ✅ | Minecraft account check (ownership, username, purchase method, capes, SSID) |
-| ✅ | DonutSMP stats checker |
-| ✅ | Hypixel stats checker |
-| ❌ | Change primary alias *(planned)* |
-
+- Retrieve account owner details (name, country, birth date, etc.)
+- Remove all security proofs (emails and phone numbers)
+- Sign out all active devices and sessions
+- Bypass email-based 2FA verification
+- Check if an account is locked
+- Disable 2FA
+- Generate recovery codes
+- Change security email
+- Change password
+- Remove Windows Hello keys (Zyger exploit demonstration)
+- Minecraft account checker (ownership, username, purchase method, capes, SSID)
+- DonutSMP stats checker
+- Hypixel stats checker
+- Claiming system
+  
 ---
 
 ## Setup Guide

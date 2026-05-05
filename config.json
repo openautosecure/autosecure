@@ -14,5 +14,9 @@
     },
     "autosecure": {
         "replace_main_alias": true
+    },
+    "claims": {
+        "claims_enabled": false,
+        "claim_users": []
     }
 }

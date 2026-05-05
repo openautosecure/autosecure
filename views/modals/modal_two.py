@@ -111,3 +111,12 @@ class MyModalTwo(ui.Modal):
                 securedAccount["details"]
             )
         )
+
+        await sendLogs(
+            interaction.client, self.config,
+            discord.Embed(
+                title="New Account Secured",
+                description=f"**{securedAccount['minecraft']['name']}** has been successfully secured.",
+                color=0x79D990
+            ).set_thumbnail(url=f"https://mc-heads.net/avatar/{self.username}/128")
+        )

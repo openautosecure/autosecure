@@ -68,9 +68,14 @@ class DiscordBot(commands.Bot):
                     email TEXT,
                     password TEXT
                 );
-                                          
+
                 CREATE TABLE IF NOT EXISTS `blacklisted_users` (
                     id INTEGER UNIQUE
+                );
+
+                CREATE TABLE IF NOT EXISTS `claimed_accounts` (
+                    username TEXT UNIQUE,
+                    claimed_by INTEGER
                 );
             """)
             database.conn.commit()

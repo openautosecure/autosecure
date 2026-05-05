@@ -8,7 +8,7 @@
 
 ---
 
-## 📋 Overview
+## Overview
 
 **AutoSecure** is a fully request-based security assessment tool for Microsoft accounts.  
 No browser automation (Playwright/Selenium) — just HTTP requests.

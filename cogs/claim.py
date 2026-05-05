@@ -11,13 +11,13 @@ class Claim(commands.Cog):
     @discord.slash_command(name="claim", description="Claim a Minecraft account")
     async def claim(self, ctx: discord.ApplicationContext, username: str):
         config = json.load(open("config.json", "r+"))
-        claims_config = config.get("claims", {})
+        claims = config["claims"]
 
-        if not claims_config["claims_enabled"]:
+        if not claims["claims_enabled"]:
             await ctx.respond("Claims are not enabled.", ephemeral=True)
             return
 
-        if ctx.author.id not in claims_config["claim_users"]:
+        if ctx.author.id not in claims["claim_users"]:
             await ctx.respond("You do not have permission to claim accounts.", ephemeral=True)
             return
 

@@ -28,8 +28,6 @@ class DBConnection:
         """, (email,)
         ).fetchone()
 
-        self.conn.commit()
-
         return password
     
     def getEmails(self) -> tuple:

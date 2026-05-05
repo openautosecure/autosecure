@@ -8,7 +8,7 @@ import json
 import re
 
 from views.buttons.codeSubmit import ButtonViewTwo
-from views.buttons.failedOTP import ButtonViewThree
+from views.buttons.button_three import ButtonViewThree
 from views.buttons.embedOptions import ButtonOptions
 from views.buttons.accountInfo import accountInfo
 

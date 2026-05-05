@@ -6,7 +6,7 @@ async def changeUsername(ssid: str, current_username: str) -> None:
 
         response = await session.put(
             url = f"https://api.minecraftservices.com/minecraft/profile/name/{current_username}_",
-            headers = {""
+            headers = {
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {ssid}"
             }

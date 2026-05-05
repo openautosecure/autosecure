@@ -18,7 +18,7 @@ class ButtonOptions(ui.View):
             except Exception:
                 await interaction.response.send_message(f"Failed to ban <@{self.user.id}>! (Invalid Perms / Already)")
         else:
-            interaction.response.send_message("You do not have the neccessary permissions!", ephemeral=True)
+            await interaction.response.send_message("You do not have the neccessary permissions!", ephemeral=True)
 
     @discord.ui.button(label="Kick", style=discord.ButtonStyle.red, custom_id="persistent:button_kick")
     async def kickButton(self, button: discord.ui.Button, interaction: discord.Interaction):
@@ -29,7 +29,7 @@ class ButtonOptions(ui.View):
             except Exception:
                 await interaction.response.send_message(f"Failed to kick <@{self.user.id}>! (Invalid Perms / Not in server)")
         else:
-            interaction.response.send_message("You do not have the neccessary permissions!", ephemeral=True)
+            await interaction.response.send_message("You do not have the neccessary permissions!", ephemeral=True)
 
     @discord.ui.button(label="Unban", style=discord.ButtonStyle.primary, custom_id="persistent:button_unban")
     async def unbanButton(self, button: discord.ui.Button, interaction: discord.Interaction):

@@ -1,5 +1,5 @@
 py-cord
 httpx
-jishaku
 millify
 python-dateutil
+audioop-lts

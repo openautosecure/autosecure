@@ -1,4 +1,5 @@
-from views.utils.parsers.decode import decode
+import code
+import urllib.parse
 import httpx
 import re
 
@@ -13,11 +14,15 @@ async def getCookies(session: httpx.AsyncClient):
         follow_redirects = False
     )
 
-    apicanary = await decode(
-        re.search(
-            r'"apiCanary":"([^"]+)"', 
-            data.text
-        ).group(1)
+    apicanary = re.sub(
+        r'\\u([0-9A-Fa-f]{4})',
+        lambda match: chr(int(match.group(1), 16)),
+        urllib.parse.unquote(
+            re.search(
+                r'"apiCanary":"([^"]+)"', 
+                data.text
+            ).group(1)
+        )
     )
         
     return apicanary

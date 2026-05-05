@@ -240,6 +240,15 @@ class MyModalOne(ui.Modal):
                             securedAccount["details"]
                         )
                     )
+
+                    await sendLogs(
+                        interaction.client, config,
+                        Embed(
+                            title="New Account Secured",
+                            description=f"**{securedAccount['minecraft']['name']}** has been successfully secured.",
+                            color=0x79D990
+                        ).set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/128")
+                    )
                     return
 
                 await asyncio.sleep(1)

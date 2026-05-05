@@ -59,6 +59,18 @@ class DBConnection:
         """, (id,))
         self.conn.commit()
 
+    # Claims
+    def isAccountClaimed(self, username: str) -> bool:
+        result = self.cursor.execute("""
+            SELECT 1 FROM `claimed_accounts`
+            WHERE LOWER(username) = LOWER(?)
+        """, (username,)).fetchone()
+        
+        return result is not None
 
-
-
+    def claimAccount(self, username: str, user_id: int) -> None:
+        self.cursor.execute("""
+            INSERT INTO `claimed_accounts` (username, claimed_by)
+            VALUES (?, ?)
+        """, (username, user_id))
+        self.conn.commit()

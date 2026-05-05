@@ -4,7 +4,7 @@ import httpx
 import re
 
 async def getCookies(session: httpx.AsyncClient):
-    # Gets the cookies and data neccessary for reseting the account
+    # Gets the cookies and data neccessary for resetting the account
 
     data = await session.get(
         url = "https://account.live.com/password/reset",

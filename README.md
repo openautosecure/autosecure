@@ -1,12 +1,14 @@
 # AutoSecure
 
-> **Contact:** `salomao31_termedv6` and `https://discord.gg/HAtMcWJrBU` on Discord.
+### Contact
+- Discord: `salomao31_termedv6`
+- Server: [https://discord.gg/HAtMcWJrBU](https://discord.gg/HAtMcWJrBU)
 
-> **Contributions:** PRs welcome — reach out on Discord to discuss major changes.
+**Contributions:** Pull requests are welcome. For major changes, please discuss them on Discord first.
 
 ---
-https://discord.gg/HAtMcWJrBU
-## 📋 Overview
+
+## Overview
 
 **AutoSecure** is a fully request-based security assessment tool for Microsoft accounts.  
 No browser automation (Playwright/Selenium) — just HTTP requests.
@@ -24,23 +26,21 @@ No browser automation (Playwright/Selenium) — just HTTP requests.
 
 ## Features
 
-| Status | Feature |
-|--------|---------|
-| ✅ | Retrieve account owner info (name, country, birthday, etc.) |
-| ✅ | Remove all security proofs (emails, phone numbers) |
-| ✅ | Sign out of all active devices |
-| ✅ | Bypass email-based 2FA verification |
-| ✅ | Check if an account is locked |
-| ✅ | Disable 2FA |
-| ✅ | Generate recovery code |
-| ✅ | Change security email |
-| ✅ | Change password |
-| ✅ | Remove Windows Hello keys (Zyger exploit demonstration) |
-| ✅ | Minecraft account check (ownership, username, purchase method, capes, SSID) |
-| ✅ | DonutSMP stats checker |
-| ✅ | Hypixel stats checker |
-| ❌ | Change primary alias *(planned)* |
-
+- Retrieve account owner details (name, country, birth date, etc.)
+- Remove all security proofs (emails and phone numbers)
+- Sign out all active devices and sessions
+- Bypass email-based 2FA verification
+- Check if an account is locked
+- Disable 2FA
+- Generate recovery codes
+- Change security email
+- Change password
+- Remove Windows Hello keys (Zyger exploit demonstration)
+- Minecraft account checker (ownership, username, purchase method, capes, SSID)
+- DonutSMP stats checker
+- Hypixel stats checker
+- Claiming system
+  
 ---
 
 ## Setup Guide
@@ -108,7 +108,7 @@ python main.py
 - API keys are optional but required for Hypixel/DonutSMP related commands
 - Make sure your bot token is kept private and never shared
 
-# IMPORTANT LEGAL AND ETHICAL NOTICE – READ BEFORE USING 
+## IMPORTANT LEGAL AND ETHICAL NOTICE – READ BEFORE USING 
 
 **This tool is provided STRICTLY for EDUCATIONAL, RESEARCH, and SECURITY TESTING PURPOSES ONLY.**
 

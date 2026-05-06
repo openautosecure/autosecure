@@ -91,18 +91,13 @@ async def recover(session: httpx.AsyncClient, email: str, recovery_code: str, ne
                     "Content-type": "application/json; charset=utf-8",
                     "Accept": "application/json",
                     "canary": canary,
-                    "hpgid": "200284",
-                    "hpgact": "0"
                 },
                 json = {
                     "contactEmail": new_email,
                     "contactEpid": "",
                     "password": new_password,
                     "passwordExpiryEnabled": 0,
-                    "scid": 100103,
                     "token": token,
-                    "uaid":"6b182876e51a429db0e2cff317076750",
-                    "uiflvr": 1001
                 }
             )
             finishJson = finishSecure.json()

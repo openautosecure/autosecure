@@ -29,7 +29,7 @@ async def getInbox(email: str) -> bool | None:
         token = data.json()["token"]
         
     emails = await fetchInbox(token)
-    view = emailView(emails)
+    view = emailView(emails, token)
 
     return {
         "embed": view.getEmbed(),

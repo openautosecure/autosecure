@@ -11,11 +11,8 @@ async def getOwnerInfo(session: httpx.AsyncClient, verificationToken: str):
                 "Accept": "application/json, text/plain, */*",
                 "Accept-Encoding": "gzip, deflate, br, zstd",
                 "X-Requested-With": "XMLHttpRequest",
-                "MS-CV": "LbJd6i44UUmIn7so.5.63",
                 "__RequestVerificationToken": verificationToken,
                 "Correlation-Context": "v=1,ms.b.tel.market=en-US,ms.b.qos.rootOperationName=GLOBAL.PROFILE.PERSONALINFO.GETPERSONALINFO",
-                "Connection": "keep-alive",
-                "Referer": "https://account.microsoft.com/profile",
                 "Sec-Fetch-Dest": "empty",
                 "Sec-Fetch-Mode": "cors",
                 "Sec-Fetch-Site": "same-origin"

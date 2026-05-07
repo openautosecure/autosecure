@@ -45,7 +45,10 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, oda
         }
 
         for i in range(2):
-
+            
+            # 1 - Normal Email OTP
+            # 2 - Primary Email working as Security Email too
+            # 3 - Phone Number
             match i:
                 case 0:
                     payload["otc"] = code

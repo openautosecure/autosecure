@@ -1,11 +1,13 @@
+from cogs.utils.fetchInbox import fetchInbox
 from discord import ui
 import discord
 
 
 class emailView(ui.View):
-    def __init__(self, emails: list, index: int = 0):
+    def __init__(self, emails: list, token: str, index: int = 0):
         super().__init__(timeout=None)
         self.emails = emails
+        self.token = token
         self.index = index
         self.mindex = len(emails) - 1
         self.updateButtons()
@@ -44,6 +46,11 @@ class emailView(ui.View):
     
     @discord.ui.button(label="🔄 Refresh", style=discord.ButtonStyle.green)
     async def refresh_button(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.emails = await fetchInbox(self.token)
+        self.mindex = len(self.emails) - 1
+        if self.index > self.mindex:
+            self.index = max(0, self.mindex)
+        self.updateButtons()
         await interaction.response.edit_message(embed=self.getEmbed(), view=self)
 
     @discord.ui.button(label="Next ▶️", style=discord.ButtonStyle.primary)

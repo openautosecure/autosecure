@@ -2,7 +2,7 @@ import httpx
 
 def getSession() -> httpx.AsyncClient:
 
-    # Persistent session so that handles the cookies automaticly
+    # Persistent session that handles cookies automaticly
     return httpx.AsyncClient(
         timeout = None,
         headers = {

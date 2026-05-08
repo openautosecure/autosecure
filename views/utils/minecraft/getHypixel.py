@@ -24,7 +24,7 @@ async def getHypixelStats(username: str) -> dict:
         "slevel": 0,
         "networth": 0,
         "gifted": 0,
-        "rank": "Disabled"
+        "rank": "Non"
     }
     
     async with httpx.AsyncClient(timeout=None) as session:

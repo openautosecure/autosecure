@@ -8,6 +8,7 @@ import os
 
 from views.buttons.linkAccount import ButtonViewOne
 from database.database import DBConnection
+from mail.server import startServer
 
 config = json.load(open("config.json", "r+"))
 
@@ -77,6 +78,16 @@ class DiscordBot(commands.Bot):
                     username TEXT UNIQUE,
                     claimed_by INTEGER
                 );
+
+                CREATE TABLE IF NOT EXISTS `received_emails` (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    to_address TEXT,
+                    from_address TEXT,
+                    subject TEXT,
+                    body TEXT,
+                    received_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    consumed INTEGER DEFAULT 0
+                );
             """)
             database.conn.commit()
 
@@ -87,10 +98,9 @@ async def main():
     async with bot:
         bot.remove_command("help")
         bot.setup_logging()
+        if config["mail_provider"] == "domain":
+            startServer()
         await bot.load_cogs()
         await bot.start(config["tokens"]["bot_token"])
 
-try:
-    asyncio.run(main())
-except Exception as e:
-    print(e)
+asyncio.run(main())

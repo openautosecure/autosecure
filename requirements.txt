@@ -4,3 +4,4 @@ millify
 python-dateutil
 audioop-lts
 fake-useragent
+aiosmtpd

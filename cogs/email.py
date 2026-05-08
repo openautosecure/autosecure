@@ -1,7 +1,9 @@
 from database.database import DBConnection
 from cogs.buttons.getInbox import getInbox
+from views.utils.securing.generateEmail import generateEmail
 from discord.ext import commands
 import discord
+import uuid
 
 
 class MailListView(discord.ui.View):
@@ -62,6 +64,35 @@ class Email(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+
+    @mail.command(name="new", description="Register a new email address (Needs domain)")
+    async def createMail(self, ctx: discord.ApplicationContext, alias: str):
+        if ctx.author.id not in self.bot.admins:
+            await ctx.respond("You do not have permission to execute this command!", ephemeral=True)
+            return
+
+        await ctx.response.defer(ephemeral=True)
+
+        password = uuid.uuid4().hex[:12]
+        email = (await generateEmail(alias, password))[1]
+
+        with DBConnection() as database:
+            if email in [e[0] for e in database.getEmails()]:
+                await ctx.respond(
+                    embed=discord.Embed(description=f"`{email}` has already been created", color=0xFF5C5C),
+                    ephemeral=True
+                )
+                return
+            database.addEmail(email, password)
+
+        await ctx.respond(
+            embed=discord.Embed(
+                title="Email Created",
+                description=f"`{email}`\n\nhas been created!",
+                color=0x57F287
+            ),
+            ephemeral=True
+        )
 
     @mail.command(name="inbox", description="Shows the inbox of your email")
     async def emailInbox(self, ctx: discord.ApplicationContext, email: str):

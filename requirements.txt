@@ -3,3 +3,4 @@ httpx
 millify
 python-dateutil
 audioop-lts
+fake-useragent

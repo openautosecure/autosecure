@@ -86,7 +86,8 @@ Edit `config.json`:
         "accounts_channel": ""
     },
     "autosecure": {
-        "replace_main_alias": true
+        "replace_main_alias": true,
+        "enable_2fa": true
     }
 }
 

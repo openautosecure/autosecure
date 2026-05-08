@@ -19,5 +19,7 @@
     "claims": {
         "claims_enabled": false,
         "claim_users": []
-    }
+    },
+    "mail_provider": "mailtm",
+    "mail_domain": ""
 }

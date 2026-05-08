@@ -2,7 +2,7 @@ import sqlite3
 
 class DBConnection:
     def __init__(self) -> None:
-        self.conn = sqlite3.connect("database/database.db")
+        self.conn = sqlite3.connect("database/database.db", check_same_thread=False)
         self.cursor = self.conn.cursor()
 
     def __enter__(self):
@@ -36,6 +36,36 @@ class DBConnection:
         """).fetchall()
 
         return emails
+
+    # Received Emails (custom SMTP)
+    def addEmail(self, to_address: str, from_address: str, subject: str, body: str) -> None:
+        self.cursor.execute("""
+            INSERT INTO `received_emails` (to_address, from_address, subject, body)
+            VALUES (?, ?, ?, ?)
+        """, (to_address, from_address, subject, body))
+        self.conn.commit()
+
+    def getEmails(self, to_address: str) -> list:
+        return self.cursor.execute("""
+            SELECT id, to_address, from_address, subject, body, received_at
+            FROM `received_emails`
+            WHERE to_address = ?
+            ORDER BY received_at ASC
+        """, (to_address.lower(),)).fetchall()
+
+    def markUnused(self, to_address: str) -> tuple | None:
+        return self.cursor.execute("""
+            SELECT id, body FROM `received_emails`
+            WHERE to_address = ? AND consumed = 0
+            ORDER BY received_at ASC
+            LIMIT 1
+        """, (to_address.lower(),)).fetchone()
+
+    def markUsed(self, email_id: int) -> None:
+        self.cursor.execute("""
+            UPDATE `received_emails` SET consumed = 1 WHERE id = ?
+        """, (email_id,))
+        self.conn.commit()
 
     # Blacklisting
     def getBlacklistedUsers(self) -> list:

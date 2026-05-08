@@ -18,8 +18,7 @@ async def getAMC(session: httpx.AsyncClient):
                 url="https://account.microsoft.com/",
                 headers={
                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                    "Connection": "keep-alive",
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0"
+                    "Connection": "keep-alive"
                 },
                 follow_redirects=True
             )

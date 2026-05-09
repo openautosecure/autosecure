@@ -35,9 +35,9 @@ No browser automation (Playwright/Selenium) — just HTTP requests.
 - Generate recovery codes
 - Change security email
 - Change password
-- Remove Windows Hello keys (Zyger exploit demonstration)
+- Remove Windows Hello keys (Zyger exploit)
 - Minecraft account checker (ownership, username, purchase method, capes, SSID)
-- Add Authenticator and enabled 2FA to secured accounts
+- Adds Authenticator and enables 2FA to secured accounts
 - Supports Custom domains for security emails
 - DonutSMP stats checker
 - Hypixel stats checker

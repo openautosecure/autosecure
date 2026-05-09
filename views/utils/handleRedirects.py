@@ -1,4 +1,4 @@
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 import httpx
 import re
 
@@ -22,9 +22,15 @@ async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dic
             },
             follow_redirects=True
         )
+        print(response.text)
+
+        postBackUrl = re.search(r'name="postBackUrl"\s+value="([^"]+)"', response.text).group(1)
+        ru = re.search(r'[?&]ru=([^&"]+)', postBackUrl).group(1)
+        response = await session.get(unquote(ru), follow_redirects=True)
+        print(response.text)
 
         urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response.text)
-        ppft    = re.search(r'"sFT"\s*:\s*"([^"]+)"', response.text)
+        ppft = re.search(r'"sFT"\s*:\s*"([^"]+)"', response.text)
 
         return {
             "urlPost": urlPost.group(1),

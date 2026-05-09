@@ -21,7 +21,7 @@ async def recoverySecure(email: str, recovery_code: str) -> dict:
     print(f"[+] - Generated Security Email ({security_email})")
 
     with DBConnection() as database:
-        database.addEmail(security_email, password)
+        database.addSecurityEmail(security_email, password)
 
     print("[~] - Automaticly Securing Account...")
     data = await recover(session, email, recovery_code, security_email, password, type)

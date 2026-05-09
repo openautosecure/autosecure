@@ -9,8 +9,10 @@ async def fetchInbox(type: str) -> list:
         with DBConnection() as db:
             rows = db.getEmails(type)
         emails = []
+
         for _, _, from_addr, subject, body, received_at in rows:
             emails.append(f"**From:** {from_addr}\n**Subject:** {subject}\n**Date:** {received_at}\n\n{body}")
+            
         return emails
 
     async with httpx.AsyncClient(timeout=None) as session:
@@ -37,5 +39,5 @@ async def fetchInbox(type: str) -> list:
                     }
                 )
                 emailsText.append(response.json()["text"])
-                
+
         return emailsText

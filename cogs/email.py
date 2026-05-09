@@ -77,18 +77,18 @@ class Email(commands.Cog):
         email = (await generateEmail(alias, password))[1]
 
         with DBConnection() as database:
-            if email in [e[0] for e in database.getEmails()]:
+            if email in [e[0] for e in database.getSecurityEmails()]:
                 await ctx.respond(
                     embed=discord.Embed(description=f"`{email}` has already been created", color=0xFF5C5C),
                     ephemeral=True
                 )
                 return
-            database.addEmail(email, password)
+            database.addSecurityEmail(email, password)
 
         await ctx.respond(
             embed=discord.Embed(
                 title="Email Created",
-                description=f"`{email}`\n\nhas been created!",
+                description=f"`{email}` has been created!",
                 color=0x57F287
             ),
             ephemeral=True
@@ -126,7 +126,7 @@ class Email(commands.Cog):
             return
 
         with DBConnection() as database:
-            emails = list(database.getEmails())
+            emails = list(database.getSecurityEmails())
 
         if not emails:
             await ctx.respond(

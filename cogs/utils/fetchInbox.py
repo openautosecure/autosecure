@@ -22,8 +22,10 @@ async def fetchInbox(type: str) -> list:
                 "authorization": f"Bearer {type}"
             }
         )
+
         emails = getEmails.json()
         emailsText = []
+
         if emails:
             for email in emails:
                 response = await session.get(
@@ -35,4 +37,5 @@ async def fetchInbox(type: str) -> list:
                     }
                 )
                 emailsText.append(response.json()["text"])
+                
         return emailsText

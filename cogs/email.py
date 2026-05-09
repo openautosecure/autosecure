@@ -88,7 +88,7 @@ class Email(commands.Cog):
         await ctx.respond(
             embed=discord.Embed(
                 title="Email Created",
-                description=f"`{email}` has been created!",
+                description=f"`{email}` has been added!",
                 color=0x57F287
             ),
             ephemeral=True

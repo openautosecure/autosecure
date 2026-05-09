@@ -16,7 +16,7 @@ class ButtonOptions(ui.View):
                 await interaction.guild.kick(user = self.user)
                 await interaction.response.send_message(f"<@{self.user}> has been sucessfully banned!" )
             except Exception:
-                await interaction.response.send_message(f"Failed to ban <@{self.user.id}>! (Invalid Perms / Already)")
+                await interaction.response.send_message(f"Failed to ban <@{self.user}>! (Invalid Perms / Already)")
         else:
             await interaction.response.send_message("You do not have the neccessary permissions!", ephemeral=True)
 
@@ -25,9 +25,9 @@ class ButtonOptions(ui.View):
         if interaction.user.guild_permissions.kick_members:
             try:
                 await interaction.guild.kick(user = self.user)
-                await interaction.response.send_message(f"<@{self.user.id}> has been sucessfully kicked!")
+                await interaction.response.send_message(f"<@{self.user}> has been sucessfully kicked!")
             except Exception:
-                await interaction.response.send_message(f"Failed to kick <@{self.user.id}>! (Invalid Perms / Not in server)")
+                await interaction.response.send_message(f"Failed to kick <@{self.user}>! (Invalid Perms / Not in server)")
         else:
             await interaction.response.send_message("You do not have the neccessary permissions!", ephemeral=True)
 
@@ -36,23 +36,23 @@ class ButtonOptions(ui.View):
         try:
             await interaction.guild.unban(user = self.user)
         finally:
-            await interaction.response.send_message(f"<@{self.user.id}> has been sucessfully unbanned!")
+            await interaction.response.send_message(f"<@{self.user}> has been sucessfully unbanned!")
 
     @discord.ui.button(label="Blacklist", style=discord.ButtonStyle.red, custom_id="persistent:button_blacklist")
     async def blacklistUser(self, button: discord.ui.Button, interaction: discord.Interaction):
         with DBConnection() as database:
-            database.addBlacklistedUser(self.user.id)
+            database.addBlacklistedUser(self.user)
             database.conn.commit()
 
-        await interaction.response.send_message(f"Successfully blacklisted {self.user.mention}!", ephemeral=True)
+        await interaction.response.send_message(f"Successfully blacklisted <@{self.user}>!", ephemeral=True)
 
     @discord.ui.button(label="Unblacklist", style=discord.ButtonStyle.primary, custom_id="persistent:button_unblacklist")
     async def unblacklistUser(self, button: discord.ui.Button, interaction: discord.Interaction):
         with DBConnection() as database:
-            database.removeBlacklistedUser(self.user.id)
+            database.removeBlacklistedUser(self.user)
             database.conn.commit()
 
-        await interaction.response.send_message(f"Successfully unblacklisted {self.user.mention}!", ephemeral=True)
+        await interaction.response.send_message(f"Successfully unblacklisted <@{self.user}>!", ephemeral=True)
 
     @discord.ui.button(label="💬 DM", style=discord.ButtonStyle.grey, custom_id="persistent:button_dm")
     async def dmButton(self, button: discord.ui.Button, interaction: discord.Interaction):

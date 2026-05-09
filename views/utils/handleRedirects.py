@@ -4,11 +4,33 @@ import re
 
 async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dict:
     # Handles Microsofts accept notice and family accounts
+    # 3 Cases | Family Locked, FIDO Passkey interrutpions and the Accept Notice Form
 
     actionURL = re.search(r'action="([^"]+)"', page_response).group(1)
     if "family" in actionURL:
         return "Family"
     
+    elif "interrupt/passkey" in actionURL:
+        pprid = re.search(r'name="pprid"[^>]+value="([^"]+)"', page_response).group(1)
+        ipt = re.search(r'name="ipt"[^>]+value="([^"]+)"', page_response).group(1)
+
+        response = await session.post(
+            url = actionURL,
+            data = {
+                "pprid": pprid,
+                "ipt": ipt
+            },
+            follow_redirects=True
+        )
+
+        urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response.text)
+        ppft    = re.search(r'"sFT"\s*:\s*"([^"]+)"', response.text)
+
+        return {
+            "urlPost": urlPost.group(1),
+            "ppft": quote(ppft.group(1), safe='-*')
+        }
+
     cid, actioncode = re.search(
         r'id="correlation_id"\s+value="([^"]+)".*?id="code"\s+value="([^"]+)"',
         page_response,

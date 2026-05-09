@@ -38,6 +38,7 @@ No browser automation (Playwright/Selenium) — just HTTP requests.
 - Remove Windows Hello keys (Zyger exploit demonstration)
 - Minecraft account checker (ownership, username, purchase method, capes, SSID)
 - Add Authenticator and enabled 2FA to secured accounts
+- Supports Custom domains for security emails
 - DonutSMP stats checker
 - Hypixel stats checker
 - Claiming system

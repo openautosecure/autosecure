@@ -16,7 +16,7 @@ async def getEmailCode(type: str) -> str:
                 match = re.search(r'Security code[:\s]+(\d{4,8})', body, re.IGNORECASE)
                 if match:
                     with DBConnection() as db:
-                        db.markCreated(email_id)
+                        db.markUsed(email_id)
                     return match.group(1)
             await asyncio.sleep(0.8)
 

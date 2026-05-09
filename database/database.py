@@ -12,7 +12,7 @@ class DBConnection:
         self.conn.close()
 
     # Security Emails
-    def addEmail(self, email: str, pwd: str) -> None:
+    def addSecurityEmail(self, email: str, pwd: str) -> None:
         self.cursor.execute("""
             INSERT INTO `security_emails` (email, password)
             VALUES (?, ?)
@@ -30,7 +30,7 @@ class DBConnection:
 
         return password
     
-    def getEmails(self) -> tuple:
+    def getSecurityEmails(self) -> tuple:
         emails = self.cursor.execute("""
             SELECT email FROM `security_emails`
         """).fetchall()

@@ -24,7 +24,7 @@ async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dic
         )
         print(response.text)
 
-        postBackUrl = re.search(r'name="postBackUrl"\s+value="([^"]+)"', response.text).group(1)
+        postBackUrl = re.search(r"""name=['"]postBackUrl['"]\s+value=['"]([^'"]+)['"]""", response.text).group(1).replace('&amp;', '&')
         ru = re.search(r'[?&]ru=([^&"]+)', postBackUrl).group(1)
         response = await session.get(unquote(ru), follow_redirects=True)
         print(response.text)

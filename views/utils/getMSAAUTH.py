@@ -71,7 +71,8 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, oda
                     "Sec-Fetch-Site": "same-origin",
                     "Priority": "u=0, i"
                 },
-                data = payload
+                data = payload,
+                follow_redirects = True
             )
 
             print(f"Attemp Number {i} \n Response: {loginData.text} \nHeaders: {loginData.headers}")
@@ -79,12 +80,13 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, oda
             if '__Host-MSAAUTH' in session.cookies:
                 break
     
-    # None of the requests got MSAAUTH
+    # Checks for both requests
     if '__Host-MSAAUTH' in session.cookies:
         print(f"MSAAUTH: {dict(session.cookies)['__Host-MSAAUTH']}")
         
         print(f"First urlPost: {urlPost}")
         if not urlPost:
+            print(loginData.text)
             data = await handleRedirects(session, loginData.text)
             return data
         

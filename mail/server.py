@@ -25,7 +25,7 @@ class MailHandler:
                 )
 
         log.info(f"Mail received: {envelope.mail_from} -> {', '.join(envelope.rcpt_tos)} | {subject}")
-        return "250 Message accepted for delivery"
+        return "250"
 
 
 def _extract_body(msg) -> str:

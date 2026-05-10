@@ -121,5 +121,6 @@ class MyModalTwo(ui.Modal):
                 title="New Account Secured",
                 description=f"**{name}** has been successfully secured.",
                 color=0x79D990
-            ).set_thumbnail(url=f"https://mc-heads.net/avatar/{self.username}/128")
+            ).set_thumbnail(url=f"https://mc-heads.net/avatar/{self.username}/128"),
+            conly = True
         )

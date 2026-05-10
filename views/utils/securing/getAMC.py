@@ -15,9 +15,10 @@ async def getAMC(session: httpx.AsyncClient):
 
             print(f"getAMC Response Headers: {response.headers}")
             finalPage = await session.get(
-                url="https://account.microsoft.com/",
+                url="https://account.microsoft.com/profile?lang=en-US",
                 headers={
                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                    "Referer": "https://account.microsoft.com/",
                     "Connection": "keep-alive"
                 },
                 follow_redirects=True
@@ -25,6 +26,7 @@ async def getAMC(session: httpx.AsyncClient):
 
             rvt = re.search(r'name="__RequestVerificationToken"\s+type="hidden"\s+value="([^"]+)"', finalPage.text, re.DOTALL).group(1)
             print(f"[+] - Got RequestVerificationToken ({rvt})")
+            print(f"[~] - AMC cookies: {dict(session.cookies)}")
             return rvt
         except httpx.ConnectError:
             if attempt == 2:

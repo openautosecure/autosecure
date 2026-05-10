@@ -1,7 +1,9 @@
 from discord.ext import commands
+import requests
 import logging
 import discord
 import asyncio
+import socket
 import json
 import sys
 import os
@@ -93,6 +95,14 @@ class DiscordBot(commands.Bot):
 
 asyncio.set_event_loop(asyncio.new_event_loop())
 bot = DiscordBot()
+
+# Simple check for dynamic ips
+if config["mail_provider"] == "domain":
+    domain_ip = socket.gethostbyname(f"mail.{config["domain"]}")
+    public_ip = requests.get("https://api.ipify.org").text
+    if domain_ip != public_ip:
+        print(f"[X] - Your public IP has been changed! Update your domain records")
+        exit()
 
 async def main():
     async with bot:

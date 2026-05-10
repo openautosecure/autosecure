@@ -5,7 +5,7 @@ async def generateEmail(username: str, password: str) -> list:
     config = json.load(open("config.json", "r"))
 
     if config["mail_provider"] == "domain":
-        email = f"{username}@{config['mail_domain']}"
+        email = f"{username}@{config['domain']}"
         return [email, email]
 
     async with httpx.AsyncClient(timeout=None) as session:

@@ -1,5 +1,4 @@
 from urllib.parse import unquote
-import urllib.parse
 import httpx
 import re
 
@@ -10,50 +9,33 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
         getCanary = await session.get(
             url = "https://account.live.com/AddAssocId",
             headers = {
-                "Content-Type": "application/x-www-form-urlencoded"
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
             },
             follow_redirects = True
         )
-        
-        print(f"GETCANARY PRIMARY TEXT - {getCanary.text}")
-        print(f"GETCANARY PRIMARY COOKIES - {dict(getCanary.cookies)}")
+
         code = unquote(re.search(r'<input[^>]*name="code"[^>]*value="([^"]+)"', getCanary.text).group(1))
         state = unquote(re.search(r'<input[^>]*name="state"[^>]*value="([^"]+)"', getCanary.text).group(1))
 
-        response = await session.post(
+        await session.post(
             url = "https://account.live.com/auth/redirect",
             data = {
                 "code": code,
                 "state": state 
             },
             headers = {
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                 "Content-Type": "application/x-www-form-urlencoded"
             }
         )
-        
-        print(f"Auth Redirect Response: {response.text}")
-        print(f"Auth Redirect Headers: {response.headers}")
 
         getCanary = await session.get(
             url = "https://account.live.com/AddAssocId",
             headers = {
-                "Content-Type": "application/x-www-form-urlencoded"
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
             }
         )
-
-        canary_match = re.search(
-            r'name="canary" value="([^"]+)"', 
-            getCanary.text
-        )
-
-        if not canary_match:
-            print("[X] - changePrimaryAlias: could not find canary in second AddAssocId response")
-            return False
-
-        canary = urllib.parse.quote(
-            canary_match.group(1),
-            safe = ""
-        )
+        canary = re.search(r'name="canary"\s+value="([^"]+)"', getCanary.text).group(1)
 
         # Add Email
         await session.post(

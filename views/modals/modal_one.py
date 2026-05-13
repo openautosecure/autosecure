@@ -232,7 +232,7 @@ class MyModalOne(ui.Modal):
                         )
                         return
 
-                    mc_name = (securedAccount['minecraft']['name'] == "No Minecraft")
+                    mc_name = ("No Minecraft" if securedAccount['minecraft']['name'] == "No Minecraft" else securedAccount['minecraft']['name'])
                     secured_desc = f"**{mc_name}** has been successfully secured."
                     if mc_name:
                         secured_desc = "An account has been secured but it does not own Minecraft."

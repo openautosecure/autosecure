@@ -1,7 +1,7 @@
 # AutoSecure
 
 ### Contact
-- Discord: `salomao31_termedv6`
+- Discord: `raiko899`
 - Server: [https://discord.gg/HAtMcWJrBU](https://discord.gg/HAtMcWJrBU)
 
 **Contributions:** Pull requests are welcome. For major changes, please discuss them on Discord first.

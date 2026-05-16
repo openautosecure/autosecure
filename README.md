@@ -74,8 +74,8 @@ Edit `config.json`:
 
 ### 6. Set up your domain for custom security mail (Optional)
 
-**You can toggle what kind of security mails the bot uses to secure your accounts
-It can be changed in the config in the "mail_provider" settings which can be "mailtm" or "domain".**
+You can toggle what kind of security mails the bot uses to secure your accounts
+It can be changed in the config in the "mail_provider" settings which can be "mailtm" or "domain".
 
 The "mailtm" will use the mailtm API and secure accounts with temporary emails from it.
 The "domain" will use your custom domain and secure accounts with custom security emails from your domain.
@@ -117,13 +117,13 @@ Example Config:
 
 ```
 
-### 6. Invite the Bot to Your Server
+### 7. Invite the Bot to Your Server
 - Go to the Discord Developer Portal → Your Application → OAuth2 → URL Generator
 - Select scopes: `bot`, `applications.commands`
 - Select permissions: `Administrator` (or the specific ones you need)
 - Copy and open the generated URL to invite the bot
 
-### 7. Run the Bot
+### 8. Run the Bot
 ```bash
 python main.py
 ```

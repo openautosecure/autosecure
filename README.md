@@ -71,7 +71,23 @@ Edit `config.json`:
 - Add your discord ID to the owners list
 - Add your bot token
 - Optionally you can add your skytools and donut key for stats
-  
+
+### 6. Set up your domain for custom security mail (Optional)
+
+**You can toggle what kind of security mails the bot uses to secure your accounts
+It can be changed in the config in the "mail_provider" settings which can be "mailtm" or "domain".**
+
+The "mailtm" will use the mailtm API and secure accounts with temporary emails from it.
+The "domain" will use your custom domain and secure accounts with custom security emails from your domain.
+
+To set it up your own mail server you need to:
+- Update your domain records, MX and A records that point to your servers IP
+- Add your domain name to "domain" in the config
+- Have port 25 open
+
+
+ 
+Example Config:
 ```json
 {
     "owners": [
@@ -90,7 +106,13 @@ Edit `config.json`:
     "autosecure": {
         "replace_main_alias": true,
         "enable_2fa": true
-    }
+    },
+    "claims": {
+        "claims_enabled": false,
+        "claim_users": []
+    },
+    "mail_provider": "domain",
+    "domain": "autosecure.lol"
 }
 
 ```

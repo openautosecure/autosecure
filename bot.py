@@ -76,8 +76,10 @@ class DiscordBot(commands.Bot):
                     id INTEGER UNIQUE
                 );
 
+                -- NOTE: If upgrading an existing database, run once:
+                --   ALTER TABLE claimed_accounts RENAME COLUMN username TO claim_id;
                 CREATE TABLE IF NOT EXISTS `claimed_accounts` (
-                    username TEXT UNIQUE,
+                    claim_id TEXT UNIQUE,
                     claimed_by INTEGER
                 );
 

@@ -2,15 +2,14 @@ from database.database import DBConnection
 from discord.ext import commands
 import discord
 import json
-import uuid
 
 
 class Claim(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @discord.slash_command(name="claim", description="Generate a new claim ID")
-    async def claim(self, ctx: discord.ApplicationContext):
+    @discord.slash_command(name="claim", description="Claim a secured account by ID")
+    async def claim(self, ctx: discord.ApplicationContext, id: discord.Option(str, "The claim ID shown on the secured account embed")):
         config = json.load(open("config.json", "r+"))
         claims = config["claims"]
 
@@ -22,28 +21,37 @@ class Claim(commands.Cog):
             await ctx.respond("You do not have permission to claim accounts.", ephemeral=True)
             return
 
-        claim_id = uuid.uuid4().hex[:8]
-
         with DBConnection() as database:
-            if database.isClaimIdUsed(claim_id):
+            if not database.isValidClaimId(id):
                 await ctx.respond(
                     embed=discord.Embed(
-                        title="Collision",
-                        description=f"Claim ID `{claim_id}` already exists. Please try again.",
+                        title="Invalid Claim ID",
+                        description=f"No secured account found with claim ID `{id}`.",
                         color=0xFF5C5C
                     ),
                     ephemeral=True
                 )
                 return
 
-            database.claimAccount(claim_id, ctx.author.id)
+            if database.isAlreadyClaimed(id):
+                await ctx.respond(
+                    embed=discord.Embed(
+                        title="Already Claimed",
+                        description=f"Claim ID `{id}` has already been claimed.",
+                        color=0xFF5C5C
+                    ),
+                    ephemeral=True
+                )
+                return
+
+            database.claimAccount(id, ctx.author.id)
 
         claim_embed = discord.Embed(
             title="Account Claimed",
-            description=f"{ctx.author.mention} generated claim ID `{claim_id}`.",
+            description=f"{ctx.author.mention} claimed account `{id}`.",
             color=0x79D990
         )
-        claim_embed.add_field(name="Claim ID", value=f"`{claim_id}`", inline=False)
+        claim_embed.add_field(name="Claim ID", value=f"`{id}`", inline=False)
         claim_embed.add_field(name="Claimed By", value=f"{ctx.author.mention} (`{ctx.author.id}`)", inline=False)
 
         logs_channel = await ctx.bot.fetch_channel(config["discord"]["logs_channel"])
@@ -51,8 +59,8 @@ class Claim(commands.Cog):
 
         await ctx.respond(
             embed=discord.Embed(
-                title="Claim ID Generated",
-                description=f"Your claim ID is:\n# `{claim_id}`",
+                title="Account Claimed",
+                description=f"You have successfully claimed account `{id}`.",
                 color=0x79D990
             ),
             ephemeral=True

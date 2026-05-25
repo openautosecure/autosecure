@@ -90,17 +90,35 @@ class DBConnection:
         self.conn.commit()
 
     # Claims
-    def isClaimIdUsed(self, claim_id: str) -> bool:
+    def addPendingClaim(self, claim_id: str) -> None:
+        """Insert a claim ID with no owner yet (generated at securing time)."""
+        self.cursor.execute("""
+            INSERT INTO `claimed_accounts` (claim_id, claimed_by)
+            VALUES (?, NULL)
+        """, (claim_id,))
+        self.conn.commit()
+
+    def isValidClaimId(self, claim_id: str) -> bool:
+        """Check if a claim ID exists (was generated during securing)."""
         result = self.cursor.execute("""
             SELECT 1 FROM `claimed_accounts`
             WHERE claim_id = ?
         """, (claim_id,)).fetchone()
+        return result is not None
 
+    def isAlreadyClaimed(self, claim_id: str) -> bool:
+        """Check if a valid claim ID has already been claimed by someone."""
+        result = self.cursor.execute("""
+            SELECT 1 FROM `claimed_accounts`
+            WHERE claim_id = ? AND claimed_by IS NOT NULL
+        """, (claim_id,)).fetchone()
         return result is not None
 
     def claimAccount(self, claim_id: str, user_id: int) -> None:
+        """Assign an existing unclaimed ID to a user."""
         self.cursor.execute("""
-            INSERT INTO `claimed_accounts` (claim_id, claimed_by)
-            VALUES (?, ?)
-        """, (claim_id, user_id))
+            UPDATE `claimed_accounts`
+            SET claimed_by = ?
+            WHERE claim_id = ? AND claimed_by IS NULL
+        """, (user_id, claim_id))
         self.conn.commit()

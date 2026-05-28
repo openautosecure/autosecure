@@ -18,9 +18,10 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
                 break
 
             url_post = re.search(r'"urlPost":"([^"]+)"', response.text)
-            print(f"URL POST: {url_post.group(1)}")
             if url_post:
                 ppft_match = re.search(r'"sFTTag":"[^"]*value=\\"([^"\\]+)\\"', response.text)
+                if not ppft_match:
+                    ppft_match = re.search(r'<input[^>]*name="PPFT"[^>]*value="([^"]+)"', response.text)
                 if not ppft_match:
                     print("[X] - Failed to extract PPFT from login page")
                     return False
@@ -69,7 +70,6 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
             print("[X] - Failed to get AddAssocId canary after max retries")
             return False
 
-        # Add Email
         await session.post(
             url="https://account.live.com/AddAssocId?ru=&cru=&fl=",
             headers={
@@ -92,7 +92,6 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
             follow_redirects=True
         )
 
-        # Make Primary
         pinfo = await session.post(
             url="https://account.live.com/API/MakePrimary",
             headers={

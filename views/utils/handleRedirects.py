@@ -3,17 +3,17 @@ import httpx
 import re
 
 async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dict:
-    # Handles Microsofts accept notice and family accounts
-    # 3 Cases | Family Locked, FIDO Passkey interrutpions and the Accept Notice Form
+    # Handles Microsofts random form popups
+    # 4 Cases | Family Locked, FIDO Passkey, Accept Notice Form and Recovery Form
 
     actionURL = re.search(r'action="([^"]+)"', page_response).group(1)
     if "family" in actionURL:
         return "Family"
     
-    elif "interrupt/passkey" in actionURL:
+    if "pprid" in page_response:
         pprid = re.search(r'name="pprid"[^>]+value="([^"]+)"', page_response).group(1)
         ipt = re.search(r'name="ipt"[^>]+value="([^"]+)"', page_response).group(1)
-
+        
         response = await session.post(
             url = actionURL,
             data = {
@@ -23,9 +23,15 @@ async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dic
             follow_redirects=True
         )
         print(response.text)
+        
+    if "recover" in actionURL:
+        print(f"[~] - Got Recovery Form, send the logs (console text) to raiko899 for the fix")
+        print(response.text)
 
+    elif "interrupt/passkey" in actionURL:
         postBackUrl = re.search(r"""name=['"]postBackUrl['"]\s+value=['"]([^'"]+)['"]""", response.text).group(1).replace('&amp;', '&')
         ru = re.search(r'[?&]ru=([^&"]+)', postBackUrl).group(1)
+        
         response = await session.get(unquote(ru), follow_redirects=True)
         print(response.text)
 

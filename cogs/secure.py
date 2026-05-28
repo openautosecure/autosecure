@@ -39,7 +39,7 @@ class secure(commands.Cog):
             await ctx.respond("You do not have permission to execute this command!", ephemeral=True)
             return
         
-        await ctx.response.send_message("This command is disabled", ephemeral=True)
+        await ctx.response.send_message("This command is WIP", ephemeral=True)
         return
        
         embed = discord.Embed(

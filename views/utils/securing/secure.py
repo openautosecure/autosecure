@@ -87,7 +87,7 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
                 accountInfo["minecraft"]["name"] = profile
                 
                 usernameInfo = await getUsernameInfo(ssid)
-                if type(usernameInfo) is bool:
+                if not usernameInfo:
                     accountInfo["minecraft"]["uchange"] = "Yes"
                 else:
                     accountInfo["minecraft"]["uchange"] = f"Changeable in {usernameInfo} days"

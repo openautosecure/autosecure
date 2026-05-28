@@ -8,8 +8,8 @@ class Claim(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @discord.slash_command(name="claim", description="Claim a Minecraft account")
-    async def claim(self, ctx: discord.ApplicationContext, username: str):
+    @discord.slash_command(name="claim", description="Claim a secured account by ID")
+    async def claim(self, ctx: discord.ApplicationContext, id: discord.Option(str, "The claim ID shown on the secured account embed")):
         config = json.load(open("config.json", "r+"))
         claims = config["claims"]
 
@@ -22,32 +22,45 @@ class Claim(commands.Cog):
             return
 
         with DBConnection() as database:
-            if database.isAccountClaimed(username):
+            if not database.isValidClaimId(id):
                 await ctx.respond(
                     embed=discord.Embed(
-                        title="Already Claimed",
-                        description=f"**{username}** has already been claimed.",
+                        title="Invalid Claim ID",
+                        description=f"No secured account found with claim ID `{id}`.",
                         color=0xFF5C5C
                     ),
                     ephemeral=True
                 )
                 return
 
-            database.claimAccount(username, ctx.author.id)
+            if database.isAlreadyClaimed(id):
+                await ctx.respond(
+                    embed=discord.Embed(
+                        title="Already Claimed",
+                        description=f"Claim ID `{id}` has already been claimed.",
+                        color=0xFF5C5C
+                    ),
+                    ephemeral=True
+                )
+                return
+
+            database.claimAccount(id, ctx.author.id)
 
         claim_embed = discord.Embed(
             title="Account Claimed",
-            description=f"{ctx.author.mention} has claimed **{username}**!",
+            description=f"{ctx.author.mention} claimed account `{id}`.",
             color=0x79D990
         )
-        claim_embed.set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/128")
+        claim_embed.add_field(name="Claim ID", value=f"`{id}`", inline=False)
+        claim_embed.add_field(name="Claimed By", value=f"{ctx.author.mention} (`{ctx.author.id}`)", inline=False)
 
         logs_channel = await ctx.bot.fetch_channel(config["discord"]["logs_channel"])
         await logs_channel.send(embed=claim_embed)
 
         await ctx.respond(
             embed=discord.Embed(
-                description=f"You have claimed **{username}**.",
+                title="Account Claimed",
+                description=f"You have successfully claimed account `{id}`.",
                 color=0x79D990
             ),
             ephemeral=True

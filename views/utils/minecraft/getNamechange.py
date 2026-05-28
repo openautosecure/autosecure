@@ -15,7 +15,7 @@ async def getUsernameInfo(ssid: str):
         
         response = response.json()
         if response["nameChangeAllowed"]:
-            return True
+            return False
         
         todayDate = datetime.datetime.now()
 

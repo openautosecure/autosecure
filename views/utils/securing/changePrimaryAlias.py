@@ -12,8 +12,6 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
             follow_redirects=True
         )
 
-        # Loop because after loginPWD we may still get the OAuth auto-submit form
-        # before finally landing on the AddAssocId canary page.
         for _ in range(4):
             canary = re.search(r'name="canary"\s+value="([^"]+)"', response.text)
             if canary:
@@ -22,7 +20,6 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
             url_post = re.search(r'"urlPost":"([^"]+)"', response.text)
             print(f"URL POST: {url_post.group(1)}")
             if url_post:
-                # React SPA login page — PPFT is in ServerData.sFTTag, not in static HTML
                 ppft_match = re.search(r'"sFTTag":"[^"]*value=\\"([^"\\]+)\\"', response.text)
                 if not ppft_match:
                     print("[X] - Failed to extract PPFT from login page")

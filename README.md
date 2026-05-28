@@ -47,8 +47,8 @@ No browser automation (Playwright/Selenium) — just HTTP requests.
 
 ## Setup Guide
 
-### 1. Install Python 3.12
-[Download Python 3.12](https://www.python.org/downloads/release/python-3120/)
+### 1. Install Python 3.14
+[Download Python 3.14](https://www.python.org/downloads/release/python-3140/)
 
 ### 2. Install Dependencies
 ```bash

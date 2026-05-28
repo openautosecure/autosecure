@@ -47,6 +47,9 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     initialTime = time.time()
     if not msaauth:
         return msaauth
+    elif msaauth == "Recovery":
+        print(f"[X] - Account requires account recovery")
+        return None
     elif msaauth == "Family":
         print(f"[X] - Account is Family Locked")
         account["minecraft"]["name"] = "Child Locked"

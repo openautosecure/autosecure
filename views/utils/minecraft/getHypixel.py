@@ -97,5 +97,4 @@ async def getHypixelStats(username: str) -> dict:
                     if member:
                         result["slevel"] = member.get("leveling", {}).get("experience", 0)
 
-    print(result)
     return result

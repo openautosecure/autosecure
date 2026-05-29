@@ -34,7 +34,6 @@ async def recover(session: httpx.AsyncClient, email: str, recovery_code: str, ne
     )
 
     recJson = recToken.json()
-    print(recJson)
     if "apiCanary" in recJson:
         canary = recJson["apiCanary"]
         token = recJson["token"]
@@ -101,9 +100,6 @@ async def recover(session: httpx.AsyncClient, email: str, recovery_code: str, ne
                 }
             )
             finishJson = finishSecure.json()
-
-            print(finishJson)
-            print(finishSecure.text)
             
             if "recoveryCode" in finishJson:
                 return {

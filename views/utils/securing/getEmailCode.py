@@ -1,8 +1,8 @@
+from database.database import DBConnection
 import asyncio
+import httpx
 import json
 import re
-import httpx
-from database.database import DBConnection
 
 async def getEmailCode(type: str) -> str:
     config = json.load(open("config.json", "r"))

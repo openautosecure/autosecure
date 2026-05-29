@@ -12,10 +12,9 @@ async def addAuthenticator(session: httpx.AsyncClient) -> str:
     proof_id = re.search(r'id="ProofId"[^>]*value="(\d+)"', proof_add.text).group(1)
     canary = json.loads(f'"{re.search(r"\"apiCanary\":\"([^\"]+)\"", proof_add.text).group(1)}"')
     tcxt = json.loads(f'"{re.search(r"\"tcxt\":\"([^\"]+)\"", proof_add.text).group(1)}"')
-    print(f"Secret Key: {secret_key}")
 
     otp = await totp(secret_key)
-    verify = await session.post(
+    await session.post(
         url = "https://account.live.com/API/AddVerifyTotp",
         headers = {
             "Accept": "application/json",
@@ -34,11 +33,8 @@ async def addAuthenticator(session: httpx.AsyncClient) -> str:
         follow_redirects=True
     )
 
-    print(verify.text)
-
     default_url = await session.get(url = "https://account.live.com/proofs/EnableTfa")
     enable_2fa = re.search(r'"EnableTfa":"([^"]+)"', default_url.text).group(1)
-    response = await session.get(url=enable_2fa)
-    print(response.text)
+    await session.get(url=enable_2fa)
 
     return secret_key

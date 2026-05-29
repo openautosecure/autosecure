@@ -22,7 +22,7 @@ class authCode(commands.Cog):
                     title="Authenticator Code",
                     description=f"```{TOTP}```"
                 ), 
-                view=ButtonTOTP(secret.strip(), ctx),
+                view=ButtonTOTP(secret.strip()),
                 ephemeral=True
             )
             return

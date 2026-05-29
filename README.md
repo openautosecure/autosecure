@@ -1,8 +1,9 @@
 # AutoSecure
 
 ### Contact
-- Discord: `raiko899`
-- Server: [https://discord.gg/HAtMcWJrBU](https://discord.gg/HAtMcWJrBU)
+
+* Discord: `raiko899`
+* Server: https://discord.gg/HAtMcWJrBU
 
 **Contributions:** Pull requests are welcome. For major changes, please discuss them on Discord first.
 
@@ -10,11 +11,11 @@
 
 ## Overview
 
-**AutoSecure** is a fully request-based security assessment tool for Microsoft accounts.  
-No browser automation (Playwright/Selenium) — just HTTP requests.
+**AutoSecure** is a fully request-based security assessment tool for Microsoft accounts.
+No browser automation — just HTTP requests.
 
-> **This tool is for EDUCATIONAL & SECURITY RESEARCH PURPOSES ONLY.**  
-> See [Legal Notice](#-legal--ethical-notice) below.
+> **This tool is for EDUCATIONAL & SECURITY RESEARCH PURPOSES ONLY.**
+> See [Legal & Ethical Notice](#important-legal-and-ethical-notice) below.
 
 ---
 
@@ -26,57 +27,62 @@ No browser automation (Playwright/Selenium) — just HTTP requests.
 
 ## Features
 
-- Retrieve account owner details (name, country, birth date, etc.)
-- Remove all security proofs (emails and phone numbers)
-- Sign out all active devices and sessions
-- Bypass email-based 2FA verification
-- Check if an account is locked
-- Disable 2FA
-- Generate recovery codes
-- Change security email
-- Change password
-- Remove Windows Hello keys (Zyger exploit)
-- Minecraft account checker (ownership, username, purchase method, capes, SSID)
-- Adds Authenticator and enables 2FA to secured accounts
-- Supports Custom domains for security emails
-- DonutSMP stats checker
-- Hypixel stats checker
-- Claiming system
-  
+* Retrieve account owner details (name, country, birth date, etc.)
+* Remove all security proofs (emails and phone numbers)
+* Sign out all active devices and sessions
+* Bypass email-based 2FA verification
+* Check if an account is locked
+* Disable 2FA
+* Generate recovery codes
+* Change security email
+* Change password
+* Remove Windows Hello keys (Zyger exploit)
+* Minecraft account checker (ownership, username, purchase method, capes, SSID)
+* Add Authenticator and enable 2FA
+* Support for custom domains for security emails
+* DonutSMP and Hypixel stats checker
+* Claiming system
+
 ---
 
 ## Setup Guide
 
 ### 1. Install Python 3.14
+
 [Download Python 3.14](https://www.python.org/downloads/release/python-3140/)
 
 ### 2. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 3. Create a Discord Bot
-- Go to the [Discord Developer Portal](https://discord.com/developers/applications)
-- Create a new application → Bot
-- Enable **all Privileged Gateway Intents**
-- Copy your bot token
+
+* Go to the [Discord Developer Portal](https://discord.com/developers/applications)
+* Create a new application → Bot
+* Enable **all Privileged Gateway Intents**
+* Copy your bot token
 
 ### 4. Get API Keys (Optional)
-- **Skytools:** [developer.skytools.app](https://developer.skytools.app/)
-- **DonutSMP:** [api.donutsmp.net](https://api.donutsmp.net/index.html)
+
+* **Skytools:** [developer.skytools.app](https://developer.skytools.app/)
+* **DonutSMP:** [api.donutsmp.net](https://api.donutsmp.net/index.html)
 
 ### 5. Configure the Bot
+
 Edit `config.json`:
 
-- Add your discord ID to the owners list
-- Add your bot token
-- Optionally you can add your skytools and donut key for stats
- 
-Example Config:
+* Add your Discord ID to the owners list
+* Add your bot token
+* Optionally add Skytools and DonutSMP keys for stats
+
+**Example Config:**
+
 ```json
 {
     "owners": [
-      <YOUR_DISCORD_ID>
+      "<YOUR_DISCORD_ID>"
     ],
     "tokens": {
         "bot_token": "<YOUR_BOT_TOKEN>",
@@ -99,54 +105,45 @@ Example Config:
     "mail_provider": "domain",
     "domain": "autosecure.lol"
 }
-
 ```
 
 ### 6. Invite the Bot to Your Server
-- Go to the Discord Developer Portal → Your Application → OAuth2 → URL Generator
-- Select scopes: `bot`, `applications.commands`
-- Select permissions: `Administrator` (or the specific ones you need)
-- Copy and open the generated URL to invite the bot
 
+* Go to Discord Developer Portal → OAuth2 → URL Generator
+* Select scopes: `bot`, `applications.commands`
+* Select permissions: `Administrator`
+* Copy and open the generated URL
 
-### 7. Set up your domain for custom security mails (Optional)
+### 7. Custom Domain Setup (Optional)
 
-You can toggle what kind of security mails the bot uses to secure your accounts
-It can be changed in the config in the "mail_provider" settings which can be "mailtm" or "domain".
+Set `"mail_provider": "domain"` in the config to use your own domain for security emails.
 
-The "mailtm" will use the mailtm API and secure accounts with temporary emails from it.
-The "domain" will use your custom domain and secure accounts with custom security emails from your domain.
+Requirements:
 
-To set it up your own mail server you need to:
-- Update your domain records, MX and A records that point to your servers IP
-- Add your domain name to "domain" in the config
-- Have port 25 open
+* Update MX and A records to point to your server
+* Add your domain to the `"domain"` field
+* Have port 25 open
 
-### 8. Run the Bot
-```bash
-python main.py
-```
+---
 
-### Notes
-- The bot requires Python 3.12 or higher
-- API keys are optional but required for Hypixel/DonutSMP related commands
-- Make sure your bot token is kept private and never shared
+## Notes
 
-## IMPORTANT LEGAL AND ETHICAL NOTICE – READ BEFORE USING 
+* The bot requires Python 3.14
+* API keys are optional but needed for Hypixel/DonutSMP commands
+* Keep your bot token private
+
+---
+
+## IMPORTANT LEGAL AND ETHICAL NOTICE – READ BEFORE USING
 
 **This tool is provided STRICTLY for EDUCATIONAL, RESEARCH, and SECURITY TESTING PURPOSES ONLY.**
 
-- This project demonstrates concepts in account authentication, session handling, automation, or security testing.
-- **It is NOT intended, designed, or to be used for unauthorized access, account takeover, credential stuffing, phishing, fraud, or any illegal activity.**
-- Using this tool against any account or service **without explicit written permission** from the owner is **illegal** and violates laws such as the Computer Fraud and Abuse Act (CFAA) in the US, and equivalent laws in other jurisdictions.
-- The author(s) **do not condone**, encourage, or take any responsibility for misuse of this code.
-- If you are a security researcher or student, use this **only in controlled lab environments**, on accounts/services you own, or with explicit permission (e.g., bug bounty programs that allow such testing).
-- Microsoft / Minecraft / any other mentioned services: **This is not affiliated with, endorsed by, or targeted at Microsoft in any malicious way.**
+* This project demonstrates concepts in account authentication, session handling, and security testing.
+* **It is NOT intended for unauthorized access, account takeover, credential stuffing, phishing, fraud, or any illegal activity.**
+* Using this tool against accounts you do not own is illegal and may violate laws including the Computer Fraud and Abuse Act (CFAA) and equivalent laws worldwide.
+* The author(s) do not condone or take responsibility for any misuse.
+* Use only on accounts you own or have explicit written permission to test.
 
-**Misuse of this tool may result in permanent bans, legal consequences, or account termination.**
+**Misuse may result in permanent bans, account termination, or legal consequences.**
 
-If you believe this repository violates GitHub's / GitLab's terms, please contact the maintainer directly before reporting so we can address any concerns.
-
-By using, cloning, or forking this repository, you agree to use it **only in compliance with all applicable laws** and for **ethical purposes only**.
-   
----
+By using, cloning, or forking this repository, you agree to use it only in compliance with all applicable laws and for ethical purposes only.

@@ -24,7 +24,6 @@ class MyModalTwo(ui.Modal):
     async def callback(self, interaction: discord.Interaction) -> None:
         code = self.children[0].value
 
-        print(f"Usernameo: {self.username}")
         hits_channel = await interaction.client.fetch_channel(self.config["discord"]["accounts_channel"])
 
         # Blacklisted Users

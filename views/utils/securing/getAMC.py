@@ -26,7 +26,6 @@ async def getAMC(session: httpx.AsyncClient):
 
             rvt = re.search(r'name="__RequestVerificationToken"\s+type="hidden"\s+value="([^"]+)"', finalPage.text, re.DOTALL).group(1)
             print(f"[+] - Got RequestVerificationToken ({rvt})")
-            print(f"[~] - AMC cookies: {dict(session.cookies)}")
             return rvt
         except httpx.ConnectError:
             if attempt == 2:

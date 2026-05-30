@@ -71,7 +71,6 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
 
             capes = await getCapes(ssid)
             if capes:
-                print(f"Capes -> {capes}")
                 accountInfo["minecraft"]["capes"] = ", ".join(i["alias"] for i in capes)
                 print(f"[+] - Got capes")
             else:

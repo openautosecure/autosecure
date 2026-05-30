@@ -42,6 +42,7 @@ class DiscordBot(commands.Bot):
 
     @staticmethod
     def setup_logging() -> None:
+        logging.basicConfig(filename="Logs/securing.log", level=logging.INFO)
         logging.getLogger("discord").setLevel(logging.INFO)
         logging.getLogger("discord.http").setLevel(logging.WARNING)
         logging.getLogger("httpx").setLevel(logging.DEBUG)

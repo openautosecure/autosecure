@@ -1,3 +1,4 @@
+import logging
 import httpx
 
 async def removeZyger(session: httpx.AsyncClient, apicanary: str):
@@ -36,4 +37,4 @@ async def removeZyger(session: httpx.AsyncClient, apicanary: str):
         print("[+] - Removed Zyger")
     else:
         print("[X] - Failed to remove Zyger")
-        print(f"Zyger: {remove.text}")
+        logging.error(f"Failed to remove Zyger: {remove.text}")

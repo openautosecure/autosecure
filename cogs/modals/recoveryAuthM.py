@@ -27,7 +27,7 @@ class recoveryModal(ui.Modal):
             ephemeral=True
         )
 
-        account = await recoverySecure(email, "pwdsecret", {"password": password, "auth_secret": auth_secret})
+        account = await recoverySecure(email, "authpwd", {"password": password, "auth_secret": auth_secret})
         if account == "invalid":
             await interaction.followup.send(
                 embed = discord.Embed(

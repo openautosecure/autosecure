@@ -36,7 +36,7 @@ async def handleFIDO(session: httpx.AsyncClient, redirect: str) -> dict:
     
     response = await session.get(unquote(ru), follow_redirects=True)
 
-    return getData(response.text)
+    return response.text
 
 # Accept Notice Form
 async def handleNotice(session: httpx.AsyncClient, action_url: str, redirect: str) -> str:
@@ -68,6 +68,12 @@ async def handleRedirects(session: httpx.AsyncClient, response: str) -> dict:
         print(f"[X] - Account is Family Locked")
         return "Family"
 
+    # FIDO passkey interrupt
+    if "interrupt/passkey" in action_url:
+        print(f"[~] - Handling FIDO")
+        result = await handleFIDO(session, response)
+        return getData(result)
+
     # Submit the all forms
     if "pprid" in response:
         redirect = await submitForm(session, action_url, response)
@@ -76,18 +82,14 @@ async def handleRedirects(session: httpx.AsyncClient, response: str) -> dict:
         if '"iAddProofViewSkip"' in redirect:
             print(f"[~] - Handling Accrou Notice Form")
             logging.info(f"Accrou Notice Response: {redirect}")
-            
+
             skip_url = re.search(r'"skip":\{"url":"([^"]+)"', redirect).group(1)
             skip_response = await session.get(skip_url, follow_redirects=True)
-    
-            return getData(skip_response.text)
 
-    elif "interrupt/passkey" in action_url:
-        print(f"[~] - Handling FIDO")
-        result = await handleFIDO(session, redirect)
-        return getData(result)
+            return getData(skip_response.text)
     
     # Accept notice
     print(f"[~] - Handling Accept Notice Form")
+    logging.info(f"Accept Notice Response: {redirect}")
     result = await handleNotice(session, action_url, redirect)
     return getData(result)

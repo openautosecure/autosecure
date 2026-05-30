@@ -14,8 +14,5 @@ async def getT(session: httpx.AsyncClient):
         fetchT.text
     )
 
-    if match:
-        return match.group(1)
-    
-    return None 
+    return match.group(1)
     

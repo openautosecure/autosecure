@@ -4,14 +4,17 @@ import re
 
 async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dict:
     # Handles Microsofts random form popups
-    # 4 Cases | Family Locked, FIDO Passkey, Accept Notice Form and Recovery Form
+    # 5 Cases | Family Locked, FIDO Passkey, Accept Notice Form, Recovery Form and Accrou Notice Form
     redirect_logs = open("logs.txt", "w+")
 
     actionURL = re.search(r'action="([^"]+)"', page_response).group(1)
     redirect_logs.write(f"Action URL: {actionURL}\n")
+
+    # Family Locked
     if "family" in actionURL:
         return "Family"
     
+    # Submit the form
     if "pprid" in page_response:
         pprid = re.search(r'name="pprid"[^>]+value="([^"]+)"', page_response).group(1)
         ipt = re.search(r'name="ipt"[^>]+value="([^"]+)"', page_response).group(1)
@@ -27,9 +30,18 @@ async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dic
         redirect_logs.write(f"Post Response: {response.text}\n")
         redirect_logs.write(f"Post Headers: {response.headers}\n")
 
-    if "recover" in actionURL:
-        redirect_logs.write(f"GOT RECOVERY FORM")
+    # Accrou Notice Form
+    if '"iAddProofViewSkip"' in response.text:
+        skip_url = re.search(r'"skip":\{"url":"([^"]+)"', response.text).group(1)
+        response = await session.get(skip_url, follow_redirects=True)
 
+        urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response.text).group(1)
+        ppft = quote(re.search(r'"sFT"\s*:\s*"([^"]+)"', response.text).group(1), safe='-*')
+
+        return {
+            "urlPost": urlPost, "ppft": ppft}
+
+    # FIDO Passkey interruption
     elif "interrupt/passkey" in actionURL:
         postBackUrl = re.search(r"""name=['"]postBackUrl['"]\s+value=['"]([^'"]+)['"]""", response.text).group(1).replace('&amp;', '&')
         ru = re.search(r'[?&]ru=([^&"]+)', postBackUrl).group(1)
@@ -45,6 +57,7 @@ async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dic
             "ppft": quote(ppft.group(1), safe='-*')
         }
 
+    # Fallback which handles the accept notice
     cid, actioncode = re.search(
         r'id="correlation_id"\s+value="([^"]+)".*?id="code"\s+value="([^"]+)"',
         page_response,

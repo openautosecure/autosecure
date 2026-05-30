@@ -69,7 +69,7 @@ class DiscordBot(commands.Bot):
             database.setupTables()
 
 # Simple check for dynamic ips (Not needed if you're using a VPS)
-if config["mail_provider"] == "domain":
+if config["mail_provider"] == "domain" and config["domain"]:
     domain: str = config["domain"]
 
     if not domain.startswith("mail."):

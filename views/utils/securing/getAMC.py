@@ -8,12 +8,11 @@ async def getAMC(session: httpx.AsyncClient):
 
     for attempt in range(3):
         try:
-            response = await session.get(
+            await session.get(
                 "https://account.microsoft.com",
                 follow_redirects=True
             )
 
-            print(f"getAMC Response Headers: {response.headers}")
             finalPage = await session.get(
                 url="https://account.microsoft.com/profile?lang=en-US",
                 headers={

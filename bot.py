@@ -6,7 +6,6 @@ import asyncio
 import socket
 import json
 import sys
-import os
 
 from views.buttons.linkAccount import ButtonViewOne
 from database.database import DBConnection
@@ -45,7 +44,6 @@ class DiscordBot(commands.Bot):
         root = logging.getLogger()
         root.setLevel(logging.INFO)
 
-        os.makedirs("Logs", exist_ok=True)
         file_handler = logging.FileHandler("Logs/securing.log")
         file_handler.setLevel(logging.INFO)
         root.addHandler(file_handler)

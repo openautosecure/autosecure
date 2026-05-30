@@ -39,7 +39,10 @@ async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dic
         ppft = quote(re.search(r'"sFT"\s*:\s*"([^"]+)"', response.text).group(1), safe='-*')
 
         return {
-            "urlPost": urlPost, "ppft": ppft}
+            "urlPost": urlPost, 
+            "ppft": ppft
+        }
+
 
     # FIDO Passkey interruption
     elif "interrupt/passkey" in actionURL:

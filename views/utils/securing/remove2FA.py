@@ -32,7 +32,7 @@ async def remove2FA(session: httpx.AsyncClient, apicanary: str):
         follow_redirects = False
     )
 
-    if "apiCanary" in remove.json() and remove.status_code == 200:
+    if remove.status_code == 200:
         print("[+] - Disabled 2FA")
     else:
         print("[X] - Failed to disable 2FA")

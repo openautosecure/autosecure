@@ -10,8 +10,3 @@ async def getAMRP(session: httpx.AsyncClient, T: str):
         },
         follow_redirects = False
     )
-    
-    if "AMRPSSecAuth" in fetchAMRP.cookies:
-        return True
-    
-    return None

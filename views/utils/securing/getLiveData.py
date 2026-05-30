@@ -11,7 +11,6 @@ async def getLiveData(session: httpx.AsyncClient) -> dict:
         response.text
     ).group(0)
 
-    print(f"URL Post: {urlPost}")
     ppft = re.search(
         r'value=\\?"([^"]+)"', 
         response.text

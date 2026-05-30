@@ -1,5 +1,6 @@
 from views.utils.handleRedirects import handleRedirects
 from urllib.parse import quote
+import logging
 import httpx
 import re
 
@@ -81,7 +82,7 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, oda
     
     # Checks for both requests
     if '__Host-MSAAUTH' in session.cookies:
-        print(f"MSAAUTH: {dict(session.cookies)['__Host-MSAAUTH']}")
+        logging.info(f"MSAAUTH cookie for {email}: {dict(session.cookies)['__Host-MSAAUTH']}")
         
         if not urlPost:
             data = await handleRedirects(session, loginData.text)

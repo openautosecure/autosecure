@@ -21,5 +21,3 @@ async def getGamertag(xbl: str) -> str:
                 "TokenType": "JWT"
             }
         )
-
-        print(gamertag.text)

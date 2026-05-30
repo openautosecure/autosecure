@@ -1,8 +1,7 @@
 from urllib.parse import quote, unquote
+import logging
 import httpx
 import re
-
-redirect_logs = open("logs.txt", "w+")
 
 def getData(response: str) -> dict:
     urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response)
@@ -36,7 +35,6 @@ async def handleFIDO(session: httpx.AsyncClient, redirect: str) -> dict:
     ru = re.search(r'[?&]ru=([^&"]+)', formatURL).group(1)
     
     response = await session.get(unquote(ru), follow_redirects=True)
-    redirect_logs.write(f"Get Response: {response.text}")
 
     return getData(response.text)
 
@@ -64,8 +62,7 @@ async def handleRedirects(session: httpx.AsyncClient, response: str) -> dict:
     # Handles Microsofts random form popups
 
     action_url = re.search(r'action="([^"]+)"', response).group(1)
-    redirect_logs.write(f"Action URL: {action_url}\n")
-
+    logging.info(f"Action URL redirect: {action_url}")
     # Family Locked
     if "family" in action_url:
         print(f"[X] - Account is Family Locked")
@@ -78,7 +75,7 @@ async def handleRedirects(session: httpx.AsyncClient, response: str) -> dict:
     # Accrou Notice Form
     if '"iAddProofViewSkip"' in redirect:
         print(f"[~] - Handling Accrou Notice Form")
-        redirect_logs.write(f"Accrou Notice Redirect: {response}\n")
+        logging.info(f"Accrou Notice Response: {response}")
         skip_url = re.search(r'"skip":\{"url":"([^"]+)"', response).group(1)
         skip_response = await session.get(skip_url, follow_redirects=True)
 

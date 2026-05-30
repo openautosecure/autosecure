@@ -7,9 +7,14 @@ class Dropdown(discord.ui.Select):
     def __init__(self):
         options = [
             discord.SelectOption(
-                label="Recovery Code",
+                label="Recovery Code (WIP)",
                 description="Uses email + recovery code",
                 value="rcvcode"
+            ),
+            discord.SelectOption(
+                label="Password + Secret",
+                description="Uses auth secret and password",
+                value="pwdsecret"
             )
         ]
         super().__init__(
@@ -25,6 +30,9 @@ class Dropdown(discord.ui.Select):
         match selected:
             case "rcvcode":
                 modal = recoveryModal()
+            case "pwdsecret":
+                modal = recoveryModal()
+            
             
         await interaction.response.send_modal(modal)
 
@@ -38,16 +46,17 @@ class secure(commands.Cog):
         if ctx.author.id not in self.bot.admins:
             await ctx.respond("You do not have permission to execute this command!", ephemeral=True)
             return
-        
-        await ctx.response.send_message("This command is WIP", ephemeral=True)
-        return
+    
        
         embed = discord.Embed(
             title = "Select Securing Method",
             description = """
             Choose how you want to authenticate:
            
-            **Recovery Code**
+            **Recovery Code (WIP)**
+            Use your email and recovery code
+
+            **Password + Secret**
             Use your email and recovery code
             """
         )

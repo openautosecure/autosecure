@@ -69,7 +69,7 @@ class Stats(commands.Cog):
         await ctx.defer(ephemeral=True)
 
         hypixel_stats = await getHypixelStats(username)
-        if not hypixel_stats:
+        if not hypixel_stats["exists"]:
             await ctx.followup.send("Make sure you setup your Skytools key first!", ephemeral=True)
             return
         

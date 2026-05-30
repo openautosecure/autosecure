@@ -2,73 +2,54 @@ from urllib.parse import quote, unquote
 import httpx
 import re
 
-async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dict:
-    # Handles Microsofts random form popups
-    # 5 Cases | Family Locked, FIDO Passkey, Accept Notice Form, Recovery Form and Accrou Notice Form
-    redirect_logs = open("logs.txt", "w+")
+redirect_logs = open("logs.txt", "w+")
 
-    actionURL = re.search(r'action="([^"]+)"', page_response).group(1)
-    redirect_logs.write(f"Action URL: {actionURL}\n")
+def getData(response: str) -> dict:
+    urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response)
+    ppft = re.search(r'"sFT"\s*:\s*"([^"]+)"', response)
 
-    # Family Locked
-    if "family" in actionURL:
-        return "Family"
+    return {
+        "urlPost": urlPost.group(1),
+        "ppft": quote(ppft.group(1), safe='-*')
+    }
+
+async def submitForm(session: httpx.AsyncClient, action_url: str, response: str) -> str:
+    pprid = re.search(r'name="pprid"[^>]+value="([^"]+)"', response).group(1)
+    ipt = re.search(r'name="ipt"[^>]+value="([^"]+)"', response).group(1)
     
-    # Submit the form
-    if "pprid" in page_response:
-        pprid = re.search(r'name="pprid"[^>]+value="([^"]+)"', page_response).group(1)
-        ipt = re.search(r'name="ipt"[^>]+value="([^"]+)"', page_response).group(1)
-        
-        response = await session.post(
-            url = actionURL,
-            data = {
-                "pprid": pprid,
-                "ipt": ipt
-            },
-            follow_redirects=True
-        )
-        redirect_logs.write(f"Post Response: {response.text}\n")
-        redirect_logs.write(f"Post Headers: {response.headers}\n")
+    response = await session.post(
+        url = action_url,
+        data = {
+            "pprid": pprid,
+            "ipt": ipt
+        },
+        follow_redirects=True
+    )
+    rtext = response.text
+    return rtext
 
-    # Accrou Notice Form
-    if '"iAddProofViewSkip"' in response.text:
-        skip_url = re.search(r'"skip":\{"url":"([^"]+)"', response.text).group(1)
-        response = await session.get(skip_url, follow_redirects=True)
+# FIDO Passkey interruption
+async def handleFIDO(session: httpx.AsyncClient, redirect: str) -> dict:
+    postBackUrl = re.search(r"""name=['"]postBackUrl['"]\s+value=['"]([^'"]+)['"]""", redirect).group(1)
+    formatURL = postBackUrl.replace('&amp;', '&')
 
-        urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response.text).group(1)
-        ppft = quote(re.search(r'"sFT"\s*:\s*"([^"]+)"', response.text).group(1), safe='-*')
+    ru = re.search(r'[?&]ru=([^&"]+)', formatURL).group(1)
+    
+    response = await session.get(unquote(ru), follow_redirects=True)
+    redirect_logs.write(f"Get Response: {response.text}")
 
-        return {
-            "urlPost": urlPost, 
-            "ppft": ppft
-        }
+    return getData(response.text)
 
-
-    # FIDO Passkey interruption
-    elif "interrupt/passkey" in actionURL:
-        postBackUrl = re.search(r"""name=['"]postBackUrl['"]\s+value=['"]([^'"]+)['"]""", response.text).group(1).replace('&amp;', '&')
-        ru = re.search(r'[?&]ru=([^&"]+)', postBackUrl).group(1)
-        
-        response = await session.get(unquote(ru), follow_redirects=True)
-        redirect_logs.write(f"Get Response: {response.text}")
-
-        urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response.text)
-        ppft = re.search(r'"sFT"\s*:\s*"([^"]+)"', response.text)
-
-        return {
-            "urlPost": urlPost.group(1),
-            "ppft": quote(ppft.group(1), safe='-*')
-        }
-
-    # Fallback which handles the accept notice
+# Accept Notice Form
+async def handleNotice(session: httpx.AsyncClient, action_url: str, redirect: str) -> str:
     cid, actioncode = re.search(
         r'id="correlation_id"\s+value="([^"]+)".*?id="code"\s+value="([^"]+)"',
-        page_response,
+        redirect,
         re.DOTALL
     ).groups()
     
     acceptNotice = await session.post(
-        url = actionURL,
+        url = action_url,
         data = {
             "correlation_id": cid,
             "code": actioncode
@@ -77,10 +58,38 @@ async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dic
     postURL = re.search(r"var redirectUrl = '([^']+)';", acceptNotice.text).group(1).replace(r"\\u0026", "&")
     response = await session.post(postURL)
 
-    urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response.text).group(1)
-    ppft = quote(re.search(r'"sFT"\s*:\s*"([^"]+)"', response.text).group(1), safe='-*')
+    return response.text
 
-    return {
-        "urlPost": urlPost,
-        "ppft": ppft
-    }
+
+async def handleRedirects(session: httpx.AsyncClient, response: str) -> dict:
+    # Handles Microsofts random form popups
+
+    action_url = re.search(r'action="([^"]+)"', response).group(1)
+    redirect_logs.write(f"Action URL: {action_url}\n")
+
+    # Family Locked
+    if "family" in action_url:
+        print(f"[X] - Account is Family Locked")
+        return "Family"
+
+    # Submit the all forms
+    if "pprid" in response:
+        redirect = await submitForm(session, action_url, response)
+
+    # Accrou Notice Form
+    if '"iAddProofViewSkip"' in redirect:
+        print(f"[~] - Handling Accrou Notice Form")
+        skip_url = re.search(r'"skip":\{"url":"([^"]+)"', redirect).group(1)
+        response = await session.get(skip_url, follow_redirects=True)
+
+        return getData(redirect)
+
+    elif "interrupt/passkey" in action_url:
+        print(f"[~] - Handling FIDO")
+        result = await handleFIDO(session, redirect)
+        return getData(result)
+    
+    # Accept notice
+    print(f"[~] - Handling Accept Notice Form")
+    result = await handleNotice(session, action_url, redirect)
+    return getData(result)

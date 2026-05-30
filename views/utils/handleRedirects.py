@@ -60,7 +60,6 @@ async def handleNotice(session: httpx.AsyncClient, action_url: str, redirect: st
 
     return response.text
 
-
 async def handleRedirects(session: httpx.AsyncClient, response: str) -> dict:
     # Handles Microsofts random form popups
 
@@ -79,15 +78,14 @@ async def handleRedirects(session: httpx.AsyncClient, response: str) -> dict:
     # Accrou Notice Form
     if '"iAddProofViewSkip"' in redirect:
         print(f"[~] - Handling Accrou Notice Form")
-        skip_url = re.search(r'"skip":\{"url":"([^"]+)"', redirect).group(1)
-        response = await session.get(skip_url, follow_redirects=True)
+        skip_url = re.search(r'"skip":\{"url":"([^"]+)"', response).group(1)
+        skip_response = await session.get(skip_url, follow_redirects=True)
 
-        return getData(redirect)
+        return getData(skip_response.text)
 
     elif "interrupt/passkey" in action_url:
         print(f"[~] - Handling FIDO")
-        result = await handleFIDO(session, redirect)
-        return getData(result)
+        return await handleFIDO(session, redirect)
     
     # Accept notice
     print(f"[~] - Handling Accept Notice Form")

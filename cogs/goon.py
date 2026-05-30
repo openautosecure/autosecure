@@ -7,7 +7,7 @@ class Goon(commands.Cog):
     
     @discord.slash_command(name="goon", description="goons")
     async def code_command(self, ctx: discord.ApplicationContext):
-        ctx.response.send_message("https://pornhub.com", ephemeral=True)
+        await ctx.response.send_message("https://pornhub.com", ephemeral=True)
 
 def setup(bot: commands.Bot) -> None:
     bot.add_cog(Goon(bot))

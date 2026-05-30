@@ -186,6 +186,7 @@ class DBConnection:
                    mc_name, mc_method, mc_gamertag, mc_uchange, mc_capes, mc_ssid
             FROM `secured_accounts` WHERE claim_id = ?
         """, (claim_id,)).fetchone()
+        
         if not row:
             return None
         keys = [

@@ -13,9 +13,9 @@ def getData(response: str) -> dict:
         "ppft": quote(ppft.group(1), safe='-*')
     }
 
-async def submitForm(session: httpx.AsyncClient, action_url: str, response: str) -> str:
-    pprid = re.search(r'name="pprid"[^>]+value="([^"]+)"', response).group(1)
-    ipt = re.search(r'name="ipt"[^>]+value="([^"]+)"', response).group(1)
+async def submitForm(session: httpx.AsyncClient, action_url: str, redirect: str) -> str:
+    pprid = re.search(r'name="pprid"[^>]+value="([^"]+)"', redirect).group(1)
+    ipt = re.search(r'name="ipt"[^>]+value="([^"]+)"', redirect).group(1)
     
     response = await session.post(
         url = action_url,
@@ -78,6 +78,7 @@ async def handleRedirects(session: httpx.AsyncClient, response: str) -> dict:
     # Accrou Notice Form
     if '"iAddProofViewSkip"' in redirect:
         print(f"[~] - Handling Accrou Notice Form")
+        redirect_logs.write(f"Accrou Notice Redirect: {response}\n")
         skip_url = re.search(r'"skip":\{"url":"([^"]+)"', response).group(1)
         skip_response = await session.get(skip_url, follow_redirects=True)
 

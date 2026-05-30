@@ -86,7 +86,8 @@ async def handleRedirects(session: httpx.AsyncClient, response: str) -> dict:
 
     elif "interrupt/passkey" in action_url:
         print(f"[~] - Handling FIDO")
-        return await handleFIDO(session, redirect)
+        result = await handleFIDO(session, redirect)
+        return getData(result)
     
     # Accept notice
     print(f"[~] - Handling Accept Notice Form")

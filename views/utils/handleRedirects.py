@@ -5,8 +5,10 @@ import re
 async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dict:
     # Handles Microsofts random form popups
     # 4 Cases | Family Locked, FIDO Passkey, Accept Notice Form and Recovery Form
+    redirect_logs = open("logs.txt", "w+")
 
     actionURL = re.search(r'action="([^"]+)"', page_response).group(1)
+    redirect_logs.write(f"Action URL: {actionURL}\n")
     if "family" in actionURL:
         return "Family"
     
@@ -22,17 +24,18 @@ async def handleRedirects(session: httpx.AsyncClient, page_response: str) -> dic
             },
             follow_redirects=True
         )
-        print(f"Post Response: {response.text}")
-        
+        redirect_logs.write(f"Post Response: {response.text}\n")
+        redirect_logs.write(f"Post Headers: {response.headers}\n")
+
     if "recover" in actionURL:
-        print(f"GOT RECOVERY FORM")
+        redirect_logs.write(f"GOT RECOVERY FORM")
 
     elif "interrupt/passkey" in actionURL:
         postBackUrl = re.search(r"""name=['"]postBackUrl['"]\s+value=['"]([^'"]+)['"]""", response.text).group(1).replace('&amp;', '&')
         ru = re.search(r'[?&]ru=([^&"]+)', postBackUrl).group(1)
         
         response = await session.get(unquote(ru), follow_redirects=True)
-        print(response.text)
+        redirect_logs.write(f"Get Response: {response.text}")
 
         urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response.text)
         ppft = re.search(r'"sFT"\s*:\s*"([^"]+)"', response.text)

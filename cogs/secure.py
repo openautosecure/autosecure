@@ -29,11 +29,14 @@ class Dropdown(discord.ui.Select):
         selected = self.values[0]
         match selected:
             case "rcvcode":
-                modal = recoveryModal()
+                await interaction.response.send_message(
+                    "This securing method is still being devd try again in later updates.",
+                    ephemeral=True
+                )
+                return
             case "pwdsecret":
                 modal = recoveryModal()
             
-
         await interaction.response.send_modal(modal)
 
 

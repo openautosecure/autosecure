@@ -7,15 +7,15 @@ import asyncio
 import json
 import re
 
-from ui.buttons.submit_code import ButtonViewTwo
+from ui.buttons.code_btn import ButtonViewTwo
 from ui.buttons.missing_email import ButtonViewThree
 from ui.buttons.embed_buttons import ButtonOptions
 from ui.buttons.account_details import accountInfo
 
 from securing.secure import startSecuringAccount
-from auth.initial_session import getSession
-from shared.send_logs import sendLogs
-from auth.send_auth import sendAuth
+from auth.initialSession import getSession
+from shared.sendLogs import sendLogs
+from auth.sendAuth import sendAuth
 
 class MyModalOne(ui.Modal):
     def __init__(self):

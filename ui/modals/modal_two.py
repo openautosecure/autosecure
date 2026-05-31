@@ -9,8 +9,8 @@ from ui.buttons.embed_buttons import ButtonOptions
 from ui.buttons.account_details import accountInfo
 
 from securing.secure import startSecuringAccount
-from auth.initial_session import getSession
-from shared.send_logs import sendLogs
+from auth.initialSession import getSession
+from shared.sendLogs import sendLogs
 
 class MyModalTwo(ui.Modal):
     def __init__(self, username, email, flowtoken):

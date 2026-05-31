@@ -76,10 +76,11 @@ async def get_msaauth(session: httpx.AsyncClient, email: str, flowToken: str, od
                 follow_redirects = True
             )
 
+            logging.info(f"Login attempt {i+1} response: {loginData.text}")
             urlPost = re.search(r'"urlPost"\s*:\s*"([^\"]+)"', loginData.text)
             if '__Host-MSAAUTH' in session.cookies:
                 break
-    
+
     # Checks for both requests
     if '__Host-MSAAUTH' in session.cookies:
         logging.info(f"MSAAUTH cookie for {email}: {dict(session.cookies)['__Host-MSAAUTH']}")

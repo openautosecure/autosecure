@@ -4,7 +4,6 @@ import logging
 import httpx
 import re
 
-
 async def get_msaauth(session: httpx.AsyncClient, email: str, flowToken: str, odata: dict, code: str) -> dict | None:
     # First post request that gets __Host-MSAAUTH
     
@@ -81,7 +80,6 @@ async def get_msaauth(session: httpx.AsyncClient, email: str, flowToken: str, od
             if '__Host-MSAAUTH' in session.cookies:
                 break
 
-    # Checks for both requests
     if '__Host-MSAAUTH' in session.cookies:
         logging.info(f"MSAAUTH cookie for {email}: {dict(session.cookies)['__Host-MSAAUTH']}")
         

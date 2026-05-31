@@ -101,5 +101,5 @@ async def change_primary_alias(session: httpx.AsyncClient, email: str, apicanary
             print(f"[X] - Failed to change primary alias ({email})")
         except Exception as e:
             logging.error(f"Error changing primary alias: {e}")
-            print(f"[X] - Failed to change primary alias ({email})")
+            print(f"[X] - Failed to change primary alias ({email}@outlook.com)")
         

@@ -2,7 +2,7 @@ import asyncio
 import httpx
 import re
 
-async def getAMC(session: httpx.AsyncClient):
+async def get_amc(session: httpx.AsyncClient):
     # Gets AMCSecAuthJWT and scrapes the RequestVerificationToken
     # neccessary to getting the DOB
 

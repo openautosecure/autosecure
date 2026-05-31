@@ -1,10 +1,10 @@
-from securing.utils.login_pwd import loginPWD
+from securing.utils.login_pwd import login_pwd
 from urllib.parse import unquote
 from database import database
 import httpx
 import re
 
-async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicanary: str) -> bool:
+async def change_primary_alias(session: httpx.AsyncClient, emailName: str, apicanary: str) -> bool:
     try:
         response = await session.get(
             url="https://account.live.com/AddAssocId",
@@ -28,7 +28,7 @@ async def changePrimaryAlias(session: httpx.AsyncClient, emailName: str, apicana
                 ppft = ppft_match.group(1)
                 with database.DBConnection() as db:
                     password = db.getEmailPassword(emailName)
-                await loginPWD(
+                await login_pwd(
                     session=session,
                     email=emailName,
                     post_url=url_post.group(1),

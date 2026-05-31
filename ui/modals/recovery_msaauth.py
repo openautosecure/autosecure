@@ -1,7 +1,7 @@
 from discord import ui
 import discord
 
-from auth.initial_session import getSession
+from auth.initial_session import get_session
 from securing.utils.secure import secure
 
 class msModal(ui.Modal):
@@ -13,7 +13,7 @@ class msModal(ui.Modal):
         
         # await interaction.response.defer()
 
-        # session = getSession().cookies.set(
+        # session = get_session().cookies.set(
         #     name = "__Host-MSAAUTH",
         #     value = self.box_one.value,
         #     domain = "login.live.com"                

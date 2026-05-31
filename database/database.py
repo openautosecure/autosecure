@@ -11,7 +11,7 @@ class DBConnection:
     def __exit__(self, *args) -> None:
         self.conn.close()
 
-    def setupTables(self) -> None:
+    def setup_tables(self) -> None:
         self.cursor.executescript("""
             CREATE TABLE IF NOT EXISTS `security_emails` (
                 email TEXT,
@@ -62,7 +62,7 @@ class DBConnection:
         self.conn.commit()
 
     # Security Emails
-    def addSecurityEmail(self, email: str, pwd: str) -> None:
+    def add_security_mail(self, email: str, pwd: str) -> None:
         self.cursor.execute("""
             INSERT INTO `security_emails` (email, password)
             VALUES (?, ?)
@@ -71,7 +71,7 @@ class DBConnection:
 
         self.conn.commit()
 
-    def getEmailPassword(self, email: str) -> str | None:
+    def get_email_password(self, email: str) -> str | None:
         password = self.cursor.execute("""
             SELECT password FROM `security_emails`
             WHERE email = ?
@@ -80,7 +80,7 @@ class DBConnection:
 
         return password
     
-    def getSecurityEmails(self) -> tuple:
+    def get_security_emails(self) -> tuple:
         emails = self.cursor.execute("""
             SELECT email FROM `security_emails`
         """).fetchall()
@@ -88,14 +88,14 @@ class DBConnection:
         return emails
 
     # Received Emails (custom SMTP)
-    def addEmail(self, to_address: str, from_address: str, subject: str, body: str) -> None:
+    def add_email(self, to_address: str, from_address: str, subject: str, body: str) -> None:
         self.cursor.execute("""
             INSERT INTO `received_emails` (to_address, from_address, subject, body)
             VALUES (?, ?, ?, ?)
         """, (to_address, from_address, subject, body))
         self.conn.commit()
 
-    def getEmails(self, to_address: str) -> list:
+    def get_emails(self, to_address: str) -> list:
         return self.cursor.execute("""
             SELECT id, to_address, from_address, subject, body, received_at
             FROM `received_emails`
@@ -103,7 +103,7 @@ class DBConnection:
             ORDER BY received_at ASC
         """, (to_address.lower(),)).fetchall()
 
-    def markUnused(self, to_address: str) -> tuple | None:
+    def mark_unused(self, to_address: str) -> tuple | None:
         return self.cursor.execute("""
             SELECT id, body FROM `received_emails`
             WHERE to_address = ? AND consumed = 0
@@ -111,28 +111,28 @@ class DBConnection:
             LIMIT 1
         """, (to_address.lower(),)).fetchone()
 
-    def markUsed(self, email_id: int) -> None:
+    def mark_used(self, email_id: int) -> None:
         self.cursor.execute("""
             UPDATE `received_emails` SET consumed = 1 WHERE id = ?
         """, (email_id,))
         self.conn.commit()
 
     # Blacklisting
-    def getBlacklistedUsers(self) -> list:
+    def get_blacklisted_users(self) -> list:
         users = self.cursor.execute("""
             SELECT id FROM `blacklisted_users`
         """).fetchall()
 
         return [user_id for (user_id,) in users]
     
-    def addBlacklistedUser(self, id: int) -> None:
+    def add_blacklisted_user(self, id: int) -> None:
         self.cursor.execute("""
             INSERT OR IGNORE INTO `blacklisted_users` (id)
             VALUES (?)
         """, (id,))
         self.conn.commit()
 
-    def removeBlacklistedUser(self, id: int) -> None:
+    def remove_blacklisted_user(self, id: int) -> None:
         self.cursor.execute("""
             DELETE FROM `blacklisted_users`
             WHERE id = ?
@@ -140,7 +140,7 @@ class DBConnection:
         self.conn.commit()
 
     # Secured Accounts
-    def addSecuredAccount(self, claim_id: str, account: dict) -> None:
+    def add_secured_account(self, claim_id: str, account: dict) -> None:
         ms = account["microsoft"]
         mc = account["minecraft"]
         self.cursor.execute("""
@@ -158,20 +158,20 @@ class DBConnection:
         ))
         self.conn.commit()
 
-    def isValidClaimId(self, claim_id: str) -> bool:
+    def is_valid_claim_id(self, claim_id: str) -> bool:
         result = self.cursor.execute("""
             SELECT 1 FROM `secured_accounts` WHERE claim_id = ?
         """, (claim_id,)).fetchone()
         return result is not None
 
-    def isAlreadyClaimed(self, claim_id: str) -> bool:
+    def is_already_claimed(self, claim_id: str) -> bool:
         result = self.cursor.execute("""
             SELECT 1 FROM `secured_accounts`
             WHERE claim_id = ? AND claimed_by IS NOT NULL
         """, (claim_id,)).fetchone()
         return result is not None
 
-    def claimAccount(self, claim_id: str, user_id: int) -> None:
+    def claim_account(self, claim_id: str, user_id: int) -> None:
         self.cursor.execute("""
             UPDATE `secured_accounts`
             SET claimed_by = ?
@@ -179,7 +179,7 @@ class DBConnection:
         """, (user_id, claim_id))
         self.conn.commit()
 
-    def getSecuredAccount(self, claim_id: str) -> dict | None:
+    def get_secured_account(self, claim_id: str) -> dict | None:
         row = self.cursor.execute("""
             SELECT ms_email, ms_security_email, ms_password, ms_recovery_code, ms_auth_secret,
                    ms_first_name, ms_last_name, ms_full_name, ms_region, ms_birthday,

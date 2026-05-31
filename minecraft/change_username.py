@@ -1,6 +1,6 @@
 import httpx
 
-async def changeUsername(ssid: str, current_username: str) -> None:
+async def change_username(ssid: str, current_username: str) -> None:
 
     async with httpx.AsyncClient() as session:
 

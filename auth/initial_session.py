@@ -1,7 +1,7 @@
 from fake_useragent import UserAgent
 import httpx
 
-def getSession() -> httpx.AsyncClient:
+def get_session() -> httpx.AsyncClient:
 
     # Persistent session that handles cookies automaticly
     return httpx.AsyncClient(

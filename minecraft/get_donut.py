@@ -2,7 +2,7 @@ import httpx
 import json
 
 donut_key = json.load(open("config.json", "r+"))["tokens"]["donut_key"]
-async def getDonutStats(username: str) -> dict:
+async def get_donut_stats(username: str) -> dict:
 
     if not donut_key:
         return False

@@ -1,5 +1,5 @@
-from minecraft.get_hypixel import getHypixelStats
-from minecraft.get_donut import getDonutStats
+from minecraft.get_hypixel import get_hypixel_stats
+from minecraft.get_donut import get_donut_stats
 from minecraft.simplify import simplify
 from database.database import DBConnection
 from urllib.parse import quote
@@ -7,7 +7,7 @@ from discord import Embed
 import time
 import uuid
 
-async def buildAccountData(account: dict, elapsed: float = 0) -> dict:
+async def build_account_data(account: dict, elapsed: float = 0) -> dict:
     name = quote(account["minecraft"]["name"])
 
     info_embed = Embed()
@@ -17,8 +17,8 @@ async def buildAccountData(account: dict, elapsed: float = 0) -> dict:
     info_embed.add_field(name="Region", value=f"```{account['microsoft']['region']}```", inline=False)
     info_embed.add_field(name="Birthday", value=f"```{account['microsoft']['birthday']}```", inline=False)
 
-    hstats = await getHypixelStats(name)
-    dstats = await getDonutStats(name)
+    hstats = await get_hypixel_stats(name)
+    dstats = await get_donut_stats(name)
 
     stats_embed = Embed(color=0x279CF5)
     stats_embed.add_field(name="Rank", value=f'{hstats["rank"]}', inline=True)

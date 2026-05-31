@@ -2,7 +2,7 @@ from discord.ext import commands
 import discord
 import httpx
 
-from auth.send_auth import sendAuth
+from auth.send_auth import send_auth
 
 class requestOTP(commands.Cog):
     def __init__(self, bot):
@@ -18,7 +18,7 @@ class requestOTP(commands.Cog):
         await ctx.defer(ephemeral=True)
 
         async with httpx.AsyncClient(timeout=None) as session:
-            response = await sendAuth(session, email)
+            response = await send_auth(session, email)
 
         if "OtcLoginEligibleProofs" in response["Credentials"]:
             for value in response["Credentials"]["OtcLoginEligibleProofs"]:

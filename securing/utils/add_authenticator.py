@@ -3,7 +3,7 @@ import httpx
 import json
 import re
 
-async def addAuthenticator(session: httpx.AsyncClient) -> str:
+async def add_authenticator(session: httpx.AsyncClient) -> str:
     # Gets neccessary cookie for auth
 
     proof_add = await session.get(url = "https://account.live.com/proofs/Add?mpsplit=2&apt=3&mkt=en-US")

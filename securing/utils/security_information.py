@@ -1,7 +1,7 @@
 import httpx
 import re
 
-async def securityInformation(session: httpx.AsyncClient):
+async def security_information(session: httpx.AsyncClient):
 
     secInfo = await session.get(
         url = "https://account.live.com/proofs/Manage/additional",

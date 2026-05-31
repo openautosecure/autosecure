@@ -1,6 +1,6 @@
 import httpx
 
-async def checkLocked(email: str) -> dict:
+async def check_locked(email: str) -> dict:
     
     # Times out sometimes...
     try:

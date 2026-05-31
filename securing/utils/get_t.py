@@ -1,7 +1,7 @@
 import httpx
 import re
 
-async def getT(session: httpx.AsyncClient):
+async def get_t(session: httpx.AsyncClient):
     # Neccessary var for a post request cant really explain it literally
 
     fetchT = await session.get(

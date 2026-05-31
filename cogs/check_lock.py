@@ -2,7 +2,7 @@ from discord.ext import commands
 import discord
 import json
 
-from auth.check_locked import checkLocked
+from auth.check_locked import check_locked
 
 class checkLock(commands.Cog):
     check = discord.SlashCommandGroup("check")
@@ -11,7 +11,7 @@ class checkLock(commands.Cog):
         self.bot = bot
 
     @check.command(name="locked", description="Checks if an account is locked")
-    async def checkLock(self, ctx: discord.ApplicationContext, email: str):
+    async def command(self, ctx: discord.ApplicationContext, email: str):
 
         if ctx.author.id not in self.bot.admins:
             await ctx.respond("You do not have permission to execute this command!", ephemeral=True)
@@ -19,7 +19,7 @@ class checkLock(commands.Cog):
 
         await ctx.defer(ephemeral=True)
 
-        lockedInfo = await checkLocked(email)
+        lockedInfo = await check_locked(email)
         
         if lockedInfo:
             status_code = lockedInfo.get("StatusCode") or lockedInfo.get("statusCode")

@@ -1,6 +1,6 @@
 import httpx
 
-async def getCreationDate(ssid: str):
+async def get_creation_date(ssid: str):
 
     async with httpx.AsyncClient(timeout=None) as session:
 

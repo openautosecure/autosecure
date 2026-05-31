@@ -3,7 +3,7 @@ import urllib.parse
 import httpx
 import re
 
-async def getCookies(session: httpx.AsyncClient):
+async def get_cookies(session: httpx.AsyncClient):
     # Gets the cookies and data neccessary for resetting the account
 
     data = await session.get(

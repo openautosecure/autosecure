@@ -1,6 +1,6 @@
 import httpx
 
-async def getGamertag(xbl: str) -> str:
+async def get_gamertag(xbl: str) -> str:
 
     async with httpx.AsyncClient(timeout=None) as session:
 

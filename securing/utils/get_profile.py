@@ -1,6 +1,6 @@
 import httpx
 
-async def getProfile(ssid: str):
+async def get_profile(ssid: str):
     # Gets the minecraft profile
     
     async with httpx.AsyncClient(timeout=None) as session:

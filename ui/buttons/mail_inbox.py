@@ -4,7 +4,7 @@ from database.database import DBConnection
 import httpx
 import json
 
-async def getInbox(email: str) -> dict | None:
+async def get_inbox(email: str) -> dict | None:
     config = json.load(open("config.json", "r"))
 
     if config["mail_provider"] == "domain":

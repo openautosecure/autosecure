@@ -2,7 +2,7 @@ import httpx
 import codecs
 import re
 
-async def removeProof(session: httpx.AsyncClient, apicanary: str):
+async def remove_proof(session: httpx.AsyncClient, apicanary: str):
     # Removes the security emails / Auth apps
     
     proofs = await session.get(

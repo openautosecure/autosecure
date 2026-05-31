@@ -1,7 +1,7 @@
 import httpx
 import json
 
-async def generateEmail(username: str, password: str) -> list:
+async def generate_email(username: str, password: str) -> list:
     config = json.load(open("config.json", "r"))
 
     if config["mail_provider"] == "domain":

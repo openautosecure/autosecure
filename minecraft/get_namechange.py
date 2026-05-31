@@ -2,7 +2,7 @@ from dateutil import parser
 import datetime
 import httpx
 
-async def getUsernameInfo(ssid: str):
+async def get_username_info(ssid: str):
 
     async with httpx.AsyncClient(timeout=None) as session:
 

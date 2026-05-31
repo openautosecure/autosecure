@@ -1,7 +1,7 @@
 import logging
 import httpx
 
-async def removeZyger(session: httpx.AsyncClient, apicanary: str):
+async def remove_zyger(session: httpx.AsyncClient, apicanary: str):
     # Removes loggin through pass keys aka Zyger
     
     remove = await session.post(

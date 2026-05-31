@@ -3,7 +3,7 @@ import base64
 import json
 import re
 
-async def getXBL(session: httpx.AsyncClient) -> dict:
+async def get_xbl(session: httpx.AsyncClient) -> dict:
 
     try: 
         

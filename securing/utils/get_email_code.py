@@ -4,7 +4,7 @@ import httpx
 import json
 import re
 
-async def getEmailCode(type: str) -> str:
+async def get_email_code(type: str) -> str:
     config = json.load(open("config.json", "r"))
 
     if config["mail_provider"] == "domain":

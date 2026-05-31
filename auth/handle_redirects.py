@@ -3,7 +3,7 @@ import logging
 import httpx
 import re
 
-def getData(response: str) -> dict:
+def get_data(response: str) -> dict:
     urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response)
     ppft = re.search(r'"sFT"\s*:\s*"([^"]+)"', response)
 
@@ -12,7 +12,7 @@ def getData(response: str) -> dict:
         "ppft": quote(ppft.group(1), safe='-*')
     }
 
-async def submitForm(session: httpx.AsyncClient, action_url: str, redirect: str) -> str:
+async def submit_form(session: httpx.AsyncClient, action_url: str, redirect: str) -> str:
     pprid = re.search(r'name="pprid"[^>]+value="([^"]+)"', redirect).group(1)
     ipt = re.search(r'name="ipt"[^>]+value="([^"]+)"', redirect).group(1)
     
@@ -28,7 +28,7 @@ async def submitForm(session: httpx.AsyncClient, action_url: str, redirect: str)
     return rtext
 
 # FIDO Passkey interruption
-async def handleFIDO(session: httpx.AsyncClient, redirect: str) -> dict:
+async def handle_fido(session: httpx.AsyncClient, redirect: str) -> dict:
     postBackUrl = re.search(r"""name=['"]postBackUrl['"]\s+value=['"]([^'"]+)['"]""", redirect).group(1)
     formatURL = postBackUrl.replace('&amp;', '&')
 
@@ -39,7 +39,7 @@ async def handleFIDO(session: httpx.AsyncClient, redirect: str) -> dict:
     return response.text
 
 # Accept Notice Form
-async def handleNotice(session: httpx.AsyncClient, action_url: str, redirect: str) -> str:
+async def handle_notice(session: httpx.AsyncClient, action_url: str, redirect: str) -> str:
     cid, actioncode = re.search(
         r'id="correlation_id"\s+value="([^"]+)".*?id="code"\s+value="([^"]+)"',
         redirect,
@@ -58,7 +58,7 @@ async def handleNotice(session: httpx.AsyncClient, action_url: str, redirect: st
 
     return response.text
 
-async def handleRedirects(session: httpx.AsyncClient, response: str) -> dict | None:
+async def handle_redirects(session: httpx.AsyncClient, response: str) -> dict | None:
     # Handles Microsofts random form popups
     try:
 
@@ -74,14 +74,14 @@ async def handleRedirects(session: httpx.AsyncClient, response: str) -> dict | N
         # FIDO passkey interrupt
         if "interrupt/passkey" in action_url:
             print(f"[~] - Handling FIDO")
-            fido_page = await submitForm(session, action_url, response)
+            fido_page = await submit_form(session, action_url, response)
             logging.info(f"Redirect Response: {fido_page}")
-            result = await handleFIDO(session, fido_page)
-            return getData(result)
+            result = await handle_fido(session, fido_page)
+            return get_data(result)
 
         # Submit the all forms
         if "pprid" in response:
-            redirect = await submitForm(session, action_url, response)
+            redirect = await submit_form(session, action_url, response)
 
             # Accrou Notice Form
             if '"iAddProofViewSkip"' in redirect:
@@ -91,13 +91,13 @@ async def handleRedirects(session: httpx.AsyncClient, response: str) -> dict | N
                 skip_url = re.search(r'"skip":\{"url":"([^"]+)"', redirect).group(1)
                 skip_response = await session.get(skip_url, follow_redirects=True)
 
-                return getData(skip_response.text)
+                return get_data(skip_response.text)
 
         # Accept notice
         print(f"[~] - Handling Accept Notice Form")
         logging.info(f"Accept Notice Response: {redirect}")
-        result = await handleNotice(session, action_url, redirect)
-        return getData(result)
+        result = await handle_notice(session, action_url, redirect)
+        return get_data(result)
     
     except Exception as e:
         logging.error(f"Error handling redirect: {e}")

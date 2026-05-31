@@ -1,6 +1,6 @@
 import httpx
 
-async def getRecoveryCode(session: httpx.AsyncClient, apicanary: str, eni: str):
+async def get_recovery_code(session: httpx.AsyncClient, apicanary: str, eni: str):
     # Generates a new recovery code
     
     data = await session.post(

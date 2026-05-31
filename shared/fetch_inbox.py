@@ -7,7 +7,7 @@ async def fetchInbox(type: str) -> list:
 
     if config["mail_provider"] == "domain":
         with DBConnection() as db:
-            rows = db.getEmails(type)
+            rows = db.get_emails(type)
         emails = []
 
         for _, _, from_addr, subject, body, received_at in rows:

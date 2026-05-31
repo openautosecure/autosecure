@@ -7,25 +7,14 @@
 
 **Contributions:** Pull requests are welcome. For major changes, please discuss them on Discord first.
 
----
-
-## Overview
+### Overview
 
 **AutoSecure** is a fully request-based security assessment tool for Microsoft accounts.
-No browser automation — just HTTP requests.
-
-> **This tool is for EDUCATIONAL & SECURITY RESEARCH PURPOSES ONLY.**
-> See [Legal & Ethical Notice](#important-legal-and-ethical-notice) below.
-
----
-
-## Status
+It uses no selenium or playwright.
 
 **Active development** — New features being added regularly.
 
----
-
-## Features
+### Features
 
 * Retrieve account owner details (name, country, birth date, etc.)
 * Remove all security proofs (emails and phone numbers)
@@ -45,19 +34,19 @@ No browser automation — just HTTP requests.
 
 ---
 
-## Setup Guide
+### Setup Guide
 
-### 1. Install Python 3.14
+#### 1. Install Python 3.14
 
 [Download Python 3.14](https://www.python.org/downloads/release/python-3140/)
 
-### 2. Install Dependencies
+#### 2. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Create a Discord Bot
+#### 3. Create a Discord Bot
 
 * Go to the [Discord Developer Portal](https://discord.com/developers/applications)
 * Create a new application → Bot
@@ -69,7 +58,7 @@ pip install -r requirements.txt
 * **Skytools:** [developer.skytools.app](https://developer.skytools.app/)
 * **DonutSMP:** [api.donutsmp.net](https://api.donutsmp.net/index.html)
 
-### 5. Configure the Bot
+#### 5. Configure the Bot
 
 Edit `config.json`:
 
@@ -107,14 +96,14 @@ Edit `config.json`:
 }
 ```
 
-### 6. Invite the Bot to Your Server
+#### 6. Invite the Bot to Your Server
 
 * Go to Discord Developer Portal → OAuth2 → URL Generator
 * Select scopes: `bot`, `applications.commands`
 * Select permissions: `Administrator`
 * Copy and open the generated URL
 
-### 7. Custom Domain Setup (Optional)
+#### 7. Custom Domain Setup (Optional)
 
 Set `"mail_provider": "domain"` in the config to use your own domain for security emails.
 
@@ -126,24 +115,12 @@ Requirements:
 
 ---
 
-## Notes
+### Notes
 
-* The bot requires Python 3.14
+* You can change mail_provider to `mailtm` or `domain`
 * API keys are optional but needed for Hypixel/DonutSMP commands
 * Keep your bot token private
 
 ---
 
-## IMPORTANT LEGAL AND ETHICAL NOTICE – READ BEFORE USING
-
-**This tool is provided STRICTLY for EDUCATIONAL, RESEARCH, and SECURITY TESTING PURPOSES ONLY.**
-
-* This project demonstrates concepts in account authentication, session handling, and security testing.
-* **It is NOT intended for unauthorized access, account takeover, credential stuffing, phishing, fraud, or any illegal activity.**
-* Using this tool against accounts you do not own is illegal and may violate laws including the Computer Fraud and Abuse Act (CFAA) and equivalent laws worldwide.
-* The author(s) do not condone or take responsibility for any misuse.
-* Use only on accounts you own or have explicit written permission to test.
-
-**Misuse may result in permanent bans, account termination, or legal consequences.**
-
-By using, cloning, or forking this repository, you agree to use it only in compliance with all applicable laws and for ethical purposes only.
+"For educational and security research use only. Not for unauthorized access or illegal activity. Users are responsible for compliance with applicable laws."

@@ -1,9 +1,9 @@
 from securing.utils.get_livedata import livedata
 from securing.build_embeds import build_account_data
 from securing.utils.polish_host import polish_host
-from auth.initial_session import get_session
+from securing.auth.initial_session import get_session
 from securing.utils.secure import secure
-from auth.get_msaauth import get_msaauth
+from securing.auth.get_msaauth import get_msaauth
 import httpx
 import time
 

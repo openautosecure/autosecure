@@ -1,7 +1,7 @@
 from discord import ui
 import discord
 
-from auth.initial_session import get_session
+from securing.auth.initial_session import get_session
 from securing.utils.secure import secure
 
 class msModal(ui.Modal):

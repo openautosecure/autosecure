@@ -50,7 +50,6 @@ class Claim(commands.Cog):
 
         claim_embed = discord.Embed(
             title="Account Claimed",
-            description=f"{ctx.author.mention} claimed an account.",
             color=0x79D990
         )
         claim_embed.add_field(name="MC Username", value=f"`{account['mc_name']}`", inline=True)

@@ -54,6 +54,7 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
             account["microsoft"]["security_email"] = "Child Locked"
             
         case _:
+            print(f"[+] - Got MSAAUTH")
             await polish_host(session, msaauth)
             account = await secure(session, recovery, account)
 

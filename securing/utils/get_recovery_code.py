@@ -1,3 +1,4 @@
+import logging
 import httpx
 
 async def get_recovery_code(session: httpx.AsyncClient, apicanary: str, eni: str):
@@ -31,4 +32,5 @@ async def get_recovery_code(session: httpx.AsyncClient, apicanary: str, eni: str
         }
     )
 
+    logging.info(f"Generate Recovery Code response: {data.text}")
     return data.json()["recoveryCode"]

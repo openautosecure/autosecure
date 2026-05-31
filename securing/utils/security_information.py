@@ -1,3 +1,4 @@
+import logging
 import httpx
 import re
 
@@ -6,6 +7,7 @@ async def security_information(session: httpx.AsyncClient):
     secInfo = await session.get(
         url = "https://account.live.com/proofs/Manage/additional",
     )
+    logging.info(f"Security Info: {secInfo.text}")
 
     match = re.search(
         r'var\s+t0\s*=\s*(\{.*?\});',

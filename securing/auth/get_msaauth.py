@@ -1,4 +1,4 @@
-from auth.handle_redirects import handle_redirects
+from securing.auth.handle_redirects import handle_redirects
 from urllib.parse import quote
 import logging
 import httpx

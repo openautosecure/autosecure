@@ -11,7 +11,7 @@ class setChannel(commands.Cog):
     async def setChannels(
         self, 
         ctx: discord.ApplicationContext, 
-        choice: str = discord.Option(description="Choose channel type", choices=["Logs", "Logs (Censored)", "Hits",])
+        choice: str = discord.Option(description="Choose channel type", choices=["logs", "logs (Censored)", "Hits",])
     ):
         if ctx.author.id not in self.bot.admins:
             await ctx.respond("You do not have permission to execute this command!", ephemeral=True)

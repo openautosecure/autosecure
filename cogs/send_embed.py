@@ -28,7 +28,7 @@ class sendEmbed(commands.Cog):
         
         if not config["discord"]["logs_channel"] or not config["discord"]["accounts_channel"]:
             await ctx.respond(
-                "You must set the Logs and Hits channel first with /set_channel!", 
+                "You must set the logs and Hits channel first with /set_channel!",
                 ephemeral=True
             )
             return

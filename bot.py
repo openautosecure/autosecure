@@ -45,7 +45,7 @@ class DiscordBot(commands.Bot):
         root = logging.getLogger()
         root.setLevel(logging.INFO)
 
-        file_handler = logging.FileHandler("Logs/securing.log")
+        file_handler = logging.FileHandler("logs/securing.log")
         file_handler.setLevel(logging.INFO)
         root.addHandler(file_handler)
 
@@ -74,7 +74,7 @@ class DiscordBot(commands.Bot):
 
 
         with DBConnection() as database:
-            database.setupTables()
+            database.setup_tables()
 
 # Simple check for dynamic ips (Not needed if you're using a VPS)
 if config["mail_provider"] == "domain" and config["domain"]:

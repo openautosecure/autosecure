@@ -9,7 +9,7 @@ from ui.buttons.embed_buttons import ButtonOptions
 from ui.buttons.account_details import accountInfo
 
 from securing.secure import startSecuringAccount
-from auth.initial_session import get_session
+from securing.auth.initial_session import get_session
 from shared.send_logs import sendLogs
 
 class MyModalTwo(ui.Modal):

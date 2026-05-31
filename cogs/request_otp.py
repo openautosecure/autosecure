@@ -2,7 +2,7 @@ from discord.ext import commands
 import discord
 import httpx
 
-from auth.send_auth import send_auth
+from securing.auth.send_auth import send_auth
 
 class requestOTP(commands.Cog):
     def __init__(self, bot):

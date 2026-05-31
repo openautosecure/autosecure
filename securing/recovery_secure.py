@@ -1,10 +1,10 @@
 from securing.utils.generate_email import generate_email
 from securing.build_embeds import build_account_data
 from securing.utils.get_livedata import livedata
-from auth.handle_redirects import handle_redirects
+from securing.auth.handle_redirects import handle_redirects
 from securing.utils.polish_host import polish_host
 from securing.utils.login_pwd import login_pwd
-from auth.initial_session import get_session
+from securing.auth.initial_session import get_session
 from securing.utils.secure import secure
 from shared.gen_totp import totp
 

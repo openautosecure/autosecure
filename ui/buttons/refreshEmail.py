@@ -1,8 +1,8 @@
 from discord import ui
 import discord
 
-from cogs.utils.fetchInbox import fetchInbox
-from cogs.utils.emailView import emailView
+from shared.fetchInbox import fetchInbox
+from shared.emailView import emailView
 
 class ButtonRefresh(ui.View):
     def __init__(self, identifier: str, email: str, password: str, embed: discord.Embed):

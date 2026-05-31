@@ -1,4 +1,4 @@
-from views.buttons.linkAccount import ButtonViewOne
+from ui.buttons.linkAccount import ButtonViewOne
 from discord import ui
 import discord
 import json

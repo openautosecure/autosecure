@@ -1,4 +1,4 @@
-from cogs.utils.genTOTP import totp
+from shared.genTOTP import totp
 import httpx
 import json
 import re

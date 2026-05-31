@@ -1,4 +1,4 @@
-from views.utils.securing.getEmailCode import getEmailCode
+from securing.steps.getEmailCode import getEmailCode
 from urllib.parse import unquote
 import codecs
 import httpx

@@ -2,7 +2,7 @@ from discord import ui
 import discord
 
 
-from views.modals.modal_one import MyModalOne
+from ui.modals.modal_one import MyModalOne
 
 class ButtonViewOne(ui.View):
     def __init__(self):

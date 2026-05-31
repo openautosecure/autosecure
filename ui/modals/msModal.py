@@ -1,8 +1,8 @@
 from discord import ui
 import discord
 
-from views.utils.initialSession import getSession
-from views.utils.securing.secure import secure
+from auth.initialSession import getSession
+from securing.steps.secure import secure
 
 class msModal(ui.Modal):
     def __init__(self) -> None:

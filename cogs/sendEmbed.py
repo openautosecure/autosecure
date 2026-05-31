@@ -1,6 +1,6 @@
-from views.buttons.linkAccount import ButtonViewOne
-from views.modals.modal_three import MyModalThree
-from views.modals.embeds import embeds
+from ui.buttons.linkAccount import ButtonViewOne
+from ui.modals.modal_three import MyModalThree
+from ui.modals.embeds import embeds
 
 from discord.ext import commands
 import discord

@@ -62,7 +62,7 @@ class DBConnection:
         self.conn.commit()
 
     # Security Emails
-    def add_security_mail(self, email: str, pwd: str) -> None:
+    def add_security_email(self, email: str, pwd: str) -> None:
         self.cursor.execute("""
             INSERT INTO `security_emails` (email, password)
             VALUES (?, ?)

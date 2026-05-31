@@ -17,7 +17,7 @@ class MailHandler:
 
         with DBConnection() as db:
             for recipient in envelope.rcpt_tos:
-                db.addEmail(
+                db.add_email(
                     to_address=recipient.lower(),
                     from_address=envelope.mail_from,
                     subject=subject,

@@ -10,13 +10,13 @@ async def get_email_code(type: str) -> str:
     if config["mail_provider"] == "domain":
         while True:
             with DBConnection() as db:
-                row = db.markUnused(type)
+                row = db.mark_unused(type)
             if row:
                 email_id, body = row
                 match = re.search(r'Security code[:\s]+(\d{4,8})', body, re.IGNORECASE)
                 if match:
                     with DBConnection() as db:
-                        db.markUsed(email_id)
+                        db.mark_used(email_id)
                     return match.group(1)
             await asyncio.sleep(0.8)
 

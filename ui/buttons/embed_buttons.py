@@ -42,7 +42,7 @@ class ButtonOptions(ui.View):
     @discord.ui.button(label="Blacklist", style=discord.ButtonStyle.red, custom_id="persistent:button_blacklist")
     async def blacklistUser(self, button: discord.ui.Button, interaction: discord.Interaction):
         with DBConnection() as database:
-            database.addBlacklistedUser(self.id)
+            database.add_blacklisted_user(self.id)
             database.conn.commit()
 
         await interaction.response.send_message(f"Successfully blacklisted <@{self.user}>!", ephemeral=True)
@@ -50,7 +50,7 @@ class ButtonOptions(ui.View):
     @discord.ui.button(label="Unblacklist", style=discord.ButtonStyle.primary, custom_id="persistent:button_unblacklist")
     async def unblacklistUser(self, button: discord.ui.Button, interaction: discord.Interaction):
         with DBConnection() as database:
-            database.removeBlacklistedUser(self.id)
+            database.remove_blacklisted_user(self.id)
             database.conn.commit()
 
         await interaction.response.send_message(f"Successfully unblacklisted <@{self.user}>!", ephemeral=True)

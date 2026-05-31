@@ -2,12 +2,12 @@ from discord.ext import commands
 import discord
 import json
 
-def config():
-    with open("config.json", "r") as f:
+def get_config():
+    with open("config.json", "r+") as f:
         return json.load(f)
 
 def save_config(config):
-    with open("config.json", "w") as f:
+    with open("config.json", "w+") as f:
         json.dump(config, f, indent=4)
 
 
@@ -107,7 +107,7 @@ class ConfigView(discord.ui.View):
 
     @discord.ui.button(label="Save & Restart", style=discord.ButtonStyle.green, row=2)
     async def save_restart(self, button: discord.ui.Button, interaction: discord.Interaction):
-        config = config()
+        config = get_config()
         config["autosecure"]["enable_2fa"] = self.enable_2fa
         config["autosecure"]["replace_main_alias"] = self.replace_alias
         config["mail_provider"] = self.mail_provider
@@ -132,7 +132,7 @@ class Config(commands.Cog):
             await ctx.respond("You do not have permission to execute this command!", ephemeral=True)
             return
 
-        config = config()
+        config = get_config()
         enable_2fa = config["autosecure"]["enable_2fa"]
         replace_alias = config["autosecure"]["replace_main_alias"]
         mail_provider = config["mail_provider"]["mailtm"]

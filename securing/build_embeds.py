@@ -30,7 +30,7 @@ async def build_account_data(account: dict, elapsed: float = 0) -> dict:
 
     claim_id = uuid.uuid4().hex[:8]
     with DBConnection() as database:
-        database.addSecuredAccount(claim_id, account)
+        database.add_secured_account(claim_id, account)
 
     hit_embed = Embed(
         title=f"New Hit! Secured in {round(elapsed, 2)}s",

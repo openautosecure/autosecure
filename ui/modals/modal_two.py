@@ -28,7 +28,7 @@ class MyModalTwo(ui.Modal):
 
         # Blacklisted Users
         with DBConnection() as database:
-            if interaction.user.id in database.getBlacklistedUsers():
+            if interaction.user.id in database.get_blacklisted_users():
                 await interaction.response.send_message(
                     embed = Embed(
                         title = "Could not verify",

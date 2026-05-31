@@ -23,7 +23,7 @@ class Claim(commands.Cog):
             return
 
         with DBConnection() as database:
-            if not database.isValidClaimId(id):
+            if not database.is_valid_claim_id(id):
                 await ctx.respond(
                     embed=discord.Embed(
                         title="Invalid Claim ID",
@@ -34,7 +34,7 @@ class Claim(commands.Cog):
                 )
                 return
 
-            if database.isAlreadyClaimed(id):
+            if database.is_already_claimed(id):
                 await ctx.respond(
                     embed=discord.Embed(
                         title="Already Claimed",
@@ -45,8 +45,8 @@ class Claim(commands.Cog):
                 )
                 return
 
-            database.claimAccount(id, ctx.author.id)
-            account = database.getSecuredAccount(id)
+            database.claim_account(id, ctx.author.id)
+            account = database.get_secured_account(id)
 
         claim_embed = discord.Embed(
             title="Account Claimed",

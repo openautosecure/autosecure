@@ -119,7 +119,7 @@ async def recoverySecure(email: str, type: str, data: dict) -> dict:
     print(f"[+] - Generated Security Email ({security_email})")
 
     with DBConnection() as database:
-        database.addSecurityEmail(security_email, password)
+        database.add_security_email(security_email, password)
 
     print("[~] - Automaticly Securing Account...")
     match type:

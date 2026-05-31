@@ -14,9 +14,6 @@
 **AutoSecure** is a fully request-based security assessment tool for Microsoft accounts.
 No browser automation — just HTTP requests.
 
-> **This tool is for EDUCATIONAL & SECURITY RESEARCH PURPOSES ONLY.**
-> See [Legal & Ethical Notice](#important-legal-and-ethical-notice) below.
-
 ---
 
 ## Status

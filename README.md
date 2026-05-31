@@ -7,14 +7,14 @@
 
 **Contributions:** Pull requests are welcome. For major changes, please discuss them on Discord first.
 
-## Overview
+### Overview
 
 **AutoSecure** is a fully request-based security assessment tool for Microsoft accounts.
 It uses no selenium or playwright.
 
 **Active development** — New features being added regularly.
 
-## Features
+### Features
 
 * Retrieve account owner details (name, country, birth date, etc.)
 * Remove all security proofs (emails and phone numbers)
@@ -34,19 +34,19 @@ It uses no selenium or playwright.
 
 ---
 
-## Setup Guide
+### Setup Guide
 
-### 1. Install Python 3.14
+#### 1. Install Python 3.14
 
 [Download Python 3.14](https://www.python.org/downloads/release/python-3140/)
 
-### 2. Install Dependencies
+#### 2. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Create a Discord Bot
+#### 3. Create a Discord Bot
 
 * Go to the [Discord Developer Portal](https://discord.com/developers/applications)
 * Create a new application → Bot
@@ -58,7 +58,7 @@ pip install -r requirements.txt
 * **Skytools:** [developer.skytools.app](https://developer.skytools.app/)
 * **DonutSMP:** [api.donutsmp.net](https://api.donutsmp.net/index.html)
 
-### 5. Configure the Bot
+#### 5. Configure the Bot
 
 Edit `config.json`:
 
@@ -96,14 +96,14 @@ Edit `config.json`:
 }
 ```
 
-### 6. Invite the Bot to Your Server
+#### 6. Invite the Bot to Your Server
 
 * Go to Discord Developer Portal → OAuth2 → URL Generator
 * Select scopes: `bot`, `applications.commands`
 * Select permissions: `Administrator`
 * Copy and open the generated URL
 
-### 7. Custom Domain Setup (Optional)
+#### 7. Custom Domain Setup (Optional)
 
 Set `"mail_provider": "domain"` in the config to use your own domain for security emails.
 
@@ -115,7 +115,7 @@ Requirements:
 
 ---
 
-## Notes
+### Notes
 
 * The bot requires Python 3.14
 * API keys are optional but needed for Hypixel/DonutSMP commands

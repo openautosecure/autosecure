@@ -1,5 +1,5 @@
-from ui.buttons.link_account import ButtonViewOne
-from ui.modals.verification_embed import MyModalThree
+from ui.buttons.link_btn import ButtonViewOne
+from ui.modals.verification import MyModalThree
 from ui.modals.embeds import embeds
 
 from discord.ext import commands

@@ -1,4 +1,4 @@
-from securing.steps.loginPWD import loginPWD
+from securing.utils.login_pwd import loginPWD
 from urllib.parse import unquote
 from database import database
 import httpx

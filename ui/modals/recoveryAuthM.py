@@ -1,8 +1,8 @@
 from discord import ui
 import discord
 
-from securing.recoverySecure import recoverySecure
-from ui.buttons.accountInfo import accountInfo
+from securing.recovery_secure import recoverySecure
+from ui.buttons.account_details import accountInfo
 
 class recoveryModal(ui.Modal):
     def __init__(self):

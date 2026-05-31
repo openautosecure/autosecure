@@ -1,7 +1,7 @@
 from discord import ui
 import discord
 
-from shared.genTOTP import totp
+from shared.gen_totp import totp
 
 class ButtonTOTP(ui.View):
     def __init__(self, secret: str):

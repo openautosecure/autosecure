@@ -1,5 +1,5 @@
-from minecraft.getHypixel import getHypixelStats
-from minecraft.getDonut import getDonutStats
+from minecraft.get_hypixel import getHypixelStats
+from minecraft.get_donut import getDonutStats
 from minecraft.simplify import simplify
 from database.database import DBConnection
 from urllib.parse import quote

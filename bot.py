@@ -8,7 +8,7 @@ import json
 import sys
 import os
 
-from ui.buttons.link_account import ButtonViewOne
+from ui.buttons.link_btn import ButtonViewOne
 from database.database import DBConnection
 from mail.server import startServer
 

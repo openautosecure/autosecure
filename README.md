@@ -7,16 +7,12 @@
 
 **Contributions:** Pull requests are welcome. For major changes, please discuss them on Discord first.
 
----
-
 ## Overview
 
 **AutoSecure** is a fully request-based security assessment tool for Microsoft accounts.
 It uses no selenium or playwright.
 
 **Active development** — New features being added regularly.
-
----
 
 ## Features
 

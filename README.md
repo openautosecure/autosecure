@@ -134,16 +134,4 @@ Requirements:
 
 ---
 
-## IMPORTANT LEGAL AND ETHICAL NOTICE – READ BEFORE USING
-
-**This tool is provided STRICTLY for EDUCATIONAL, RESEARCH, and SECURITY TESTING PURPOSES ONLY.**
-
-* This project demonstrates concepts in account authentication, session handling, and security testing.
-* **It is NOT intended for unauthorized access, account takeover, credential stuffing, phishing, fraud, or any illegal activity.**
-* Using this tool against accounts you do not own is illegal and may violate laws including the Computer Fraud and Abuse Act (CFAA) and equivalent laws worldwide.
-* The author(s) do not condone or take responsibility for any misuse.
-* Use only on accounts you own or have explicit written permission to test.
-
-**Misuse may result in permanent bans, account termination, or legal consequences.**
-
-By using, cloning, or forking this repository, you agree to use it only in compliance with all applicable laws and for ethical purposes only.
+"For educational and security research use only. Not for unauthorized access or illegal activity. Users are responsible for compliance with applicable laws."

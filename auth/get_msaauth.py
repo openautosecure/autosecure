@@ -1,11 +1,11 @@
-from auth.handle_redirects import handleRedirects
+from auth.handle_redirects import handle_redirects
 from urllib.parse import quote
 import logging
 import httpx
 import re
 
 
-async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, odata: dict, code: str) -> dict | None:
+async def get_msaauth(session: httpx.AsyncClient, email: str, flowToken: str, odata: dict, code: str) -> dict | None:
     # First post request that gets __Host-MSAAUTH
     
     if not code:
@@ -85,7 +85,7 @@ async def getMSAAUTH(session: httpx.AsyncClient, email: str, flowToken: str, oda
         logging.info(f"MSAAUTH cookie for {email}: {dict(session.cookies)['__Host-MSAAUTH']}")
         
         if not urlPost:
-            data = await handleRedirects(session, loginData.text)
+            data = await handle_redirects(session, loginData.text)
             return data
         
         ppft = quote(re.search(r'"sFT"\s*:\s*"([^"]+)"', loginData.text).group(1), safe='-*')

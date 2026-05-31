@@ -1,6 +1,6 @@
 import httpx
 
-async def getProfile(ssid: str):
+async def get_profile(ssid: str):
     
     async with httpx.AsyncClient(timeout=None) as session:
 

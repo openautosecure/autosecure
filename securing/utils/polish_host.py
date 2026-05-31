@@ -1,6 +1,6 @@
 import httpx
 
-async def polishHost(session: httpx.AsyncClient, postData: dict) -> str:
+async def polish_host(session: httpx.AsyncClient, postData: dict) -> str:
     # Second post request that persists the microsoft session (Polish WLSSC)
 
     data = await session.post(

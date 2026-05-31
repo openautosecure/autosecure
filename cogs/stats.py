@@ -3,8 +3,8 @@ from discord.ext import commands
 from datetime import timedelta
 import discord
 
-from minecraft.get_donut import getDonutStats
-from minecraft.get_hypixel import getHypixelStats
+from minecraft.get_donut import get_donut_stats
+from minecraft.get_hypixel import get_hypixel_stats
 
 class Stats(commands.Cog):
     stats = discord.SlashCommandGroup("stats")
@@ -20,7 +20,7 @@ class Stats(commands.Cog):
 
         await ctx.defer(ephemeral=True)
 
-        donut_stats = await getDonutStats(username)
+        donut_stats = await get_donut_stats(username)
         if not donut_stats:
             await ctx.followup.send("Set up your donut API key first!", ephemeral=True)
             return
@@ -69,7 +69,7 @@ class Stats(commands.Cog):
 
         await ctx.defer(ephemeral=True)
 
-        hypixel_stats = await getHypixelStats(username)
+        hypixel_stats = await get_hypixel_stats(username)
         if not hypixel_stats["exists"]:
             await ctx.followup.send("Make sure you setup your Skytools key first!", ephemeral=True)
             return

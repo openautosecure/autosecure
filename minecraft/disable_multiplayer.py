@@ -1,5 +1,5 @@
 import httpx
 
 # In progress...
-async def disableMultiplayer(xbl: str) :
+async def disable_multiplayer(xbl: str) :
     pass

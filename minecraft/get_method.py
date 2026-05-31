@@ -1,6 +1,6 @@
 import httpx
 
-async def getMethod(ssid: str):
+async def get_method(ssid: str):
 
     async with httpx.AsyncClient(timeout=None) as session:
 

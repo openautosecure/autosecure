@@ -1,6 +1,6 @@
 import httpx
 
-async def getAMRP(session: httpx.AsyncClient, T: str):
+async def get_amrp(session: httpx.AsyncClient, T: str):
     # Gets neccessary cookie for auth
     
     fetchAMRP = await session.post(

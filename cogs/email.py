@@ -1,6 +1,7 @@
+from securing.utils.generate_email import generate_email
+from ui.buttons.mail_inbox import get_inbox
+
 from database.database import DBConnection
-from ui.buttons.inbox_btn import getInbox
-from securing.steps.generateEmail import generateEmail
 from discord.ext import commands
 import discord
 import uuid
@@ -19,7 +20,7 @@ class MailListView(discord.ui.View):
             label="◀",
             style=discord.ButtonStyle.secondary,
             disabled=(page == 0),
-            row=0
+            row=0\
         )
         previous_button.callback = self.previous
         self.add_item(previous_button)
@@ -74,16 +75,16 @@ class Email(commands.Cog):
         await ctx.response.defer(ephemeral=True)
 
         password = uuid.uuid4().hex[:12]
-        email = (await generateEmail(alias, password))[1]
+        email = (await generate_email(alias, password))[1]
 
         with DBConnection() as database:
-            if email in [e[0] for e in database.getSecurityEmails()]:
+            if email in [e[0] for e in database.get_security_emails()]:
                 await ctx.respond(
                     embed=discord.Embed(description=f"`{email}` has already been created", color=0xFF5C5C),
                     ephemeral=True
                 )
                 return
-            database.addSecurityEmail(email, password)
+            database.add_security_email(email, password)
 
         await ctx.respond(
             embed=discord.Embed(
@@ -101,7 +102,7 @@ class Email(commands.Cog):
             return
 
         await ctx.response.defer(ephemeral=True)
-        inbox = await getInbox(email)
+        inbox = await get_inbox(email)
 
         if not inbox:
             await ctx.respond(
@@ -126,7 +127,7 @@ class Email(commands.Cog):
             return
 
         with DBConnection() as database:
-            emails = list(database.getSecurityEmails())
+            emails = list(database.get_security_emails())
 
         if not emails:
             await ctx.respond(

@@ -1,4 +1,4 @@
-from securing.utils.get_email_code import getEmailCode
+from securing.utils.get_email_code import get_email_code
 from urllib.parse import unquote
 import codecs
 import httpx
@@ -62,7 +62,7 @@ async def recover(session: httpx.AsyncClient, email: str, recovery_code: str, ne
         
         if "apiCanary" in responseJson:
             canary = responseJson["apiCanary"]
-            code = await getEmailCode(type)
+            code = await get_email_code(type)
             verifyCodeResponse = await session.post(
                 url = "https://account.live.com/API/Proofs/VerifyCode",
                 headers = {

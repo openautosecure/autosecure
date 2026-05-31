@@ -1,6 +1,6 @@
 import httpx
 
-async def getSSID(xbl: str):
+async def get_ssid(xbl: str):
 
     async with httpx.AsyncClient(timeout=None) as session:
 

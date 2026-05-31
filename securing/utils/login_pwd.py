@@ -1,6 +1,6 @@
 import httpx
 
-async def loginPWD(session: httpx.AsyncClient, email: str, post_url: str, password: str, ppft: str) -> str:
+async def login_pwd(session: httpx.AsyncClient, email: str, post_url: str, password: str, ppft: str) -> str:
     # Login with Password
     
     password_post = await session.post(

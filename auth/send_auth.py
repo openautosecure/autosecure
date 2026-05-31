@@ -1,6 +1,6 @@
 import httpx
 
-async def sendAuth(session: httpx.AsyncClient, email: str) -> dict:
+async def send_auth(session: httpx.AsyncClient, email: str) -> dict:
 
     # First payload triggers authenticator entropy and second triggers email OTP if exists
     # {'ErrorHR': '800434AA'} Generally means microsoft has put the emails OTPs on cooldown (~10 Minutes)
@@ -27,7 +27,7 @@ async def sendAuth(session: httpx.AsyncClient, email: str) -> dict:
 
     for _ in range(2):
 
-        sendAuth = await session.post(
+        send_auth = await session.post(
             url = "https://login.live.com/GetCredentialType.srf",
             headers = {
                 "Accept": "application/json",
@@ -41,8 +41,8 @@ async def sendAuth(session: httpx.AsyncClient, email: str) -> dict:
             json = payload
         )
         
-        print(f"SendAuth Response: {sendAuth.text}")
-        emailInfo = sendAuth.json()
+        print(f"SendAuth Response: {send_auth.text}")
+        emailInfo = send_auth.json()
         
         if "Credentials" in emailInfo and "RemoteNgcParams" in emailInfo["Credentials"]:
             return emailInfo

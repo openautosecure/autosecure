@@ -1,6 +1,6 @@
 import httpx
 
-async def getCapes(ssid: str) :
+async def get_capes(ssid: str) :
 
     async with httpx.AsyncClient(timeout=None) as session:
 

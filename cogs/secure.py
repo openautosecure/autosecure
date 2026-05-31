@@ -1,4 +1,4 @@
-from cogs.modals.recoveryAuthM import recoveryModal
+from ui.modals.recoveryAuthM import recoveryModal
 
 from discord.ext import commands
 import discord

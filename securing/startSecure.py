@@ -1,9 +1,9 @@
-from views.utils.securing.getLiveData import getLiveData
-from views.utils.securing.polishHost import polishHost
-from views.utils.initialSession import getSession
-from views.utils.securing.secure import secure
-from views.utils.getMSAAUTH import getMSAAUTH
-from views.utils.buildAccountData import buildAccountData
+from securing.steps.getLiveData import getLiveData
+from securing.steps.polishHost import polishHost
+from auth.initialSession import getSession
+from securing.steps.secure import secure
+from auth.getMSAAUTH import getMSAAUTH
+from securing.buildAccountData import buildAccountData
 import httpx
 import time
 

@@ -1,7 +1,7 @@
 from discord import ui
 import discord
 
-from cogs.utils.recoverySecure import recoverySecure
+from securing.recoverySecure import recoverySecure
 
 class recoveryModal(ui.Modal):
     def __init__(self):

@@ -5,12 +5,12 @@ import datetime
 import discord
 import json
 
-from views.buttons.buttonOptions import ButtonOptions
-from views.buttons.accountInfo import accountInfo
+from ui.buttons.buttonOptions import ButtonOptions
+from ui.buttons.accountInfo import accountInfo
 
-from views.utils.startSecure import startSecuringAccount
-from views.utils.initialSession import getSession
-from views.utils.sendLogs import sendLogs
+from securing.startSecure import startSecuringAccount
+from auth.initialSession import getSession
+from shared.sendLogs import sendLogs
 
 class MyModalTwo(ui.Modal):
     def __init__(self, username, email, flowtoken):

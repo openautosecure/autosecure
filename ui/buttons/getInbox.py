@@ -1,5 +1,5 @@
-from cogs.utils.fetchInbox import fetchInbox
-from cogs.utils.emailView import emailView
+from shared.fetchInbox import fetchInbox
+from shared.emailView import emailView
 from database.database import DBConnection
 import httpx
 import json

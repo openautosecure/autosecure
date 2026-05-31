@@ -2,7 +2,7 @@ from database.database import DBConnection
 from discord import ui
 import discord
 
-from views.modals.dmEmbed import dmEmbed
+from ui.modals.dmEmbed import dmEmbed
 
 class ButtonOptions(ui.View):
     def __init__(self, user, id: int):

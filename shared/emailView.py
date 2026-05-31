@@ -1,4 +1,4 @@
-from cogs.utils.fetchInbox import fetchInbox
+from shared.fetchInbox import fetchInbox
 from discord import ui
 import discord
 

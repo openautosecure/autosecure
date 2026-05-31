@@ -1,10 +1,10 @@
-from views.utils.minecraft.simplify import simplify
+from minecraft.simplify import simplify
 from discord.ext import commands
 from datetime import timedelta
 import discord
 
-from views.utils.minecraft.getDonut import getDonutStats
-from views.utils.minecraft.getHypixel import getHypixelStats
+from minecraft.getDonut import getDonutStats
+from minecraft.getHypixel import getHypixelStats
 
 class Stats(commands.Cog):
     stats = discord.SlashCommandGroup("stats")

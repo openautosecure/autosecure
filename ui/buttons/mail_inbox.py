@@ -1,5 +1,5 @@
-from shared.fetchInbox import fetchInbox
-from shared.emailView import emailView
+from shared.fetch_inbox import fetchInbox
+from shared.email_view import emailView
 from database.database import DBConnection
 import httpx
 import json

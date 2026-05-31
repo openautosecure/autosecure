@@ -1,8 +1,8 @@
 from discord.ext import commands
 import discord
 
-from ui.buttons.totp_refresh import ButtonTOTP
-from shared.gen_totp import totp
+from ui.buttons.totp_refresh_btn import ButtonTOTP
+from shared.genTOTP import totp
 
 
 class authCode(commands.Cog):

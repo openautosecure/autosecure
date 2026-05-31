@@ -3,8 +3,8 @@ from discord.ext import commands
 from datetime import timedelta
 import discord
 
-from minecraft.getDonut import getDonutStats
-from minecraft.getHypixel import getHypixelStats
+from minecraft.get_donut import getDonutStats
+from minecraft.get_hypixel import getHypixelStats
 
 class Stats(commands.Cog):
     stats = discord.SlashCommandGroup("stats")

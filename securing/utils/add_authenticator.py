@@ -1,4 +1,4 @@
-from shared.genTOTP import totp
+from shared.gen_totp import totp
 import httpx
 import json
 import re

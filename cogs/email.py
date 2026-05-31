@@ -1,6 +1,6 @@
 from database.database import DBConnection
-from ui.buttons.getInbox import getInbox
-from securing.steps.generateEmail import generateEmail
+from ui.buttons.mail_inbox import getInbox
+from securing.utils.generate_email import generateEmail
 from discord.ext import commands
 import discord
 import uuid

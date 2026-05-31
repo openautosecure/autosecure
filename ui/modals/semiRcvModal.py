@@ -1,7 +1,7 @@
 from discord import ui
 import discord
 
-from securing.recoverySecure import recoverySecure
+from securing.recovery_secure import recoverySecure
 
 class recoveryModal(ui.Modal):
     def __init__(self):
@@ -11,12 +11,11 @@ class recoveryModal(ui.Modal):
 
     async def callback(self, interaction: discord.Interaction):
         email = self.children[0].value
-        recovery_code = self.children[1].value
+        rcvc = self.children[1].value
         
         await interaction.response.defer(ephemeral=True)
 
-        account = await recoverySecure(email, "rcvcode", {"recovery_code": recovery_code})
-
+        account = await recoverySecure(email, rcvc)
         if account == "invalid":
             await interaction.followup.send(
                 embed = discord.Embed(
@@ -39,8 +38,6 @@ class recoveryModal(ui.Modal):
             )
             return
 
-        return account
-
-    
+        pass
 
     

@@ -2,7 +2,7 @@ from discord.ext import commands
 import discord
 import json
 
-from auth.checkLocked import checkLocked
+from auth.check_locked import checkLocked
 
 class checkLock(commands.Cog):
     check = discord.SlashCommandGroup("check")

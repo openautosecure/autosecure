@@ -60,6 +60,9 @@ async def handle_notice(session: httpx.AsyncClient, action_url: str, redirect: s
 
 async def handle_redirects(session: httpx.AsyncClient, response: str) -> dict | None:
     # Handles Microsofts random form popups
+    # Response = Original Form without prrid
+    # Redirect = Response after handling form
+     
     try:
 
         logging.info(f"Redirect Response: {response}")
@@ -95,8 +98,8 @@ async def handle_redirects(session: httpx.AsyncClient, response: str) -> dict | 
 
         # Accept notice
         print(f"[~] - Handling Accept Notice Form")
-        logging.info(f"Accept Notice Response: {redirect}")
-        result = await handle_notice(session, action_url, redirect)
+        logging.info(f"Accept Notice Response: {response}")
+        result = await handle_notice(session, action_url, response)
         return get_data(result)
     
     except Exception as e:

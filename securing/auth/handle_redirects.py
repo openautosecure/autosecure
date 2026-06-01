@@ -94,7 +94,16 @@ async def handle_redirects(session: httpx.AsyncClient, response: str) -> dict | 
             print(f"[~] - Handling Accrou Notice Form")
             logging.info(f"Accrou Notice Response: {redirect}")
 
-            skip_url = re.search(r'"skip":\{"url":"([^"]+)"', redirect).group(1)
+            skip_match = (
+                re.search(r'"skip":\s*\{"url"\s*:\s*"([^"]+)"', redirect) or
+                re.search(r'"skipUrl"\s*:\s*"([^"]+)"', redirect)
+            )
+            if skip_match:
+                skip_url = skip_match.group(1).replace('\\u0026', '&')
+            else:
+                ru_match = re.search(r'[?&]ru=([^&"]+)', action_url)
+                skip_url = unquote(ru_match.group(1))
+
             skip_response = await session.get(skip_url, follow_redirects=True)
             return get_data(skip_response.text)
 

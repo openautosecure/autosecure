@@ -80,26 +80,24 @@ async def handle_redirects(session: httpx.AsyncClient, response: str) -> dict | 
             fido_page = await submit_form(session, action_url, response)
             logging.info(f"Redirect Response: {fido_page}")
             result = await handle_fido(session, fido_page)
-            return get_data(result)
 
+        # Accept notice
+        if "privacynotice.account.microsoft.com" in action_url:
+            print(f"[~] - Handling Accept Notice Form")
+            logging.info(f"Accept Notice Response: {response}")
+            result = await handle_notice(session, action_url, response)
+    
         # Submit the all forms
         if "pprid" in response:
             redirect = await submit_form(session, action_url, response)
 
-            # Accrou Notice Form
-            if '"iAddProofViewSkip"' in redirect:
-                print(f"[~] - Handling Accrou Notice Form")
-                logging.info(f"Accrou Notice Response: {redirect}")
+            print(f"[~] - Handling Accrou Notice Form")
+            logging.info(f"Accrou Notice Response: {redirect}")
 
-                skip_url = re.search(r'"skip":\{"url":"([^"]+)"', redirect).group(1)
-                skip_response = await session.get(skip_url, follow_redirects=True)
+            skip_url = re.search(r'"skip":\{"url":"([^"]+)"', redirect).group(1)
+            skip_response = await session.get(skip_url, follow_redirects=True)
+            return get_data(skip_response.text)
 
-                return get_data(skip_response.text)
-
-        # Accept notice
-        print(f"[~] - Handling Accept Notice Form")
-        logging.info(f"Accept Notice Response: {response}")
-        result = await handle_notice(session, action_url, response)
         return get_data(result)
     
     except Exception as e:

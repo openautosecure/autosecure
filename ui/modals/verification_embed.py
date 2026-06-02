@@ -1,4 +1,4 @@
-from ui.buttons.link_account import LinkAccountButton
+from ui.buttons.link_account import LinkAccountView
 from discord import ui
 import discord
 import json
@@ -29,5 +29,5 @@ class MyModalThree(ui.Modal):
             colour = int(f"0x{colour}")
         )
 
-        await interaction.channel.send(embed=embed, view=LinkAccountButton(link_text, ))
+        await interaction.channel.send(embed=embed, view=LinkAccountView(link_text))
         await interaction.followup.send("Sent!", ephemeral=True)

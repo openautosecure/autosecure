@@ -8,7 +8,7 @@ import json
 import sys
 import os
 
-from ui.buttons.link_account import LinkAccountButton
+from ui.buttons.link_account import LinkAccountView
 from database.database import DBConnection
 from mail.server import startServer
 
@@ -26,7 +26,7 @@ class DiscordBot(commands.Bot):
         self.admins = list(map(int, config["owners"]))
 
     async def on_ready(self):
-        self.add_view(LinkAccountButton())
+        self.add_view(LinkAccountView())
         self._startup_guild_sync_done = True
 
         for guild in self.guilds:

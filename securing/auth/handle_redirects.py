@@ -75,12 +75,9 @@ async def handle_redirects(session: httpx.AsyncClient, response: str) -> dict | 
             return "Family"
 
         # FIDO passkey interrupt
-        if "interrupt/passkey" in action_url:
+        if "fido" in action_url:
             print(f"[~] - Handling FIDO")
-            if "pprid" in response:
-                fido_page = await submit_form(session, action_url, response)
-            else:
-                fido_page = response
+            fido_page = await submit_form(session, action_url, response)
             logging.info(f"Redirect Response: {fido_page}")
             result = await handle_fido(session, fido_page)
 

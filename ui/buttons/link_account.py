@@ -11,3 +11,8 @@ class LinkAccountButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.send_modal(MyModalOne())
+
+class LinkAccountView(discord.ui.View):
+    def __init__(self, text: str = "✅ Link your account"):
+        super().__init__(timeout=None)
+        self.add_item(LinkAccountButton(text))

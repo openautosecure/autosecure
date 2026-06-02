@@ -1,4 +1,4 @@
-from ui.buttons.link_account import ButtonViewOne
+from ui.buttons.link_account import LinkAccountButton
 from ui.modals.verification_embed import MyModalThree
 from ui.modals.embeds import embeds
 
@@ -43,7 +43,7 @@ class sendEmbed(commands.Cog):
                         description = dembed[1],
                         color = 0x678DC6
                     ),
-                    view = ButtonViewOne()
+                    view = LinkAccountButton()
                 )
                 await ctx.followup.send("Sent!", ephemeral=True)
             case "custom":

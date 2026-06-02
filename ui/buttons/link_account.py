@@ -1,11 +1,13 @@
 from ui.modals.modal_one import MyModalOne
-from discord import ui
 import discord
 
-class ButtonViewOne(ui.View):
-    def __init__(self):
-        super().__init__(timeout=None)
-    
-    @discord.ui.button(label="✅ Link your account", style=discord.ButtonStyle.green, custom_id="persistent:button_one")
-    async def button_one(self, button: discord.ui.Button, interaction: discord.Interaction):
+class LinkAccountButton(discord.ui.Button):
+    def __init__(self, text: str = "✅ Link your account"):
+        super().__init__(
+            label=text,
+            style=discord.ButtonStyle.green,
+            custom_id="persistent:button_one"
+        )
+
+    async def callback(self, interaction: discord.Interaction):
         await interaction.response.send_modal(MyModalOne())

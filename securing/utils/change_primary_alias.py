@@ -51,9 +51,11 @@ async def change_alias(session: httpx.AsyncClient, email: str, canary: str, apic
             "hpgid": 200176
         }
     )
-    print(f"[+] - Changed Primary Alias ({email})")
 
-async def change_primary_alias(session: httpx.AsyncClient, email: str, apicanary: str):
+    print(f"[+] - Changed Primary Alias ({email}@outlook.com)")
+    return True
+
+async def change_primary_alias(session: httpx.AsyncClient, email: str, apicanary: str) -> bool:
         
         try:
               
@@ -96,9 +98,11 @@ async def change_primary_alias(session: httpx.AsyncClient, email: str, apicanary
             canary = re.search(r'name="canary"\s+value="([^"]+)"', rtext)
             if canary:
                   await change_alias(session, email, canary.group(1), apicanary)
-                  return
-
+                  return True
+            
             print(f"[X] - Failed to change primary alias ({email})")
+            return False
+        
         except Exception as e:
             logging.error(f"Error changing primary alias: {e}")
             print(f"[X] - Failed to change primary alias ({email}@outlook.com)")

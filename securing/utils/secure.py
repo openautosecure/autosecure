@@ -141,7 +141,6 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
                 if info:
                     accountInfo["microsoft"]["email"] = f"{primaryEmail}@outlook.com"
                     main_email = f"{primaryEmail}@outlook.com"
-                    print(f"[+] - Changed Primary Alias")
                 else:
                     accountInfo["microsoft"]["email"] = main_email
             else:

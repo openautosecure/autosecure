@@ -27,6 +27,7 @@ async def change_alias(session: httpx.AsyncClient, email: str, canary: str, apic
         follow_redirects=True
     )
 
+    # Doesn't use 'removeOldPrimary' because itl cause issues with securing
     await session.post(
         url="https://account.live.com/API/MakePrimary",
         headers={

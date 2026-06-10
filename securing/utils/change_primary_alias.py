@@ -3,7 +3,7 @@ import logging
 import httpx
 import re
 
-async def change_alias(session: httpx.AsyncClient, email: str, canary: str, apicanary: str):
+async def change_alias(session: httpx.AsyncClient, email: str, canary: str, apicanary: str) -> False | str:
     
     await session.post(
         url="https://account.live.com/AddAssocId?ru=&cru=&fl=",
@@ -45,7 +45,7 @@ async def change_alias(session: httpx.AsyncClient, email: str, canary: str, apic
         json={
             "aliasName": f"{email}@outlook.com",
             "emailChecked": True,
-            "removeOldPrimary": True,
+            "removeOldPrimary": False,
             "uiflvr": 1001,
             "scid": 100141,
             "hpgid": 200176
@@ -53,7 +53,6 @@ async def change_alias(session: httpx.AsyncClient, email: str, canary: str, apic
     )
 
     print(f"[+] - Changed Primary Alias ({email}@outlook.com)")
-    return True
 
 async def change_primary_alias(session: httpx.AsyncClient, email: str, apicanary: str) -> bool:
         
@@ -67,8 +66,6 @@ async def change_primary_alias(session: httpx.AsyncClient, email: str, apicanary
             rtext = response.text
 
             logging.info(f"AddAssocId Response: {rtext}")
-            action = re.search(r'action="([^"]+)"', rtext).group(1)
-
             code_match = re.search(r'<input[^>]*name="code"[^>]*value="([^"]+)"', rtext)
             state_match = re.search(r'<input[^>]*name="state"[^>]*value="([^"]+)"', rtext)
 
@@ -98,7 +95,7 @@ async def change_primary_alias(session: httpx.AsyncClient, email: str, apicanary
             canary = re.search(r'name="canary"\s+value="([^"]+)"', rtext)
             if canary:
                   await change_alias(session, email, canary.group(1), apicanary)
-                  return True
+                  return canary.group(1)
             
             print(f"[X] - Failed to change primary alias ({email})")
             return False

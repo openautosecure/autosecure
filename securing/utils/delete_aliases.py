@@ -11,11 +11,12 @@ async def delete_aliases(session: httpx.AsyncClient) -> None:
     )
     logging.info(f"Delete Aliases response: {response.text}")
 
-    canary = re.search(r'name="canary"\s+value="([^"]+)"', response.text)
+    canary = re.search(r'name="canary"\s+value="([^"]+)"', response.text).group(1)
     logging.info(f"Del canary: {canary}")
     aliases = re.findall(
-        r'<span class="dirltr\s*">([^<]+@[^<]+)</span>(?!\s*\(primary\))',
-        response.text
+        r'id="idAliasEmail\d+".*?<span class="dirltr\s*">([^<]+@[^<]+)</span>',
+        response.text,
+        re.DOTALL
     )
     logging.info(f"ALIASES: {aliases}")
 

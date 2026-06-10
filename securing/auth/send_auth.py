@@ -3,7 +3,7 @@ import httpx
 async def send_auth(session: httpx.AsyncClient, email: str) -> dict:
 
     # First payload triggers authenticator entropy and second triggers email OTP if exists
-    # {'ErrorHR': '800434AA'} Generally means microsoft has put the emails OTPs on cooldown (~10 Minutes)
+    # {'ErrorHR': '800434AA'} Generally means microsoft has put the emails OTPs on cooldown (~10 Minutes) or bad request
     # The more OTPs are forced the harder it is to get them since microsoft has kind of a flag system
     # It is still possible to get them via browser though
     # Bypasses 2FA via forceotclogin

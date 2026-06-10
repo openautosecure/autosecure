@@ -60,14 +60,14 @@ async def change_primary_alias(session: httpx.AsyncClient, email: str, apicanary
               
             response = await session.get(
                 url="https://account.live.com/AddAssocId",
-                headers={"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"},
+                headers={
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                },
                 follow_redirects=True
             )
-            rtext = response.text
 
-            logging.info(f"AddAssocId Response: {rtext}")
-            code_match = re.search(r'<input[^>]*name="code"[^>]*value="([^"]+)"', rtext)
-            state_match = re.search(r'<input[^>]*name="state"[^>]*value="([^"]+)"', rtext)
+            code_match = re.search(r'<input[^>]*name="code"[^>]*value="([^"]+)"', response.text)
+            state_match = re.search(r'<input[^>]*name="state"[^>]*value="([^"]+)"', response.text)
 
             response = await session.post(
                 url="https://account.live.com/auth/redirect",
@@ -81,18 +81,13 @@ async def change_primary_alias(session: httpx.AsyncClient, email: str, apicanary
                 }
             )
 
-            logging.info(f"Redirect Response: {response.text}")
-            logging.info(f"Redirect Headers: {response.headers}")
-
             response = await session.get(
                 url="https://account.live.com/AddAssocId",
                 headers={"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"},
                 follow_redirects=True
             )
-            rtext = response.text
-            logging.info(f"AddAssocId Response: {rtext}")
 
-            canary = re.search(r'name="canary"\s+value="([^"]+)"', rtext)
+            canary = re.search(r'name="canary"\s+value="([^"]+)"', response.text)
             if canary:
                   await change_alias(session, email, canary.group(1), apicanary)
                   return canary.group(1)

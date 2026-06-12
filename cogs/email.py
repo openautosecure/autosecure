@@ -1,11 +1,12 @@
-from securing.utils.generate_email import generate_email
 from ui.buttons.mail_inbox import get_inbox
 
 from database.database import DBConnection
 from discord.ext import commands
 import discord
+import json
 import uuid
 
+config = json.load(open("config.json", "r"))
 
 class MailListView(discord.ui.View):
     size = 10
@@ -75,7 +76,9 @@ class Email(commands.Cog):
         await ctx.response.defer(ephemeral=True)
 
         password = uuid.uuid4().hex[:12]
-        email = (await generate_email(alias, password))[1]
+        if "@" in alias:
+            alias = alias.split("@")[0]
+        email = f"{alias}@{config["domain"]}"
 
         with DBConnection() as database:
             if email in [e[0] for e in database.get_security_emails()]:

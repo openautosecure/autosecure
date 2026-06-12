@@ -76,22 +76,19 @@ class DiscordBot(commands.Bot):
         with DBConnection() as database:
             database.setup_tables()
 
-# Simple check for dynamic ips (Not needed if you're using a VPS)
-if config["mail_provider"] == "domain" and config["domain"]:
-    domain: str = config["domain"]
+domain: str = config["domain"]
+if not domain.startswith("mail."):
+    domain = f"mail.{domain}"
 
-    if not domain.startswith("mail."):
-        domain = f"mail.{domain}"
-
-    domain_ip = socket.gethostbyname(domain)
-    public_ip = requests.get("https://api.ipify.org").text
-    if domain_ip != public_ip:
-        print(f"""
-              [X] - Your public IP has been changed! Update your domain records
-              Public IP - {public_ip}
-              Domain IP - {domain_ip}
-        """)
-        exit()
+domain_ip = socket.gethostbyname(domain)
+public_ip = requests.get("https://api.ipify.org").text
+if domain_ip != public_ip:
+    print(f"""
+          [X] - Your public IP has been changed! Update your domain records
+          Public IP - {public_ip}
+          Domain IP - {domain_ip}
+    """)
+    exit()
         
 asyncio.set_event_loop(asyncio.new_event_loop())
 bot = DiscordBot()
@@ -100,9 +97,7 @@ async def main():
     async with bot:
         bot.remove_command("help")
         bot.setup_logging()
-
-        if config["mail_provider"] == "domain":
-            startServer()
+        startServer()
 
         await bot.load_cogs()
         await bot.start(config["tokens"]["bot_token"])

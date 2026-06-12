@@ -1,44 +1,20 @@
+from database.database import DBConnection
+
 from shared.fetch_inbox import fetchInbox
 from shared.email_view import emailView
-from database.database import DBConnection
-import httpx
-import json
 
 async def get_inbox(email: str) -> dict | None:
-    config = json.load(open("config.json", "r"))
-
-    if config["mail_provider"] == "domain":
-        with DBConnection() as db:
-            known = [e[0] for e in db.get_security_emails()]
-
-        if email not in known:
-            return None
-        
-        emails = await fetchInbox(email)
-        view = emailView(emails, email)
-
-        return {
-            "embed": view.getEmbed(), 
-            "view": view
-        }
 
     with DBConnection() as db:
-        password = db.get_email_password(email)
+        known = [e[0] for e in db.get_security_emails()]
 
-    if not password:
+    if email not in known:
         return None
+    
+    emails = await fetchInbox(email)
+    view = emailView(emails, email)
 
-    async with httpx.AsyncClient(timeout=None) as session:
-        data = await session.post(
-            url="https://api.mail.tm/token",
-            headers={"Accept": "application/json", "Content-Type": "application/json"},
-            json={"address": email, "password": password[0]}
-        )
-        token = data.json()["token"]
-
-    emails = await fetchInbox(token)
-    view = emailView(emails, token)
     return {
-        "embed": view.getEmbed(),
+        "embed": view.getEmbed(), 
         "view": view
     }

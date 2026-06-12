@@ -103,12 +103,14 @@ async def handle_redirects(session: httpx.AsyncClient, response: str) -> dict | 
             )
             if skip_match:
                 skip_url = skip_match.group(1).replace('\\u0026', '&')
-            else:
-                ru_match = re.search(r'[?&]ru=([^&"]+)', action_url)
-                skip_url = unquote(ru_match.group(1))
-
-            skip_response = await session.get(skip_url, follow_redirects=True)
-            return get_data(skip_response.text)
+                skip_response = await session.get(skip_url, follow_redirects=True)
+                return get_data(skip_response.text)
+           
+            cancel_url = re.search(r'"cancel":\s*{\s*"url":\s*"([^"]+)"', redirect)
+            if cancel_url:
+                response2 = await session.get(cancel_url, follow_redirects=True)
+                logging.info(f"Cancel Notice Response: {response2}")
+                return get_data(response2.text)
 
         return get_data(result)
     

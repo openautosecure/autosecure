@@ -12,7 +12,4 @@ async def get_capes(ssid: str) :
         )
 
         jresponse = response.json()
-        if "capes" in jresponse:
-            return jresponse["capes"]
-
-        return None
+        return jresponse["capes"]

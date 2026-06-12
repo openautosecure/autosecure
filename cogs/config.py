@@ -11,16 +11,11 @@ def save_config(config):
         json.dump(config, f, indent=4)
 
 
-def embed(enable_2fa: bool, replace_alias: bool, mail_provider: str) -> discord.Embed:
+def embed(enable_2fa: bool, replace_alias: bool) -> discord.Embed:
     embed = discord.Embed(title="Bot Configuration", color=0x678DC6)
     embed.add_field(
         name="Replace Primary Alias",
         value="Enabled" if replace_alias else "Disabled",
-        inline=True
-    )
-    embed.add_field(
-        name="Mail Provider",
-        value="Mail.tm" if mail_provider == "mailtm" else "Custom Domain",
         inline=True
     )
     embed.add_field(
@@ -31,79 +26,25 @@ def embed(enable_2fa: bool, replace_alias: bool, mail_provider: str) -> discord.
     embed.set_footer(text="Click save to apply")
     return embed
 
-
-class MailSelect(discord.ui.Select):
-    def __init__(self, view: "ConfigView"):
-        self._config_view = view
-        options = [
-            discord.SelectOption(
-                label="Mail.tm",
-                value="mailtm",
-                description="Use Mail.tm security emails (temporary)",
-                default=view.mail_provider == "mailtm"
-            ),
-            discord.SelectOption(
-                label="Custom Domain",
-                value="domain",
-                description="Use your own domain (set in config)",
-                default=view.mail_provider == "domain"
-            ),
-        ]
-        super().__init__(
-            placeholder="Mail provider...",
-            options=options,
-            row=1
-        )
-
-    async def callback(self, interaction: discord.Interaction):
-        selected = self.values[0]
-        self._config_view.mail_provider = selected
-        await interaction.response.edit_message(content="Mail provider updated", view=None)
-        await self._config_view.original_interaction.edit_original_response(
-            embed=embed(
-                self._config_view.enable_2fa,
-                self._config_view.replace_alias,
-                selected
-            ),
-            view=self._config_view
-        )
-
-
-class MailSelectView(discord.ui.View):
-    def __init__(self, config_view: "ConfigView"):
-        super().__init__(timeout=60)
-        self.add_item(MailSelect(config_view))
-
-
 class ConfigView(discord.ui.View):
-    def __init__(self, enable_2fa: bool, replace_alias: bool, mail_provider: str):
+    def __init__(self, enable_2fa: bool, replace_alias: bool):
         super().__init__(timeout=180)
         self.replace_alias = replace_alias
-        self.mail_provider = mail_provider
         self.enable_2fa = enable_2fa
 
     @discord.ui.button(label="Toggle Primary Alias", style=discord.ButtonStyle.primary, row=0)
     async def toggle_alias(self, button: discord.ui.Button, interaction: discord.Interaction):
         self.replace_alias = not self.replace_alias
         await interaction.response.edit_message(
-            embed=embed(self.enable_2fa, self.replace_alias, self.mail_provider),
+            embed=embed(self.enable_2fa, self.replace_alias),
             view=self
-        )
-
-    @discord.ui.button(label="Change Domain Type", style=discord.ButtonStyle.primary, row=0)
-    async def toggle_domain(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.defer()
-        await interaction.followup.send(
-            "Select mail provider:",
-            view=MailSelectView(self),
-            ephemeral=True
         )
 
     @discord.ui.button(label="Toggle 2FA", style=discord.ButtonStyle.primary, row=1)
     async def toggle_2fa(self, button: discord.ui.Button, interaction: discord.Interaction):
         self.enable_2fa = not self.enable_2fa
         await interaction.response.edit_message(
-            embed=embed(self.enable_2fa, self.replace_alias, self.mail_provider),
+            embed=embed(self.enable_2fa, self.replace_alias),
             view=self
         )
 
@@ -112,7 +53,6 @@ class ConfigView(discord.ui.View):
         config = get_config()
         config["autosecure"]["enable_2fa"] = self.enable_2fa
         config["autosecure"]["replace_main_alias"] = self.replace_alias
-        config["mail_provider"] = self.mail_provider
         save_config(config)
 
         await interaction.response.edit_message(
@@ -137,10 +77,9 @@ class Config(commands.Cog):
         config = get_config()
         enable_2fa = config["autosecure"]["enable_2fa"]
         replace_alias = config["autosecure"]["replace_main_alias"]
-        mail_provider = config["mail_provider"]
 
-        view = ConfigView(enable_2fa, replace_alias, mail_provider)
-        config_embed = embed(enable_2fa, replace_alias, mail_provider)
+        view = ConfigView(enable_2fa, replace_alias)
+        config_embed = embed(enable_2fa, replace_alias)
 
         await ctx.respond(embed=config_embed, view=view, ephemeral=True)
         view.original_interaction = ctx.interaction

@@ -5,7 +5,7 @@ import httpx
 import json
 import re
 
-async def recover(session: httpx.AsyncClient, email: str, recovery_code: str, new_email: str, new_password: str, type: str):
+async def recover(session: httpx.AsyncClient, email: str, recovery_code: str, new_email: str, new_password: str):
     # Automates the recovery process through recovery code 
     
     data = await session.get(url=f"https://account.live.com/ResetPassword.aspx?wreply=https://login.live.com/oauth20_authorize.srf&mn={email}")
@@ -62,7 +62,7 @@ async def recover(session: httpx.AsyncClient, email: str, recovery_code: str, ne
         
         if "apiCanary" in responseJson:
             canary = responseJson["apiCanary"]
-            code = await get_email_code(type)
+            code = await get_email_code(new_email)
             verifyCodeResponse = await session.post(
                 url = "https://account.live.com/API/Proofs/VerifyCode",
                 headers = {

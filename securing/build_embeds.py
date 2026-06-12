@@ -1,6 +1,7 @@
 from minecraft.get_hypixel import get_hypixel_stats
 from minecraft.get_donut import get_donut_stats
 from minecraft.simplify import simplify
+
 from database.database import DBConnection
 from urllib.parse import quote
 from discord import Embed

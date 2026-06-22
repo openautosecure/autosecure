@@ -1,5 +1,5 @@
+from ui.modals.verification_embed import CustomVerification
 from ui.buttons.link_account import LinkAccountView
-from ui.modals.verification_embed import MyModalThree
 from ui.modals.embeds import embeds
 
 from discord.ext import commands
@@ -47,7 +47,7 @@ class sendEmbed(commands.Cog):
                 )
                 await ctx.followup.send("Sent!", ephemeral=True)
             case "custom":
-                await ctx.send_modal(MyModalThree())
+                await ctx.send_modal(CustomVerification())
 
 def setup(bot: commands.Bot) -> None:
     bot.add_cog(sendEmbed(bot))

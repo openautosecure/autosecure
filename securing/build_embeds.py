@@ -22,11 +22,11 @@ async def build_account_data(account: dict, elapsed: float = 0) -> dict:
     dstats = await get_donut_stats(name)
 
     stats_embed = Embed(color=0x279CF5)
-    stats_embed.add_field(name="Rank", value=f'{hstats["rank"]}', inline=True)
-    stats_embed.add_field(name="Hyp LVL", value=f'{simplify(hstats["level"])}', inline=True)
-    stats_embed.add_field(name="Gifted", value=f'{hstats["gifted"]}', inline=True)
-    stats_embed.add_field(name="SB NW", value=f'${simplify(hstats["networth"])}', inline=True)
-    stats_embed.add_field(name="SB LVL", value=f'{simplify(hstats["slevel"])}', inline=True)
+    stats_embed.add_field(name="Rank", value=f'{hstats["hypixel"]["rank"]}', inline=True)
+    stats_embed.add_field(name="Hyp LVL", value=f'{simplify(hstats["hypixel"]["level"])}', inline=True)
+    stats_embed.add_field(name="Gifted", value=f'{hstats["hypixel"]["gifted"]}', inline=True)
+    stats_embed.add_field(name="SB NW", value=f'${simplify(hstats["skyblock"]["networth"])}', inline=True)
+    stats_embed.add_field(name="SB LVL", value=f'{simplify(hstats["skyblock"]["slevel"])}', inline=True)
     stats_embed.add_field(name="Donut NW", value=f'{simplify(dstats["result"]["money"]) if dstats and dstats != "Failed" else 0}', inline=True)
 
     claim_id = uuid.uuid4().hex[:8]

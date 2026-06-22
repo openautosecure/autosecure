@@ -3,7 +3,7 @@ from discord import ui
 import discord
 import json
 
-class MyModalThree(ui.Modal):
+class CustomVerification(ui.Modal):
     def __init__(self):
         super().__init__(title="Verification")
         self.add_item(ui.InputText(label="Title", placeholder="Your Custom Title", required=True))
@@ -20,13 +20,13 @@ class MyModalThree(ui.Modal):
 
         config = json.load(open("config.json", "r+"))
         if config["discord"]["logs_channel"] == "" or config["discord"]["accounts_channel"] == "":
-            interaction.response.send_message("You must set the Log and Accounts Channel first throught /set_channel", ephemeral=True)
+            await interaction.response.send_message("You must set the Log and Accounts Channel first throught /set_channel", ephemeral=True)
             return
 
         embed = discord.Embed(
             title = title,
             description = description,
-            colour = int(f"0x{colour}")
+            colour = int(colour, base=0)
         )
 
         await interaction.channel.send(embed=embed, view=LinkAccountView(link_text))

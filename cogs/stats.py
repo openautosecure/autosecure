@@ -1,4 +1,4 @@
-from minecraft.simplify import simplify
+from shared.simplify import simplify
 from discord.ext import commands
 from datetime import timedelta
 import discord
@@ -30,29 +30,23 @@ class Stats(commands.Cog):
             return
 
         result = donut_stats["result"]
-
-        try:
-            kd = round(result['kills'] / result['deaths'], 2) if result['deaths'] > 0 else result['kills']
-        except Exception:
-            kd = "N/A"
-
         embed = discord.Embed(
-            title=f"🍩 DonutSMP — {username.capitalize()}",
+            title=f"DonutSMP | {username.capitalize()}",
             description=(
-                f"💰 **Balance** • `${simplify(result['money'])}`\n"
-                f"💎 **Shards** • `{simplify(result['shards'])}`\n"
-                f"⏱️ **Playtime** • `{timedelta(milliseconds=int(float(result['playtime']))).days if result['playtime'] else '0'} days`\n"
-                f"\n"
-                f"⚔️ **Kills** • `{simplify(result['kills'])}`\n"
-                f"💀 **Deaths** • `{simplify(result['deaths'])}`\n"
-                f"📊 **K/D Ratio** • `{kd}`\n"
-                f"🐾 **Mobs Killed** • `{simplify(result['mobs_killed'])}`\n"
-                f"\n"
-                f"🧱 **Blocks Placed** • `{simplify(result['placed_blocks'])}`\n"
-                f"⛏️ **Blocks Broken** • `{simplify(result['broken_blocks'])}`\n"
-                f"\n"
-                f"🏪 **Spent on Shop** • `${simplify(result['money_spent_on_shop'])}`\n"
-                f"💵 **Made from Sells** • `${simplify(result['money_made_from_sell'])}`"
+                f"**Balance** • `${simplify(result['money'])}`\n"
+                f"**Shards** • `{simplify(result['shards'])}`\n"
+                f"**Playtime** • `{timedelta(milliseconds=int(float(result['playtime']))).days if result['playtime'] else '0'} days`\n"
+                "\n"
+                f"**Kills** • `{simplify(result['kills'])}`\n"
+                f"**Deaths** • `{simplify(result['deaths'])}`\n"
+                f"**K/D Ratio** • `{result["kd"]}`\n"
+                f"**Mobs Killed** • `{simplify(result['mobs_killed'])}`\n"
+                "\n"
+                f"**Blocks Placed** • `{simplify(result['placed_blocks'])}`\n"
+                f"**Blocks Broken** • `{simplify(result['broken_blocks'])}`\n"
+                "\n"
+                f"**Spent on Shop** • `${simplify(result['money_spent_on_shop'])}`\n"
+                f"**Made from Sells** • `${simplify(result['money_made_from_sell'])}`"
             ),
             color=0xF4A460
         )
@@ -73,38 +67,27 @@ class Stats(commands.Cog):
         if not hypixel_stats["exists"]:
             await ctx.followup.send("Make sure you setup your Skytools key first!", ephemeral=True)
             return
-        
-        elif hypixel_stats == "Failed":
-            await ctx.followup.send("That player doesn't exist!", ephemeral=True)
-            return
-
-        try:
-            bw_kd = round(hypixel_stats['bw_kills'] / hypixel_stats['bw_deaths'], 2) if hypixel_stats['bw_deaths'] > 0 else hypixel_stats['bw_kills']
-            sw_kd = round(hypixel_stats['sw_kills'] / hypixel_stats['sw_deaths'], 2) if hypixel_stats['sw_deaths'] > 0 else hypixel_stats['sw_kills']
-        except Exception:
-            bw_kd = sw_kd = "N/A"
 
         embed = discord.Embed(
-            title=f"{hypixel_stats['rank']} Rank — {username.capitalize()}",
+            title=f"{hypixel_stats['hypixel']['rank']} Rank - {username.capitalize()}",
             description=(
-                f"⭐ **Hypixel Level** • `{hypixel_stats['level']}`\n"
-                f"🎁 **Gifted Ranks** • `{hypixel_stats['gifted']}`\n"
-                f"🌌 **SkyBlock Level** • `{hypixel_stats['slevel']}`\n"
-                f"💰 **Networth** • `{simplify(hypixel_stats['networth'])} Coins`\n"
-                f"\n"
-                f"✨ **Karma** • `{simplify(hypixel_stats['karma'])}`\n"
-                f"🏆 **Achievement Points** • `{simplify(hypixel_stats['achievement_points'])}`\n"
-                f"\n"
-                f"🛏️ **BW Wins** • `{hypixel_stats['bw_wins']}`\n"
-                f"💀 **BW Deaths** • `{hypixel_stats['bw_deaths']}`\n"
-                f"⚔️ **BW Kills** • `{hypixel_stats['bw_kills']}`\n"
-                f"🎯 **BW Final Kills** • `{hypixel_stats['bw_final_kills']}`\n"
-                f"📊 **BW K/D** • `{bw_kd}`\n"
-                f"\n"
-                f"🌀 **SW Wins** • `{hypixel_stats['sw_wins']}`\n"
-                f"💀 **SW Deaths** • `{hypixel_stats['sw_deaths']}`\n"
-                f"⚔️ **SW Kills** • `{hypixel_stats['sw_kills']}`\n"
-                f"📊 **SW K/D** • `{sw_kd}`\n"
+                f"**Hypixel Level** • `{hypixel_stats['hypixel']['level']}`\n"
+                f"**Gifted Ranks** • `{hypixel_stats['hypixel']['gifted']}`\n"
+                f"**Karma** • `{simplify(hypixel_stats['hypixel']['karma'])}`\n"
+                "\n"
+                f"**SkyBlock Level** • `{hypixel_stats['skyblock'].get('slevel', 0)}`\n"
+                f"**Networth** • `{simplify(hypixel_stats['skyblock']['networth'])} Coins`\n"
+                "\n"
+                f"**BW Wins** • `{hypixel_stats['bedwars']['wins']}`\n"
+                f"**BW Deaths** • `{hypixel_stats['bedwars']['deaths']}`\n"
+                f"**BW Kills** • `{hypixel_stats['bedwars']['kills']}`\n"
+                f"**BW Final Kills** • `{hypixel_stats['bedwars']['final_kills']}`\n"
+                f"**BW K/D** • `{hypixel_stats['bedwars']['kd']}`\n"
+                "\n"
+                f"**SW Wins** • `{hypixel_stats['skywars']['sw_wins']}`\n"
+                f"**SW Deaths** • `{hypixel_stats['skywars']['sw_deaths']}`\n"
+                f"**SW Kills** • `{hypixel_stats['skywars']['sw_kills']}`\n"
+                f"**SW K/D** • `{hypixel_stats['skywars']['sw_kd']}`\n"
             ),
             color=0xFFAA00
         ).set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/128")

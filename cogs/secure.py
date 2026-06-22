@@ -1,4 +1,5 @@
-from ui.modals.recovery_auth import recoveryModal
+from ui.modals.recovery_secret_bulk import BulkRecoveryModal
+from ui.modals.recovery_secret import recoveryModal
 
 from discord.ext import commands
 import discord
@@ -15,6 +16,11 @@ class Dropdown(discord.ui.Select):
                 label="Password + Secret",
                 description="Uses auth secret and password",
                 value="pwdsecret"
+            ),
+            discord.SelectOption(
+                label="Bulk Password + Secret",
+                description="Bulk option for password + secret",
+                value="bulk_pwdsecret"
             )
         ]
         super().__init__(
@@ -36,6 +42,8 @@ class Dropdown(discord.ui.Select):
                 return
             case "pwdsecret":
                 modal = recoveryModal()
+            case "bulk_pwdsecret":
+                modal = BulkRecoveryModal()
             
         await interaction.response.send_modal(modal)
 
@@ -60,7 +68,10 @@ class secure(commands.Cog):
             Use your email and recovery code
 
             **Password + Secret**
-            Use your email and recovery code
+            Use your email and password + authenticator secret
+
+            **Bulk Password + Secret**
+            Secure multiple accounts at once (one per line)
             """
         )
 

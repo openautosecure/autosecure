@@ -1,9 +1,9 @@
-from securing.utils.get_livedata import livedata
-from securing.build_embeds import build_account_data
-from securing.utils.polish_host import polish_host
+from securing.build_embeds import build_account_embeds
 from securing.auth.initial_session import get_session
-from securing.utils.secure import secure
+from securing.utils.polish_host import polish_host
 from securing.auth.get_msaauth import get_msaauth
+from securing.utils.get_livedata import livedata
+from securing.utils.secure import secure
 import httpx
 import time
 
@@ -60,5 +60,5 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
 
     finalTime = (time.time() - initialTime)
 
-    account = await build_account_data(account, finalTime)
+    account = await build_account_embeds(account, finalTime)
     return account

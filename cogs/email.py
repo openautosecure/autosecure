@@ -49,7 +49,7 @@ class MailListView(discord.ui.View):
         return discord.Embed(
             title="Security Emails",
             description=f"**{len(self.emails)}** email(s) stored:\n\n{lines}",
-            color=0x678DC6
+            color=0x3B89FF
         ).set_footer(text="These emails are automatically deleted after 7 days")
 
     async def previous(self, interaction: discord.Interaction):
@@ -83,7 +83,7 @@ class Email(commands.Cog):
         with DBConnection() as database:
             if email in [e[0] for e in database.get_security_emails()]:
                 await ctx.respond(
-                    embed=discord.Embed(description=f"`{email}` has already been created", color=0xFF5C5C),
+                    embed=discord.Embed(description=f"`{email}` has already been created", color=0xFA4343),
                     ephemeral=True
                 )
                 return
@@ -109,14 +109,14 @@ class Email(commands.Cog):
 
         if not inbox:
             await ctx.respond(
-                embed=discord.Embed(description="This email has not been found", color=0xFF5C5C),
+                embed=discord.Embed(description="This email has not been found", color=0xFA4343),
                 ephemeral=True
             )
             return
 
         if len(inbox) == 0:
             await ctx.respond(
-                embed=discord.Embed(description="No emails found in inbox.", color=0xFF5C5C),
+                embed=discord.Embed(description="No emails found in inbox.", color=0xFA4343),
                 ephemeral=True
             )
             return
@@ -137,7 +137,7 @@ class Email(commands.Cog):
                 embed=discord.Embed(
                     title="No Emails Found",
                     description="You don't have any emails stored",
-                    color=0xFF5C5C
+                    color=0xFA4343
                 ),
                 ephemeral=True
             )

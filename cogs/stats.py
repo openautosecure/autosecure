@@ -1,6 +1,6 @@
 from shared.simplify import simplify
 from discord.ext import commands
-from datetime import timedelta
+from datetime import datetime
 import discord
 
 from minecraft.get_donut import get_donut_stats
@@ -30,28 +30,28 @@ class Stats(commands.Cog):
             return
 
         result = donut_stats["result"]
+        ms = int(float(result['playtime'])) if result['playtime'] else 0
+        days = ms // 86400000
+        hours = (ms % 86400000) // 3600000
+
         embed = discord.Embed(
-            title=f"DonutSMP | {username.capitalize()}",
+            title=f"Stats for {username}",
             description=(
-                f"**Balance** • `${simplify(result['money'])}`\n"
-                f"**Shards** • `{simplify(result['shards'])}`\n"
-                f"**Playtime** • `{timedelta(milliseconds=int(float(result['playtime']))).days if result['playtime'] else '0'} days`\n"
-                "\n"
-                f"**Kills** • `{simplify(result['kills'])}`\n"
-                f"**Deaths** • `{simplify(result['deaths'])}`\n"
-                f"**K/D Ratio** • `{result["kd"]}`\n"
-                f"**Mobs Killed** • `{simplify(result['mobs_killed'])}`\n"
-                "\n"
-                f"**Blocks Placed** • `{simplify(result['placed_blocks'])}`\n"
-                f"**Blocks Broken** • `{simplify(result['broken_blocks'])}`\n"
-                "\n"
-                f"**Spent on Shop** • `${simplify(result['money_spent_on_shop'])}`\n"
-                f"**Made from Sells** • `${simplify(result['money_made_from_sell'])}`"
+                f"**Money**: `${simplify(result['money'])}`\n"
+                f"**Shards**: `{simplify(result['shards'])}`\n"
+                f"**Player Kills**: `{simplify(result['kills'])}`\n"
+                f"**Deaths**: `{simplify(result['deaths'])}`\n"
+                f"**Playtime**: `{days}d {hours}h`\n"
+                f"**Blocks Placed**: `{simplify(result['placed_blocks'])}`\n"
+                f"**Blocks Broken**: `{simplify(result['broken_blocks'])}`\n"
+                f"**Mobs Killed**: `{simplify(result['mobs_killed'])}`\n"
+                f"**Money Spent**: `${simplify(result['money_spent_on_shop'])}`\n"
+                f"**Money Made**: `${simplify(result['money_made_from_sell'])}`"
             ),
-            color=0xF4A460
+            timestamp=datetime.utcnow(),
+            color=0xFF9E45
         )
         embed.set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/128")
-        embed.set_footer(text="DonutSMP Stats")
 
         await ctx.followup.send(embed=embed, ephemeral=True)
 
@@ -71,23 +71,23 @@ class Stats(commands.Cog):
         embed = discord.Embed(
             title=f"{hypixel_stats['hypixel']['rank']} Rank - {username.capitalize()}",
             description=(
-                f"**Hypixel Level** • `{hypixel_stats['hypixel']['level']}`\n"
-                f"**Gifted Ranks** • `{hypixel_stats['hypixel']['gifted']}`\n"
-                f"**Karma** • `{simplify(hypixel_stats['hypixel']['karma'])}`\n"
+                f"**Hypixel Level**: `{hypixel_stats['hypixel']['level']}`\n"
+                f"**Gifted Ranks**: `{hypixel_stats['hypixel']['gifted']}`\n"
+                f"**Karma**: `{simplify(hypixel_stats['hypixel']['karma'])}`\n"
                 "\n"
-                f"**SkyBlock Level** • `{hypixel_stats['skyblock']["level"]}`\n"
-                f"**Networth** • `{simplify(hypixel_stats['skyblock']['networth'])} Coins`\n"
+                f"**SkyBlock Level**: `{hypixel_stats['skyblock']["level"]}`\n"
+                f"**Networth**: `{simplify(hypixel_stats['skyblock']['networth'])} Coins`\n"
                 "\n"
-                f"**BW Wins** • `{hypixel_stats['bedwars']['wins']}`\n"
-                f"**BW Deaths** • `{hypixel_stats['bedwars']['deaths']}`\n"
-                f"**BW Kills** • `{hypixel_stats['bedwars']['kills']}`\n"
-                f"**BW Final Kills** • `{hypixel_stats['bedwars']['final_kills']}`\n"
-                f"**BW K/D** • `{hypixel_stats['bedwars']['kd']}`\n"
+                f"**BW Wins**: `{hypixel_stats['bedwars']['wins']}`\n"
+                f"**BW Deaths**: `{hypixel_stats['bedwars']['deaths']}`\n"
+                f"**BW Kills**: `{hypixel_stats['bedwars']['kills']}`\n"
+                f"**BW Final Kills**: `{hypixel_stats['bedwars']['final_kills']}`\n"
+                f"**BW K/D**: `{hypixel_stats['bedwars']['kd']}`\n"
                 "\n"
-                f"**SW Wins** • `{hypixel_stats['skywars']['sw_wins']}`\n"
-                f"**SW Deaths** • `{hypixel_stats['skywars']['sw_deaths']}`\n"
-                f"**SW Kills** • `{hypixel_stats['skywars']['sw_kills']}`\n"
-                f"**SW K/D** • `{hypixel_stats['skywars']['sw_kd']}`\n"
+                f"**SW Wins**: `{hypixel_stats['skywars']['sw_wins']}`\n"
+                f"**SW Deaths**: `{hypixel_stats['skywars']['sw_deaths']}`\n"
+                f"**SW Kills**: `{hypixel_stats['skywars']['sw_kills']}`\n"
+                f"**SW K/D**: `{hypixel_stats['skywars']['sw_kd']}`\n"
             ),
             color=0xFFAA00
         ).set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/128")

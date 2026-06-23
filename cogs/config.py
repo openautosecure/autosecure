@@ -11,7 +11,7 @@ def save_config(config):
         json.dump(config, f, indent=4)
 
 def embed(enable_2fa: bool, replace_alias: bool) -> discord.Embed:
-    embed = discord.Embed(title="Bot Configuration", color=0x678DC6)
+    embed = discord.Embed(title="Bot Configuration", color=0x3B89FF)
     embed.add_field(
         name="Replace Primary Alias",
         value="Enabled" if replace_alias else "Disabled",

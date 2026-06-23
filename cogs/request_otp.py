@@ -26,7 +26,7 @@ class requestOTP(commands.Cog):
                     await ctx.followup.send(
                         embed=discord.Embed(
                             description=f"Successfully sent OTP to `{value['display']}`",
-                            color=0x678DC6
+                            color=0x3B89FF
                         ),
                         ephemeral=True
                     )

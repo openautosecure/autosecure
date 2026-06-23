@@ -16,6 +16,7 @@ async def get_donut_stats(username: str) -> dict:
             }
         )
         stats = response.json()
+        print(stats)
 
         if response.status_code == 500:
             return "Failed"

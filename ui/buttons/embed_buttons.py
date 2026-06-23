@@ -24,13 +24,12 @@ class ButtonOptions(ui.View):
             self.hstats = await get_hypixel_stats(self.username)
             self.dstats = await get_donut_stats(self.username)
 
-    # First row
     @discord.ui.button(label="🛏️ Bedwars", style=discord.ButtonStyle.grey, custom_id="persistent:button_bedwars", row=1)
     async def bedwarsButton(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)
         await self.check_stats()
 
-        await interaction.response.send_message(
+        await interaction.followup.send(
             embed = discord.Embed(
             title=f"Bedwars stats for {self.username}",
             description=(
@@ -48,10 +47,10 @@ class ButtonOptions(ui.View):
 
     @discord.ui.button(label="⚔️ Skywars", style=discord.ButtonStyle.grey, custom_id="persistent:button_skywars", row=1)
     async def skywarsButton(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)
         await self.check_stats()
 
-        await interaction.response.send_message(
+        await interaction.followup.send(
             embed = discord.Embed(
             title=f"Skywars stats for {self.username}",
             description=(
@@ -68,10 +67,10 @@ class ButtonOptions(ui.View):
 
     @discord.ui.button(label="💰 Skyblock", style=discord.ButtonStyle.grey, custom_id="persistent:button_skyblock", row=1)
     async def skyblockButton(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)
         await self.check_stats()
 
-        await interaction.response.send_message(
+        await interaction.followup.send(
             embed = discord.Embed(
             title=f"Skyblock stats for {self.username}",
             description=(
@@ -83,13 +82,14 @@ class ButtonOptions(ui.View):
             ).set_thumbnail(url=f"https://mc-heads.net/avatar/{self.username}/50"),
             ephemeral = True
         )
+
     @discord.ui.button(label="🍩 Donut", style=discord.ButtonStyle.grey, custom_id="persistent:button_donut", row=1)
     async def donutButton(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)
         await self.check_stats()
 
         if not self.dstats or self.dstats == "Failed":
-            await interaction.response.send_message("No DonutSMP stats found.", ephemeral=True)
+            await interaction.followup.send("No DonutSMP stats found.", ephemeral=True)
             return
         
         ms = int(float(self.dstats['playtime'])) if self.dstats['playtime'] else 0
@@ -115,9 +115,8 @@ class ButtonOptions(ui.View):
         )
         embed.set_thumbnail(url=f"https://mc-heads.net/avatar/{self.username}/60")
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.followup.send(embed=embed, ephemeral=True)
 
-    # Second Row
     @discord.ui.button(label="Ban", style=discord.ButtonStyle.red, custom_id="persistent:button_ban", row=2)
     async def banButton(self, button: discord.ui.Button, interaction: discord.Interaction):
         try:
@@ -157,7 +156,6 @@ class ButtonOptions(ui.View):
 
         await interaction.response.send_message(f"Successfully unblacklisted <@{self.user}>!", ephemeral=True)
     
-    # Third Row
     @discord.ui.button(label="DM", style=discord.ButtonStyle.grey, custom_id="persistent:button_dm", row=3)
     async def dmButton(self, button: discord.ui.Button, interaction: discord.Interaction):
         await interaction.response.send_modal(

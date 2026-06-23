@@ -1,5 +1,6 @@
 from securing.utils.get_email_code import get_email_code
 from urllib.parse import unquote
+import logging
 import codecs
 import httpx
 import json
@@ -9,7 +10,8 @@ async def recover(session: httpx.AsyncClient, email: str, recovery_code: str, ne
     # Automates the recovery process through recovery code 
     
     data = await session.get(url=f"https://account.live.com/ResetPassword.aspx?wreply=https://login.live.com/oauth20_authorize.srf&mn={email}")
-
+    logging.info(f"sRecovery: {data.text}")
+    
     serverData = json.loads(re.search(r"var\s+ServerData=(.*?)(?=;|$)", data.text).group(1))
     decoded_token = codecs.decode(unquote(serverData["sRecoveryToken"]), "unicode_escape")
 

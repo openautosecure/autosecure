@@ -24,7 +24,7 @@ class sendEmbed(commands.Cog):
             )
             return
         
-        config = json.load(open("config.json", "r+"))
+        config = json.load(open("config/config.json", "r"))
         
         if not config["discord"]["logs_channel"] or not config["discord"]["accounts_channel"]:
             await ctx.respond(

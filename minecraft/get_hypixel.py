@@ -1,7 +1,7 @@
 import httpx
 import json
 
-config = json.load(open("config.json", "r+"))
+config = json.load(open("config/config.json", "r"))
 skytools_key = config["tokens"]["skytools_key"]
 
 async def get_hypixel_stats(username: str) -> dict:

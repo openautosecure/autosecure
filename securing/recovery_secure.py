@@ -15,7 +15,7 @@ import json
 import uuid
 import re
 
-config = json.load(open("config.json", "r"))
+config = json.load(open("config/config.json", "r"))
 
 async def login_authenticator(session: httpx.AsyncClient, email: str, data: dict, account: dict):
     initialTime = time()

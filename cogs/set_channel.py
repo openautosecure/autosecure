@@ -17,7 +17,7 @@ class setChannel(commands.Cog):
             await ctx.respond("You do not have permission to execute this command!", ephemeral=True)
             return
         
-        with open("config.json", "r") as config:
+        with open("config/config.json", "r") as config:
             newConfig = json.load(config)
         
         match choice.lower():

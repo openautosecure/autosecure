@@ -6,7 +6,7 @@ import discord
 import json
 import uuid
 
-config = json.load(open("config.json", "r"))
+config = json.load(open("config/config.json", "r"))
 
 class MailListView(discord.ui.View):
     size = 10

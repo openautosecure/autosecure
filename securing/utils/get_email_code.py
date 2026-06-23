@@ -4,7 +4,7 @@ import httpx
 import json
 import re
 
-config = json.load(open("config.json", "r"))
+config = json.load(open("config/config.json", "r"))
 
 async def get_email_code(mail: str) -> str:
 

@@ -7,7 +7,6 @@ def get_data(response: str) -> dict:
     logging.info(f"Getting Live Data")
     urlPost = re.search(r'"urlPost"\s*:\s*"([^"]+)"', response)
     ppft = re.search(r'id=\\"i0327\\" value=\\"([^\\]+)\\"', response)
-    
     if not ppft:
         ppft = re.search(r'"sFT"\s*:\s*"([^"]+)"', response)
 

@@ -59,7 +59,7 @@ class Claim(commands.Cog):
         logs_channel = await ctx.bot.fetch_channel(config["discord"]["logs_channel"])
         await logs_channel.send(embed=claim_embed)
 
-        censored_id = config["discord"].get("censored_logs_channel")
+        censored_id = config["discord"]["censored_logs_channel"]
         if censored_id:
             censored_channel = await ctx.bot.fetch_channel(censored_id)
             await censored_channel.send(embed=claim_embed)

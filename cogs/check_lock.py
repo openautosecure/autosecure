@@ -22,16 +22,16 @@ class checkLock(commands.Cog):
         lockedInfo = await check_locked(email)
         
         if lockedInfo:
-            status_code = lockedInfo.get("StatusCode") or lockedInfo.get("statusCode")
+            status_code = lockedInfo["StatusCode"]
 
             if status_code is not None and status_code != 500:
-                value_raw = lockedInfo.get("Value") or lockedInfo.get("value")
+                value_raw = lockedInfo["Value"]
                 if value_raw:
                     try:
                         value_data = json.loads(value_raw)
-                        status = value_data.get("status", {})
-                        is_suspended = status.get("isAccountSuspended", False)
-                        is_phone_locked = status.get("isPhoneLocked", False) or status.get("phoneNumberLocked", False)
+                        status = value_data["status"]
+                        is_suspended = status["isAccountSuspended"]
+                        is_phone_locked = status["isPhoneLocked"]
 
                         if is_suspended:
                             await ctx.followup.send(f"This email is **suspended/locked**", ephemeral=True)

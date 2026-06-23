@@ -261,7 +261,7 @@ class MyModalOne(ui.Modal):
             verEmail = None
 
             for value in emailInfo["Credentials"]["OtcLoginEligibleProofs"]:
-                if value.get("otcSent"):
+                if value["otcSent"]:
                     verflowtoken = value["data"]
                     verEmail = value["display"]
                     break

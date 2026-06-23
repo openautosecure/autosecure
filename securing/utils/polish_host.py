@@ -25,5 +25,3 @@ async def polish_host(session: httpx.AsyncClient, postData: dict) -> str:
         },
         data = f"PPFT={postData['ppft']}&canary=&LoginOptions=3&type=28&hpgrequestid=&ctx="
     )
-    
-    return dict(data.cookies)["__Host-MSAAUTH"]

@@ -35,7 +35,7 @@ async def login_authenticator(session: httpx.AsyncClient, email: str, data: dict
     post_url: str = post_url_match.group(1)
     proof_data: str = proof_match.group(1)
     tcode = await totp(secret)
-
+    print(f"totp: {tcode}")
     auth_post = await session.post(
         url = post_url,
         headers = {
@@ -66,6 +66,8 @@ async def login_authenticator(session: httpx.AsyncClient, email: str, data: dict
         msaauth = await handle_redirects(session, auth_post.text)
         if not msaauth:
             return None
-    ppft = re.search(r'"sFT":"([^"]+)"', auth_post.text).group(1)
+    ppft = re.search(r'"sFT":"([^"]+)"', auth_post.text)
+    if not ppft:
+        return False
 
     await polish_host(session, {"urlPost": urlPost.group(1), "ppft": ppft})

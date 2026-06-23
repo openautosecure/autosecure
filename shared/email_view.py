@@ -25,12 +25,12 @@ class emailView(ui.View):
             return discord.Embed(
                 title="Email Inbox (0/0)",
                 description="No emails found in inbox.",
-                color=0x678DC6,
+                color=0x3B89FF,
             )
         return discord.Embed(
             title=f"Email Inbox ({self.index + 1}/{len(self.emails)})",
             description=self.emails[self.index],
-            color=0x678DC6,
+            color=0x3B89FF,
         )
 
     @discord.ui.button(label="◀️ Back", style=discord.ButtonStyle.primary)

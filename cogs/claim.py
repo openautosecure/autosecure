@@ -28,7 +28,7 @@ class Claim(commands.Cog):
                     embed=discord.Embed(
                         title="Invalid Claim ID",
                         description=f"No secured account found with claim ID `{id}`.",
-                        color=0xFF5C5C
+                        color=0xFA4343
                     ),
                     ephemeral=True
                 )
@@ -39,7 +39,7 @@ class Claim(commands.Cog):
                     embed=discord.Embed(
                         title="Already Claimed",
                         description=f"Claim ID `{id}` has already been claimed.",
-                        color=0xFF5C5C
+                        color=0xFA4343
                     ),
                     ephemeral=True
                 )
@@ -94,7 +94,7 @@ class Claim(commands.Cog):
                 embed=discord.Embed(
                     title="Account Claimed",
                     description="Claimed successfully but couldn't DM you. Enable DMs from server members.",
-                    color=0xFF5C5C
+                    color=0xFA4343
                 ),
                 ephemeral=True
             )

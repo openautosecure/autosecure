@@ -41,7 +41,7 @@ class sendEmbed(commands.Cog):
                     embed = discord.Embed(
                         title = dembed[0],
                         description = dembed[1],
-                        color = 0x678DC6
+                        color = 0x3B89FF
                     ),
                     view = LinkAccountView()
                 )

@@ -1,6 +1,6 @@
 from securing.auth.handle_redirects import handle_redirects
 from securing.auth.initial_session import get_session
-from securing.build_embeds import build_account_data
+from securing.build_embeds import build_account_embeds
 from securing.utils.polish_host import polish_host
 from securing.utils.get_livedata import livedata
 from securing.utils.login_pwd import login_pwd
@@ -84,7 +84,7 @@ async def login_authenticator(session: httpx.AsyncClient, email: str, data: dict
     logging.info(f"Account: {dsecured}")
     final_time = (time() - initialTime)
 
-    build_account = await build_account_data(dsecured, final_time)
+    build_account = await build_account_embeds(dsecured, final_time)
     return build_account
             
 async def recoverySecure(email: str, type: str, data: dict) -> dict:

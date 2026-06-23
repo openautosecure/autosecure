@@ -51,7 +51,7 @@ class Stats(commands.Cog):
             timestamp=datetime.utcnow(),
             color=0xFF9E45
         )
-        embed.set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/128")
+        embed.set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/60")
 
         await ctx.followup.send(embed=embed, ephemeral=True)
 
@@ -89,8 +89,9 @@ class Stats(commands.Cog):
                 f"**SW Kills**: `{hypixel_stats['skywars']['sw_kills']}`\n"
                 f"**SW K/D**: `{hypixel_stats['skywars']['sw_kd']}`\n"
             ),
-            color=0xFFAA00
-        ).set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/128")
+            timestamp=datetime.utcnow(),
+            color=0xFF9E45
+        ).set_thumbnail(url=f"https://mc-heads.net/avatar/{username}/60")
 
         await ctx.followup.send(embed=embed, ephemeral=True)
 

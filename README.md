@@ -60,13 +60,13 @@ pip install -r requirements.txt
 
 #### 5. Configure the Bot
 
-Edit `config.json`:
+Edit `cogs/config.json`:
 
 * Add your Discord ID to the owners list
 * Add your bot token
 * Optionally add Skytools and DonutSMP keys for stats
 
-**Example Config:**
+**Example Config (`cogs/config.json`):**
 
 ```json
 {
@@ -91,7 +91,6 @@ Edit `config.json`:
         "claims_enabled": false,
         "claim_users": []
     },
-    "mail_provider": "domain",
     "domain": "autosecure.lol"
 }
 ```

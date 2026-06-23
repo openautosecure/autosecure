@@ -10,7 +10,6 @@ def save_config(config):
     with open("config.json", "w+") as f:
         json.dump(config, f, indent=4)
 
-
 def embed(enable_2fa: bool, replace_alias: bool) -> discord.Embed:
     embed = discord.Embed(title="Bot Configuration", color=0x678DC6)
     embed.add_field(

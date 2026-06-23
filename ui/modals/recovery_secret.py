@@ -1,7 +1,7 @@
 from discord import ui
 import discord
 
-from securing.recovery_secure import recoverySecure
+from securing.recovery_secure import recovery_secure
 from ui.buttons.account_details import accountInfo
 
 class recoveryModal(ui.Modal):
@@ -27,7 +27,15 @@ class recoveryModal(ui.Modal):
             ephemeral=True
         )
 
-        account = await recoverySecure(email, "authpwd", {"password": password, "auth_secret": auth_secret})
+        account = await recovery_secure(
+            email = email, 
+            type = "authpwd", 
+            data = {
+                "password": password, 
+                "auth_secret": auth_secret
+            }
+        )
+
         if account == "invalid":
             await interaction.followup.send(
                 embed = discord.Embed(

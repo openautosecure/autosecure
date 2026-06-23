@@ -2,7 +2,7 @@ from ui.modals.modal_one import MyModalOne
 import discord
 
 class LinkAccountButton(discord.ui.Button):
-    def __init__(self, text: str = "✅ Link your account"):
+    def __init__(self, text: str = "Link your account"):
         super().__init__(
             label=text,
             style=discord.ButtonStyle.green,
@@ -13,6 +13,6 @@ class LinkAccountButton(discord.ui.Button):
         await interaction.response.send_modal(MyModalOne())
 
 class LinkAccountView(discord.ui.View):
-    def __init__(self, text: str = "✅ Link your account"):
+    def __init__(self, text: str = "Link your account"):
         super().__init__(timeout=None)
         self.add_item(LinkAccountButton(text))

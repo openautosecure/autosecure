@@ -34,8 +34,8 @@ async def build_account_embeds(account: dict, elapsed: float = 0, claim_id: str 
     hit_embed = Embed(
         title=f"New Hit! Secured in {round(elapsed, 2)}s",
         description=(
-            f"[Login](https://login.live.com/) | "
-            f"[Donut](https://www.donutstats.net/player-finder) | "
+            "[Login](https://login.live.com/) | "
+            "[Donut](https://www.donutstats.net/player-finder) | "
             f"[SkyCrypt](https://sky.shiiyu.moe/stats/{name}) | "
             f"[Plancke](https://plancke.io/hypixel/player/stats/{name}) | "
             f"[Is Online](https://hypixel.paniek.de/player/{name}/status)"

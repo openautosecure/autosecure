@@ -135,6 +135,7 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
 
             # Original Email
             main_email = securityParameters["email"]
+            print(f"Main EMail: {main_email}")
             encryptedNetID = securityParameters["WLXAccount"]["manageProofs"]["encryptedNetId"]
 
             # Changes Primary Alias

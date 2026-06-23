@@ -1,7 +1,7 @@
 import httpx
 import json
 
-donut_key = json.load(open("config.json", "r+"))["tokens"]["donut_key"]
+donut_key = json.load(open("config/config.json", "r"))["tokens"]["donut_key"]
 async def get_donut_stats(username: str) -> dict:
 
     if not donut_key:

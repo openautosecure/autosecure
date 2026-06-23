@@ -12,7 +12,7 @@ from ui.buttons.link_account import LinkAccountView
 from database.database import DBConnection
 from mail.server import startServer
 
-config = json.load(open("config.json", "r+"))
+config = json.load(open("config/config.json", "r"))
 
 class DiscordBot(commands.Bot):
     def __init__(self):

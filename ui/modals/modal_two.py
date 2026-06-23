@@ -18,7 +18,7 @@ class MyModalTwo(ui.Modal):
         self.username = quote(username)
         self.email = email
         self.flowtoken = flowtoken
-        self.config = json.load(open("config.json", "r+"))
+        self.config = json.load(open("config/config.json", "r"))
         self.add_item(ui.InputText(label="Code", required=True, max_length=6))
 
     async def callback(self, interaction: discord.Interaction) -> None:

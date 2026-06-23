@@ -33,7 +33,7 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
     # Main file where all processes to securing the account occur
 
     # To auto update if you edit the config via command
-    config = json.load(open("config.json", "r+"))
+    config = json.load(open("config/config.json", "r"))
     replace_alias = config["autosecure"]["replace_main_alias"]
     enable_2fa = config["autosecure"]["enable_2fa"]
     domain = config["domain"]

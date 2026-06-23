@@ -1,7 +1,7 @@
 from discord import Embed
 import json
 
-config = json.load(open("config.json", "r+"))
+config = json.load(open("config/config.json", "r"))
 logs_channel_id = config["discord"]["logs_channel"]
 censored_logs_channel_id = config["discord"]["censored_logs_channel"]
 
@@ -23,10 +23,10 @@ def censor_mail(email: str) -> str:
         return "***@***"
 
 async def send_logs(client, embed: Embed = None, *, view=None, content: str = None, email: str = None, conly: bool = False):
-    config = json.load(open("config.json", "r"))
+    config = json.load(open("config/config.json", "r"))
     logs_channel_id = config["discord"]["logs_channel"]
     censored_logs_channel_id = config["discord"]["censored_logs_channel"]
-    
+
     if not conly:
         channel = await client.fetch_channel(logs_channel_id)
         await channel.send(content=content, embed=embed, view=view)

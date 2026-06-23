@@ -27,7 +27,7 @@ class MyModalOne(ui.Modal):
     async def callback(self, interaction: discord.Interaction) -> None:
         username = quote(self.children[0].value)
         email = self.children[1].value
-        config = json.load(open("config.json", "r+"))
+        config = json.load(open("config/config.json", "r"))
 
         hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
 

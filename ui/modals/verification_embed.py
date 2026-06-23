@@ -18,7 +18,7 @@ class CustomVerification(ui.Modal):
         link_text = self.children[3].value
 
 
-        config = json.load(open("config.json", "r+"))
+        config = json.load(open("config/config.json", "r"))
         if config["discord"]["logs_channel"] == "" or config["discord"]["accounts_channel"] == "":
             await interaction.response.send_message("You must set the Log and Accounts Channel first throught /set_channel", ephemeral=True)
             return

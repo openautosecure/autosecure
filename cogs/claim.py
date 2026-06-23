@@ -11,7 +11,7 @@ class Claim(commands.Cog):
 
     @discord.slash_command(name="claim", description="Claim a secured account by ID")
     async def claim(self, ctx: discord.ApplicationContext, id: str):
-        config = json.load(open("config.json", "r+"))
+        config = json.load(open("config/config.json", "r"))
         claims = config["claims"]
 
         if not claims["claims_enabled"]:

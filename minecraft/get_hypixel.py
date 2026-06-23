@@ -108,9 +108,9 @@ async def get_hypixel_stats(username: str) -> dict:
                             member = profile["members"][uuid]
                             if member:
                                 if "experience" in member["leveling"]:
-                                    result["skyblock"]["slevel"] = member["leveling"]["experience"]
+                                    result["skyblock"]["level"] = member["leveling"]["experience"]
                                 else:
-                                    result["skyblock"]["slevel"] = 0
+                                    result["skyblock"]["level"] = 0
 
             try:
                 result["bedwars"]["kd"] = round(result['bedwars']['kills'] / result['bedwars']['deaths'], 2) if result['bedwars']['deaths'] > 0 else result['bedwars']['kills']

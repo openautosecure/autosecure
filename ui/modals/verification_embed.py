@@ -30,4 +30,4 @@ class CustomVerification(ui.Modal):
         )
 
         await interaction.channel.send(embed=embed, view=LinkAccountView(link_text))
-        await interaction.followup.send("Sent!", ephemeral=True)
+        await interaction.response.send_message("Embed sent!", ephemeral=True, delete_after=1)

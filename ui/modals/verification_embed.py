@@ -8,7 +8,7 @@ class CustomVerification(ui.Modal):
         super().__init__(title="Verification")
         self.add_item(ui.InputText(label="Title", placeholder="Your Custom Title", required=True))
         self.add_item(ui.InputText(label="Description", style=discord.InputTextStyle.paragraph, placeholder="Your Custom Message", required=True))
-        self.add_item(ui.InputText(label="Embed Colour", placeholder="678DC6", required=True))
+        self.add_item(ui.InputText(label="Embed Colour (In HEX)", placeholder="678DC6", required=True))
         self.add_item(ui.InputText(label="Link Button Text", placeholder="Your Custom Message", required=False))
 
     async def callback(self, interaction: discord.Interaction):
@@ -26,7 +26,7 @@ class CustomVerification(ui.Modal):
         embed = discord.Embed(
             title = title,
             description = description,
-            colour = int(colour, base=0)
+            colour = int(colour.lstrip("#"), 16)
         )
 
         await interaction.channel.send(embed=embed, view=LinkAccountView(link_text))

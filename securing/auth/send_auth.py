@@ -18,6 +18,7 @@ async def send_auth(session: httpx.AsyncClient, email: str) -> dict:
         "isFederationDisabled": True,
         "isFidoSupported": False,
         "isOtherIdpSupported": False,
+        "isReactLoginRequest": True,
         "isRemoteConnectSupported": False,
         "isRemoteNGCSupported": True,
         "isSignup": False,

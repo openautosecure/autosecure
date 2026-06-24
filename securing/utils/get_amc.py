@@ -1,3 +1,4 @@
+import logging
 import asyncio
 import httpx
 import re
@@ -15,7 +16,7 @@ async def get_amc(session: httpx.AsyncClient):
 
             # Complete getting AMC cookie
             await session.get(
-                url =" https://account.microsoft.com/profile?lang=en-US",
+                url ="https://account.microsoft.com/profile?lang=en-US",
                 headers = {
                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
                 },
@@ -29,7 +30,8 @@ async def get_amc(session: httpx.AsyncClient):
                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
                 }
             )
-
+            logging.info(f"PROFILE INFO: {profile_info.text}")
+            
             rvt = re.search(
                 r'name="__RequestVerificationToken"\s+type="hidden"\s+value="([^"]+)"', 
                 profile_info.text, 

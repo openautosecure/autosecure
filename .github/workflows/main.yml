@@ -1,2 +1,0 @@
-- name: Release notes scraper
-  uses: AbsaOSS/generate-release-notes@v1.3.1

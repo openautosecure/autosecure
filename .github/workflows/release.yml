@@ -1,0 +1,24 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build Changelog
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v6.2.3
+        with:
+          mode: "COMMIT"
+          configurationJson: |
+            {
+              "categories": [
+                { "title": "## Features",      "labels": ["feat"] },
+                { "title": "## Bug Fixes",     "labels": ["fix"] },
+                { "title": "## Docs",           "labels": ["docs"] },
+                { "title": "## Other",          "labels": [] }
+              ],

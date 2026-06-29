@@ -35,12 +35,14 @@ class sendEmbed(commands.Cog):
         
         match type.lower():
             case "default":
-                dembed = embeds["default_embed"]
+                msgs = config["messages"]
+                title = msgs["verify_embed_title"] or embeds["default_embed"][0]
+                description = msgs["verify_embed_description"] or embeds["default_embed"][1]
                 await ctx.defer(ephemeral=True)
                 await ctx.channel.send(
                     embed = discord.Embed(
-                        title = dembed[0],
-                        description = dembed[1],
+                        title = title,
+                        description = description,
                         color = 0x3B89FF
                     ),
                     view = LinkAccountView()

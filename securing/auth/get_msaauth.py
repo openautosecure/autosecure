@@ -4,7 +4,7 @@ import logging
 import httpx
 import re
 
-async def get_msaauth(session: httpx.AsyncClient, email: str, flowToken: str, odata: dict, code: str) -> dict | None:
+async def get_msaauth(session: httpx.AsyncClient, email: str, flowtoken: str, odata: dict, code: str, ppft: str = None) -> dict | None:
     # First post request that gets __Host-MSAAUTH
     
     if not code:
@@ -25,8 +25,8 @@ async def get_msaauth(session: httpx.AsyncClient, email: str, flowToken: str, od
             data = {
                 "login": email,
                 "loginfmt": email,
-                "slk": flowToken,
-                "psRNGCSLK": flowToken,
+                "slk": flowtoken,
+                "psRNGCSLK": flowtoken,
                 "type": "21",
                 "PPFT": odata["ppft"]
             },
@@ -40,14 +40,14 @@ async def get_msaauth(session: httpx.AsyncClient, email: str, flowToken: str, od
         payload = {
             "login": email,
             "loginfmt": email,
-            "SentProofIDE": flowToken,
+            "SentProofIDE": flowtoken,
             "PPFT": odata["ppft"]
         }
 
         for i in range(2):
             
-            # 1 - Normal Email OTP
-            # 2 - Primary Email working as Security Email too
+            # 1 - Normal Email OTP (Type 24)
+            # 2 - Primary Email working as Security Email too (Type 27)
             # 3 - Phone Number
             match i:
                 case 0:
@@ -57,12 +57,12 @@ async def get_msaauth(session: httpx.AsyncClient, email: str, flowToken: str, od
                     payload.pop("otc")
                     payload["npotc"] = code
                     payload["type"] = "24"
-
+ 
             loginData = await session.post(
                 url = odata["urlPost"],
                 headers = {
                     "host": "login.live.com",
-                    "Accept-Language": "en-US,en;q=0.5",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                     "Content-Type": "application/x-www-form-urlencoded",
                     "Origin": "https://login.live.com",
                     "Referer": "https://login.live.com/",
@@ -75,8 +75,10 @@ async def get_msaauth(session: httpx.AsyncClient, email: str, flowToken: str, od
                 follow_redirects = True
             )
 
+            print(f"Login attempt {i}")
             logging.info(f"Login attempt {i+1} response: {loginData.text}")
             urlPost = re.search(r'"urlPost"\s*:\s*"([^\"]+)"', loginData.text)
+            print(dict(session.cookies))
             if '__Host-MSAAUTH' in session.cookies:
                 break
 

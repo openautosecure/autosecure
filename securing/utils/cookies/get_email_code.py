@@ -1,5 +1,6 @@
 from database.database import DBConnection
 import asyncio
+import httpx
 import json
 import re
 
@@ -15,7 +16,6 @@ async def get_email_code(mail: str) -> str:
         if row:
             email_id, body = row
             match = re.search(r'\b(\d{6})\b', body)
-            print(body)
             if match:
                 with DBConnection() as db:
                     db.mark_used(email_id)

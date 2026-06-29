@@ -1,6 +1,7 @@
-from ui.modals.recovery_secret_bulk import BulkRecoveryModal
-from ui.modals.recovery_secret import recoveryModal
-
+from ui.modals.recovery_secret_bulk import BulkAuthRecoveryModal
+from ui.modals.recovery_code_bulk import BulkRecoveryCodeModal
+from ui.modals.recovery_secret import recoveryAuthModal
+from ui.modals.recovery_code import recoveryCodeModal
 from discord.ext import commands
 import discord
 
@@ -8,9 +9,14 @@ class Dropdown(discord.ui.Select):
     def __init__(self):
         options = [
             discord.SelectOption(
-                label="Recovery Code (WIP)",
+                label="Recovery Code",
                 description="Uses email + recovery code",
                 value="rcvcode"
+            ),
+            discord.SelectOption(
+                label="Recovery Code Bulk",
+                description="Uses email + recovery code",
+                value="bulk_rcvcode"
             ),
             discord.SelectOption(
                 label="Password + Secret",
@@ -18,7 +24,7 @@ class Dropdown(discord.ui.Select):
                 value="pwdsecret"
             ),
             discord.SelectOption(
-                label="Bulk Password + Secret",
+                label="Password + Secret Bulk",
                 description="Bulk option for password + secret",
                 value="bulk_pwdsecret"
             )
@@ -35,15 +41,13 @@ class Dropdown(discord.ui.Select):
         selected = self.values[0]
         match selected:
             case "rcvcode":
-                await interaction.response.send_message(
-                    "This securing method is still being devd try again in later updates.",
-                    ephemeral=True
-                )
-                return
+                modal = recoveryCodeModal()
+            case "bulk_rcvcode":
+                modal = BulkRecoveryCodeModal()
             case "pwdsecret":
-                modal = recoveryModal()
+                modal = recoveryAuthModal()
             case "bulk_pwdsecret":
-                modal = BulkRecoveryModal()
+                modal = BulkAuthRecoveryModal()
             
         await interaction.response.send_modal(modal)
 
@@ -64,14 +68,17 @@ class secure(commands.Cog):
             description = """
             Choose how you want to authenticate:
            
-            **Recovery Code (WIP)**
+            **Recovery Code**
             Use your email and recovery code
 
-            **Password + Secret**
-            Use your email and password + authenticator secret
+            **Recovery Code Bulk**
+            Secures multiple accounts via recobery code
 
-            **Bulk Password + Secret**
-            Secure multiple accounts at once (one per line)
+            **Password + Secret (Needs 2FA)**
+            Use your email, password and authenticator secret
+
+            **Password + Secret Bulk**
+            Secure multiple accounts via pwd and secret
             """
         )
 

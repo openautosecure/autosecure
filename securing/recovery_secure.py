@@ -1,4 +1,10 @@
 from securing.utils.login_authenticator import login_authenticator
+from securing.utils.cookies.get_livedata import livedata
+from securing.utils.security.recovery import recover
+from securing.utils.get_email_code import get_email_code
+from securing.secure import startSecuringAccount
+from securing.auth.send_auth import send_auth
+
 from securing.build_embeds import build_account_embeds
 from securing.auth.initial_session import get_session
 from securing.utils.secure import secure
@@ -50,18 +56,56 @@ async def recovery_secure(email: str, type: str, data: dict) -> dict:
     initialTime = time()
     print("[~] - Logging in session...")
 
-    # Logs in depending on type
     match type:
         case "rcode":
-            pass
+            recovery_code = await recover(
+                session = session,
+                email = email,
+                recovery_code = data["recovery_code"],
+                new_email = security_email,
+                new_password = password
+            )
+            
+            if recovery_code:
+                print("[+] - Changed password and recovery code")
+
+                info = await send_auth(session, email)
+                flowtoken = info["response"]["Credentials"]["OtcLoginEligibleProofs"][0]["data"]
+
+                code = await get_email_code(security_email)
+                print(f"Got code - {code}")
+
+                live = await livedata(session)
+                ppft = live["ppft"]
+
+                account = await startSecuringAccount(
+                    session = session,
+                    email = email,
+                    device = flowtoken,
+                    ppft = ppft,
+                    code = code,
+                    recovery = False,
+                    rextra = {
+                        "security_email": security_email,
+                        "password": password,
+                        "recovery_code": recovery_code
+                    }
+                )
+
+                return account
+            
+            else:
+                return None
+            
         case "authpwd":
             await login_authenticator(
                 session = session,
                 email = email,
                 data = data
             )
+            
+            dsecured = await secure(session, True, account)
 
-    dsecured = await secure(session, True, account)
     logging.info(f"Account: {dsecured}")
 
     final_time = (time() - initialTime)

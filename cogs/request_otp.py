@@ -1,8 +1,8 @@
+from securing.auth.send_auth import send_auth
+
 from discord.ext import commands
 import discord
 import httpx
-
-from securing.auth.send_auth import send_auth
 
 class requestOTP(commands.Cog):
     def __init__(self, bot):
@@ -21,16 +21,14 @@ class requestOTP(commands.Cog):
             response = await send_auth(session, email)
 
         if "OtcLoginEligibleProofs" in response["Credentials"]:
-            for value in response["Credentials"]["OtcLoginEligibleProofs"]:
-                if value["otcSent"]:
-                    await ctx.followup.send(
-                        embed=discord.Embed(
-                            description=f"Successfully sent OTP to `{value['display']}`",
-                            color=0x3B89FF
-                        ),
-                        ephemeral=True
-                    )
-                    return
+            await ctx.followup.send(
+                embed=discord.Embed(
+                    description=f"Successfully sent OTP to `{["Credentials"]["OtcLoginEligibleProofs"][0]['display']}`",
+                    color=0x3B89FF
+                ),
+                ephemeral=True
+            )
+            return
 
         await ctx.followup.send(
             embed=discord.Embed(

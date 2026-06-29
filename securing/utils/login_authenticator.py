@@ -1,6 +1,6 @@
 from securing.auth.handle_redirects import handle_redirects
 from securing.utils.polish_host import polish_host
-from securing.utils.get_livedata import livedata
+from securing.utils.cookies.get_livedata import livedata
 from securing.utils.login_pwd import login_pwd
 from shared.gen_totp import totp
 

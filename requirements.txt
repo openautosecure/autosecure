@@ -6,3 +6,7 @@ audioop-lts
 fake-useragent
 aiosmtpd
 requests
+fastapi
+uvicorn
+PyJWT
+python-multipart

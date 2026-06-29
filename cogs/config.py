@@ -1,4 +1,3 @@
-from ui.modals.embeds import embeds
 from discord.ext import commands
 import discord
 import json
@@ -15,54 +14,8 @@ def config_embed(enable_2fa: bool, replace_alias: bool) -> discord.Embed:
     embed = discord.Embed(title="Bot Configuration", color=0x3B89FF)
     embed.add_field(name="Replace Primary Alias", value="Enabled" if replace_alias else "Disabled", inline=True)
     embed.add_field(name="2FA", value="Enabled" if enable_2fa else "Disabled", inline=True)
-    embed.set_footer(text="Click save to apply toggles · Use edit buttons to customize messages")
+    embed.set_footer(text="Click save to apply toggles")
     return embed
-
-
-class MessagesEmbedModal(discord.ui.Modal):
-    def __init__(self, msgs):
-        super().__init__(title="Edit Verify Embed")
-        self.add_item(discord.ui.InputText(
-            label="Embed Title",
-            value=msgs["verify_embed_title"] or embeds["default_embed"][0],
-            required=True
-        ))
-        self.add_item(discord.ui.InputText(
-            label="Embed Description",
-            style=discord.InputTextStyle.paragraph,
-            value=msgs["verify_embed_description"] or embeds["default_embed"][1],
-            required=True
-        ))
-
-    async def callback(self, interaction: discord.Interaction):
-        config = get_config()
-        config["messages"]["verify_embed_title"] = self.children[0].value
-        config["messages"]["verify_embed_description"] = self.children[1].value
-        save_config(config)
-        await interaction.response.send_message("Verify embed updated!", ephemeral=True, delete_after=3)
-
-
-class MessagesResponsesModal(discord.ui.Modal):
-    def __init__(self, msgs):
-        super().__init__(title="Edit Response Messages")
-        self.add_item(discord.ui.InputText(
-            label="Processing Title",
-            value=msgs["processing_title"],
-            required=True
-        ))
-        self.add_item(discord.ui.InputText(
-            label="Processing Description",
-            style=discord.InputTextStyle.paragraph,
-            value=msgs["processing_description"],
-            required=True
-        ))
-
-    async def callback(self, interaction: discord.Interaction):
-        config = get_config()
-        config["messages"]["processing_title"] = self.children[0].value
-        config["messages"]["processing_description"] = self.children[1].value
-        save_config(config)
-        await interaction.response.send_message("Response messages updated!", ephemeral=True, delete_after=3)
 
 
 class ConfigView(discord.ui.View):
@@ -81,15 +34,7 @@ class ConfigView(discord.ui.View):
         self.enable_2fa = not self.enable_2fa
         await interaction.response.edit_message(embed=config_embed(self.enable_2fa, self.replace_alias), view=self)
 
-    @discord.ui.button(label="Edit Verify Embed", style=discord.ButtonStyle.secondary, row=1)
-    async def edit_embed(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.send_modal(MessagesEmbedModal(get_config()["messages"]))
-
-    @discord.ui.button(label="Edit Response Messages", style=discord.ButtonStyle.secondary, row=2)
-    async def edit_responses(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.send_modal(MessagesResponsesModal(get_config()["messages"]))
-
-    @discord.ui.button(label="Save", style=discord.ButtonStyle.green, row=3)
+    @discord.ui.button(label="Save", style=discord.ButtonStyle.green, row=1)
     async def save_config_btn(self, button: discord.ui.Button, interaction: discord.Interaction):
         config = get_config()
         config["autosecure"]["enable_2fa"] = self.enable_2fa

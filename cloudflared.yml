@@ -1,0 +1,9 @@
+tunnel: autosec
+credentials-file: /home/sal/.cloudflared/d22edcc5-9fc2-469a-ab49-5abc87cf49e5.json
+ingress:
+  - hostname: securings.fun
+    path: /api/*
+    service: http://localhost:8000
+  - hostname: securings.fun
+    service: http://localhost:3000
+  - service: http_status:404

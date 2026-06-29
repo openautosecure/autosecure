@@ -1,51 +1,51 @@
 import logging
-import asyncio
 import httpx
 import re
 
+# Home, Profile and Devices
+endpoints = [
+    "https://account.microsoft.com/profile?lang=en-US",
+    "https://account.microsoft.com/profile/about?ru=https%3A%2F%2Faccount.microsoft.com%2Fprofile",
+    "https://account.microsoft.com/devices/"
+]
+
+async def scrape_token(session: httpx.AsyncClient, url: str) -> str:
+
+    response = await session.get(
+        url = url,
+        headers = {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+        },
+        follow_redirects=True
+    )
+
+    token = re.search(
+        r'name="__RequestVerificationToken"\s+type="hidden"\s+value="([^"]+)"',
+        response.text,
+        re.DOTALL
+    ).group(1)
+
+    return token
+
 async def get_amc(session: httpx.AsyncClient) -> list:
     # Gets AMCSecAuthJWT and scrapes the RequestVerificationToken
-    # neccessary to getting the DOB
+    # There are diferent types of RequestVericationTokens
+    # Each one is diferent for each page request
 
+    # AMC Cookie
     response = await session.get(
         "https://account.microsoft.com",
         follow_redirects=True
     )
-
     logging.info(f"Account Following Response: {response.text}")
-    # AMC Cookie and Home Token
-    home = await session.get(
-        url ="https://account.microsoft.com/profile?lang=en-US",
-        headers = {
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-        },
-        follow_redirects=True
-    )
 
-    home_token = re.search(
-        r'name="__RequestVerificationToken"\s+type="hidden"\s+value="([^"]+)"',
-        home.text,
-        re.DOTALL
-    ).group(1)
+    home_token = scrape_token(session, endpoints[0])
+    profile_token = scrape_token(session, endpoints[1])
+    devices_token = scrape_token(session, endpoints[2])
 
-    # Profile Token
-    profile_info = await session.get(
-        url = "https://account.microsoft.com/profile/about?ru=https%3A%2F%2Faccount.microsoft.com%2Fprofile",
-        headers = {
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-        },
-        follow_redirects=True
-    )
-    logging.info(f"PROFILE INFO: {profile_info.text}")
-
-    profile_token = re.search(
-        r'name="__RequestVerificationToken"\s+type="hidden"\s+value="([^"]+)"',
-        profile_info.text,
-        re.DOTALL
-    ).group(1)
-
-    print(f"[+] - Got RequestVerificationTokens ({[home_token, profile_token]})")
-    return [
-        home_token,
-        profile_token
-    ]
+    print(f"[+] - Got RequestVerificationTokens ({[home_token, profile_token, devices_token]})")
+    return {
+        "home": home_token,
+        "profile": profile_token,
+        "devices": devices_token
+    }

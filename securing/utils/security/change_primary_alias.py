@@ -52,7 +52,7 @@ async def change_alias(session: httpx.AsyncClient, email: str, canary: str, apic
             "hpgid": 200176
         }
     )
-
+    
     print(f"[+] - Changed Primary Alias ({email}@outlook.com)")
 
 async def change_primary_alias(session: httpx.AsyncClient, email: str, apicanary: str) -> bool:

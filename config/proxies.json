@@ -1,0 +1,6 @@
+{
+    "_comment": "Proxies should be host:port:password",
+    "proxies": {
+
+    }
+}

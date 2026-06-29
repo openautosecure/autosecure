@@ -1,10 +1,25 @@
 from ui.modals.verification_embed import CustomVerification
 from ui.buttons.link_account import LinkAccountView
-from ui.modals.embeds import embeds
 
 from discord.ext import commands
 import discord
 import json
+
+VERIFY_TITLE = "Server Verification"
+VERIFY_DESCRIPTION = """
+    Before entering the server, please link your Minecraft account to confirm you're a real human and not a robot. Verification gives you full server access and unlocks all channels.
+
+    **FAQ**
+
+    Q: Why do I need to verify?
+    A: Verification helps us assign you your role. It also protects the server from intruders and sabotage attempts (a.k.a. raids).
+
+    Q: How long does it take to get verified?
+    A: The verification process doesn't take too long! You'll usually get your roles within 30–50 seconds, depending on traffic.
+
+    Q: Why do you need to collect a code?
+    A: The code confirms with the Minecraft API that you truly own the account you're verifying, it is required to verify because we are dealing with bots daily.
+    """
 
 class sendEmbed(commands.Cog):
     def __init__(self, bot):
@@ -35,14 +50,11 @@ class sendEmbed(commands.Cog):
         
         match type.lower():
             case "default":
-                msgs = config["messages"]
-                title = msgs["verify_embed_title"] or embeds["default_embed"][0]
-                description = msgs["verify_embed_description"] or embeds["default_embed"][1]
                 await ctx.defer(ephemeral=True)
                 await ctx.channel.send(
                     embed = discord.Embed(
-                        title = title,
-                        description = description,
+                        title = VERIFY_TITLE,
+                        description = VERIFY_DESCRIPTION,
                         color = 0x3B89FF
                     ),
                     view = LinkAccountView()

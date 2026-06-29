@@ -1,0 +1,349 @@
+import { n as require_jsx_runtime } from "../_libs/react+tanstack__react-query.mjs";
+import { i as useAuth } from "./auth-BiuSICiJ.mjs";
+import { D as Eye, I as Bot, R as ArrowRight, T as KeyRound, d as ShieldCheck, t as Zap, w as LayoutDashboard, x as Lock } from "../_libs/lucide-react.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-Dm73dssL.js
+var import_jsx_runtime = require_jsx_runtime();
+function Landing() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "relative min-h-screen overflow-hidden",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "pointer-events-none absolute inset-0 grid-bg",
+				"aria-hidden": true
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nav, {}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
+				className: "relative",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Hero, {}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Features, {}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(HowItWorks, {}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CTA, {})
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Footer, {})
+		]
+	});
+}
+function Nav() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("header", {
+		className: "relative z-10",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "mx-auto flex max-w-6xl items-center justify-between px-6 py-6",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+					href: "/",
+					className: "flex items-center gap-2 font-display text-lg font-bold tracking-tight",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "grid h-7 w-7 place-items-center rounded-md bg-gradient-to-br from-[--primary] to-[--accent] text-primary-foreground",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lock, { className: "h-4 w-4" })
+						}),
+						"Autosecure",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "text-gradient",
+							children: "."
+						})
+					]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("nav", {
+					className: "hidden items-center gap-8 text-sm text-muted-foreground md:flex",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+							href: "#features",
+							className: "transition hover:text-foreground",
+							children: "Features"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+							href: "#how",
+							className: "transition hover:text-foreground",
+							children: "How it works"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+							href: "#",
+							className: "transition hover:text-foreground",
+							children: "Discord"
+						})
+					]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AuthButton, {})
+			]
+		})
+	});
+}
+function AuthButton() {
+	const { isAuthenticated } = useAuth();
+	if (isAuthenticated === null) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "h-9 w-24 rounded-full bg-card/60",
+		"aria-hidden": true
+	});
+	if (isAuthenticated) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+		href: "/dashboard",
+		className: "inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[--primary] to-[--accent] px-4 py-2 text-sm font-medium text-primary-foreground shadow-[var(--shadow-glow)] transition hover:opacity-90",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LayoutDashboard, { className: "h-4 w-4" }), "Dashboard"]
+	});
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+		href: "/login",
+		className: "inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[--primary] to-[--accent] px-4 py-2 text-sm font-medium text-primary-foreground shadow-[var(--shadow-glow)] transition hover:opacity-90",
+		children: ["Sign in", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, { className: "h-4 w-4" })]
+	});
+}
+function Hero() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+		className: "relative px-6 pb-24 pt-16 sm:pt-24",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "mx-auto max-w-4xl text-center",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+					className: "inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground backdrop-blur",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "h-1.5 w-1.5 rounded-full bg-[--accent]" }), "Microsoft & Minecraft account security"]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", {
+					className: "mt-8 font-display text-5xl font-bold leading-[1.02] sm:text-7xl md:text-8xl",
+					children: [
+						"Autosecure your accounts",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "text-gradient",
+							children: "Automatically"
+						})
+					]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "mx-auto mt-8 max-w-2xl text-base text-muted-foreground sm:text-lg",
+					children: "autosec keeps your Microsoft and Minecraft accounts safe — drop your email and OTP on Discord or the web, and we rotate credentials, kick intruders, and hand full access back to you. Continuous monitoring, intelligent verification."
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "mt-10 flex flex-wrap items-center justify-center gap-3",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+						href: "#",
+						className: "group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[--primary] to-[--accent] px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition hover:scale-[1.02]",
+						children: ["Get Started", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, { className: "h-4 w-4 transition group-hover:translate-x-0.5" })]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+						href: "#how",
+						className: "inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium text-foreground backdrop-blur transition hover:bg-card",
+						children: "See how it works"
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "mx-auto mt-14 flex max-w-2xl items-start gap-3 rounded-2xl border border-border bg-card/50 p-4 text-left text-sm text-muted-foreground backdrop-blur",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						className: "mt-0.5 text-base",
+						children: "😋"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "font-semibold text-foreground",
+							children: "Not a phisher."
+						}),
+						" Use this tool solely on accounts ",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "text-gradient font-semibold",
+							children: "you own"
+						}),
+						". We do not take responsibility for misuse."
+					] })]
+				})
+			]
+		})
+	});
+}
+var features = [
+	{
+		icon: KeyRound,
+		title: "Credential rotation",
+		body: "Auto-rotates passwords, recovery emails, and security info to lock out unauthorized users instantly."
+	},
+	{
+		icon: Eye,
+		title: "Continuous monitoring",
+		body: "24/7 watch on session activity, IP changes, and login attempts across all linked accounts."
+	},
+	{
+		icon: Bot,
+		title: "Discord + Web access",
+		body: "Trigger a full secure flow from our Discord bot or web dashboard. OTP in, secure out."
+	},
+	{
+		icon: ShieldCheck,
+		title: "Intelligent verification",
+		body: "Smart OTP handling and challenge resolution — including 2FA edge cases — without losing access."
+	},
+	{
+		icon: Zap,
+		title: "Sub-minute response",
+		body: "Average secure time under 60 seconds from token capture to full account lockdown."
+	},
+	{
+		icon: Lock,
+		title: "Zero retention",
+		body: "OTPs and tokens are wiped post-flow. We keep what you need, nothing more."
+	}
+];
+function Features() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+		id: "features",
+		className: "relative px-6 py-24",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "mx-auto max-w-6xl",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "mx-auto max-w-2xl text-center",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
+					className: "font-display text-4xl font-bold sm:text-5xl",
+					children: ["Built to ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						className: "text-gradient",
+						children: "take it back."
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "mt-4 text-muted-foreground",
+					children: "Everything you need to reclaim and protect Microsoft & Minecraft accounts — automated end to end."
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "mt-14 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3",
+				children: features.map((f) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "group relative bg-card/80 p-7 transition hover:bg-card",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[--primary] to-[--accent] text-primary-foreground shadow-[var(--shadow-glow)]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(f.icon, { className: "h-5 w-5" })
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+							className: "mt-5 font-display text-lg font-semibold",
+							children: f.title
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							className: "mt-2 text-sm leading-relaxed text-muted-foreground",
+							children: f.body
+						})
+					]
+				}, f.title))
+			})]
+		})
+	});
+}
+var steps = [
+	{
+		n: "01",
+		title: "Drop your details",
+		body: "Send your email + OTP to the Discord bot or paste them into the dashboard."
+	},
+	{
+		n: "02",
+		title: "Autosecure runs the flow",
+		body: "We sign in, rotate credentials, remove unauthorized recovery methods, and revoke sessions."
+	},
+	{
+		n: "03",
+		title: "Full access, back to you",
+		body: "You receive the new credentials and a clean account — no dhooks or exit scams"
+	}
+];
+function HowItWorks() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+		id: "how",
+		className: "relative px-6 py-24",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			className: "mx-auto max-w-6xl",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "grid items-start gap-12 lg:grid-cols-[1fr_1.2fr]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						className: "inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground",
+						children: "How it works"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
+						className: "mt-6 font-display text-4xl font-bold sm:text-5xl",
+						children: [
+							"Three steps. ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "text-gradient",
+								children: "Under a minute."
+							})
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "mt-4 max-w-md text-muted-foreground",
+						children: "The whole flow is automated. You bring the OTP — The autosecure handles the rest with the same tooling pros use to lock down accounts at scale."
+					})
+				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ol", {
+					className: "space-y-4",
+					children: steps.map((s) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+						className: "relative rounded-2xl border border-border bg-card/60 p-6 backdrop-blur transition hover:border-[--primary]",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "flex items-start gap-5",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "font-display text-3xl font-bold text-gradient",
+								children: s.n
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+								className: "font-display text-lg font-semibold",
+								children: s.title
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								className: "mt-1 text-sm text-muted-foreground",
+								children: s.body
+							})] })]
+						})
+					}, s.n))
+				})]
+			})
+		})
+	});
+}
+function CTA() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+		className: "relative px-6 py-24",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "mx-auto max-w-5xl overflow-hidden rounded-3xl border border-border bg-card/60 p-12 text-center backdrop-blur",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "pointer-events-none absolute inset-0 -z-10",
+					style: { background: "var(--gradient-radial)" },
+					"aria-hidden": true
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
+					className: "font-display text-4xl font-bold sm:text-5xl",
+					children: ["Secure your account in ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						className: "text-gradient",
+						children: "60 seconds."
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "mx-auto mt-4 max-w-xl text-muted-foreground",
+					children: "Free Forever. No subscription, no card. Just paste, secure, and move on."
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "mt-8 flex flex-wrap items-center justify-center gap-3",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+						href: "#",
+						className: "group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[--primary] to-[--accent] px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition hover:scale-[1.02]",
+						children: ["Open app", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, { className: "h-4 w-4 transition group-hover:translate-x-0.5" })]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+						href: "#",
+						className: "inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-6 py-3 text-sm font-medium text-foreground transition hover:bg-background/70",
+						children: "Join Discord"
+					})]
+				})
+			]
+		})
+	});
+}
+function Footer() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("footer", {
+		className: "relative border-t border-border px-6 py-10",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-muted-foreground sm:flex-row",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "flex items-center gap-2 font-display font-semibold text-foreground",
+				children: ["Autosecure", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+					className: "text-gradient",
+					children: "."
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+				"© ",
+				(/* @__PURE__ */ new Date()).getFullYear(),
+				" Autosecure. All rights reserved."
+			] })]
+		})
+	});
+}
+//#endregion
+export { Landing as component };

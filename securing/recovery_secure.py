@@ -110,5 +110,9 @@ async def recovery_secure(email: str, type: str, data: dict) -> dict:
 
     final_time = (time() - initialTime)
 
-    build_account = await build_account_embeds(dsecured, final_time)
+    claim_id = uuid.uuid4().hex
+    with DBConnection() as database:
+        database.add_secured_account(claim_id, dsecured)
+
+    build_account = await build_account_embeds(dsecured, final_time, claim_id)
     return build_account

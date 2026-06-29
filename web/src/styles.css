@@ -1,0 +1,586 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+:root {
+  --radius: 0.75rem;
+  --background: oklch(0.16 0.025 285);
+  --foreground: oklch(0.97 0.005 285);
+  --card: oklch(0.21 0.03 285);
+  --card-foreground: oklch(0.97 0.005 285);
+  --muted: oklch(0.25 0.025 285);
+  --muted-foreground: oklch(0.7 0.02 285);
+  --border: oklch(0.3 0.04 285 / 60%);
+  --primary: oklch(0.7 0.22 305);          /* purple */
+  --primary-foreground: oklch(0.99 0 0);
+  --primary-glow: oklch(0.78 0.18 320);
+  --accent: oklch(0.78 0.16 230);          /* cyan */
+  --accent-foreground: oklch(0.15 0.02 285);
+  --accent-glow: oklch(0.85 0.14 220);
+
+  --gradient-hero: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  --gradient-text: linear-gradient(90deg, oklch(0.78 0.18 320), oklch(0.85 0.14 220));
+  --gradient-radial: radial-gradient(60% 50% at 50% 20%, oklch(0.35 0.18 305 / 35%) 0%, transparent 70%);
+  --shadow-glow: 0 0 35px -8px color-mix(in oklab, var(--primary) 50%, transparent);
+  --shadow-glow-accent: 0 0 35px -8px color-mix(in oklab, var(--accent) 50%, transparent);
+  --body-bg:
+    radial-gradient(ellipse 80% 50% at 50% -10%, oklch(0.35 0.18 305 / 35%), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, oklch(0.35 0.15 230 / 25%), transparent 60%);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html  { background-color: var(--background); background-image: var(--body-bg); background-attachment: fixed; }
+  body  { background: transparent; color: var(--foreground); font-family: var(--font-sans); }
+  h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.03em; }
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  label { cursor: pointer; }
+}
+
+@utility text-gradient {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility grid-bg {
+  background-image:
+    linear-gradient(oklch(1 0 0 / 4%) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(1 0 0 / 4%) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 30%, transparent 80%);
+}
+
+/* Range slider — transparent native input floated over custom track/thumb visuals */
+input.custom-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+input.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 0;
+  width: 0;
+}
+input.custom-range::-moz-range-thumb {
+  height: 0;
+  width: 0;
+  border: none;
+  background: transparent;
+}
+
+/* ── Account cards (autosecure.cy style) ── */
+@keyframes dbIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+.db-acct-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: dbIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.db-acct-card:hover {
+  background: var(--card);
+  border-color: color-mix(in oklab, var(--primary) 40%, transparent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+}
+
+.db-acct-img-section {
+  height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.03) 100%);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.db-acct-skin {
+  height: 165px;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,0.35));
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+  pointer-events: none;
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.db-acct-card:hover .db-acct-skin {
+  transform: scale(1.05) translateY(-2px);
+}
+
+.db-acct-time {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  color: var(--muted-foreground);
+  font-weight: 500;
+  font-family: "JetBrains Mono", monospace;
+  z-index: 1;
+}
+
+.db-acct-info-section {
+  padding: 1rem 1.1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.db-acct-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.db-acct-stats {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--border);
+}
+
+.db-acct-stat {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+.db-acct-stat-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+  margin-bottom: 0.15rem;
+}
+
+.db-acct-stat-val {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Account detail full-page view ── */
+.db-detail-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  flex: 1;
+}
+
+.db-detail-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  transition: color 0.15s;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.db-detail-back-btn:hover {
+  color: var(--foreground);
+}
+
+/* ── Top row: skin (20%) + info (80%) ── */
+.db-detail-top {
+  display: flex;
+  gap: 1.25rem;
+  align-items: stretch;
+  flex: 1;
+}
+
+.db-skin-viewer-card {
+  flex: 0 0 auto;
+  width: 22%;
+  min-width: 200px;
+  max-width: 260px;
+  aspect-ratio: 10 / 15;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: color-mix(in oklab, var(--background) 70%, transparent);
+}
+
+.db-skin-viewer-card canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  cursor: grab;
+}
+.db-skin-viewer-card canvas:active {
+  cursor: grabbing;
+}
+
+.db-detail-info-card {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: linear-gradient(145deg, color-mix(in oklab, var(--card) 100%, transparent), color-mix(in oklab, var(--background) 90%, transparent));
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--border) 50%, transparent), 0 4px 24px -8px rgba(0,0,0,0.3);
+}
+
+.db-detail-heading {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.db-detail-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.25rem 1.5rem;
+}
+
+/* ── Stat blocks (reused in sections too) ── */
+.db-detail-stat-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  background: color-mix(in oklab, var(--background) 45%, transparent);
+  border: 1px solid color-mix(in oklab, var(--border) 35%, transparent);
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+}
+
+.db-detail-stat-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: color-mix(in oklab, var(--muted-foreground) 60%, transparent);
+}
+
+.db-detail-stat-value-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.db-detail-stat-value {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+}
+
+.db-detail-stat-copy {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: color-mix(in oklab, var(--muted-foreground) 40%, transparent);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.db-detail-stat-block:hover .db-detail-stat-copy {
+  opacity: 1;
+}
+.db-detail-stat-copy:hover {
+  color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 15%, transparent);
+}
+.db-detail-stat-copy:not(:hover) {
+  opacity: 0;
+}
+
+.db-detail-stat-value\:break {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--foreground);
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.db-detail-stat-badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: color-mix(in oklab, var(--primary) 15%, transparent);
+  color: var(--primary);
+}
+
+/* ── Detail section cards ── */
+.db-detail-section {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.db-detail-section-title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.db-detail-section-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+/* ── Security mail button row ── */
+.db-detail-mail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0 0;
+}
+
+.db-detail-mail-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.db-mail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: var(--primary-foreground);
+}
+
+.db-mail-btn-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.65rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: var(--primary-foreground);
+  white-space: nowrap;
+}
+
+.db-mail-btn:hover {
+  opacity: 0.9;
+}
+
+/* ── Mail popup ── */
+.db-mail-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: oklch(0 0 0 / 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 1rem;
+  animation: dbIn 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.db-mail-popup {
+  width: 100%;
+  max-width: 520px;
+  max-height: 80vh;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  animation: dbIn 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.db-mail-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.db-mail-popup-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.db-mail-popup-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.db-mail-popup-close {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.db-mail-popup-close:hover {
+  background: var(--muted);
+  color: var(--foreground);
+}
+
+.db-mail-popup-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem;
+}
+
+.db-mail-popup-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.db-mail-popup-empty-text {
+  font-size: 0.85rem;
+  color: var(--muted-foreground);
+}
+
+.db-mail-msg {
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-bottom: 0.5rem;
+  transition: background 0.15s;
+}
+
+.db-mail-msg:hover {
+  background: color-mix(in oklab, var(--background) 50%, transparent);
+}
+
+.db-mail-msg-subject {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.db-mail-msg-from {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin-top: 0.15rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.db-mail-msg-body {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin-top: 0.3rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.db-mail-msg-time {
+  font-size: 0.65rem;
+  color: color-mix(in oklab, var(--muted-foreground) 60%, transparent);
+  margin-top: 0.3rem;
+}
+
+

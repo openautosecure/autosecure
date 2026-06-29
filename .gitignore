@@ -209,3 +209,9 @@ __marimo__/
 CLAUDE.md
 database/database.db
 AGENTS.md
+
+# Web build output & deps
+web/.output/
+web/node_modules/
+web/dist/
+web/.vite/

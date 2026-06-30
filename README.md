@@ -49,7 +49,8 @@ Required for the web dashboard frontend.
 
 ```bash
 pip install -r requirements.txt
-cd web && npm install
+cd web
+npm install
 ```
 
 #### 4. Create a Discord Bot

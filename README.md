@@ -118,11 +118,9 @@ Edit `config/config.json`:
 * Make sure you have port 25 open
 
 2. Make a [cloudflare](https://www.cloudflare.com/) account and change your domain registrar to it
-3. Install `cloudflared` from (here)(https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)
+3. Install `cloudflared` from [here](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)
 
-4. Setup `cloudflared`
-
-Open your console (CMD) on the project folder and create a tunnel:
+4. Open your console (CMD) on the project folder and create a tunnel:
 ```bash
 cloudflared tunnel login
 cloudflared tunnel create autosecure

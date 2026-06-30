@@ -124,6 +124,7 @@ Edit `config/config.json`:
 ```bash
 cloudflared tunnel login
 cloudflared tunnel create autosecure
+cloudflared tunnel route dns autosecure <yourdomain>
 ```
 
 5. Setup your `cloudflared.yml` file

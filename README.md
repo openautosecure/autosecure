@@ -144,12 +144,12 @@ ingress:
 
 ### Set up your domain records
 
-* Add these DNS records in your DNS provider:
+* Add these DNS records in cloudflare
 
 | Type | Name | Value |
 |------|------|-------|
 | A | `mail.domain` | Your server's public IP |
-| MX | `@` | Your domain (e.g. `yourdomain.com`) with priority `10` |
+| MX | `@` | Your domain (e.g. `yourdomain`) with priority `10` |
 
 How to setup records [guide](https://www.365i.co.uk/news/2026/02/24/set-up-dns-records-for-your-domain/)
 Cloudflare DNS records [guide](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/)
@@ -166,20 +166,14 @@ python bot.py
 
 #### Everything (Bot and Web)
 
-For Linux
+For Linux:
 
 ```bash
 bash start.sh
 ```
 
-For Windows
+For Windows:
 
-```bash
-bash start.sh
-```
+Open start.bat as administrator
 
----
 
-### Notes
-
-* API keys are optional but needed for Hypixel/DonutSMP commands

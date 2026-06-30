@@ -5,8 +5,6 @@
 * Discord: `raiko899`
 * Server: https://discord.gg/HAtMcWJrBU
 
-**Contributions:** Pull requests are welcome. For major changes, please discuss them on Discord first.
-
 ### Overview
 
 **AutoSecure** is a fully request-based security assessment tool for Microsoft accounts.
@@ -70,13 +68,6 @@ cd web && npm install
 
 Edit `config/config.json`:
 
-* Add your Discord ID to the owners list
-* Add your bot token
-* Set your web credentials
-* Optionally add Skytools and DonutSMP keys for stats
-
-**Example Config (`config/config.json`):**
-
 ```json
 {
     "owners": [
@@ -120,25 +111,31 @@ Edit `config/config.json`:
 
 #### 8.Domain Setup
 
-You need a domain for two things:
-- **Web dashboard** hosted on your domain
-- **Custom mail** to receive security verification emails on your own domain
-
-##### Buying a Domain
+1. Buy a Domain
 
 * [Namecheap](https://unstoppabledomains.com) (Accepts Crypto)
-* [Cloudflare Registrar](https://www.cloudflare.com/products/registrar/) (Web Routing)
-et up Web Dashboard
+* PS: MAKE SURE you have port 25 open
 
-1. Install `cloudflared` from [here](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)
+2. Make a cloudflare account and change your domain registrar
 
-2. Open your console (CMD) and create and a tunnel:
+* [Cloudflare](https://www.cloudflare.com/)
+
+3. Install `cloudflared` 
+
+Download it from (here)(https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)
+
+4. Setup `cloudflared`
+
+Open your console (CMD) on the project folder and create a tunnel:
 ```bash
 cloudflared tunnel login
 cloudflared tunnel create autosecure
 ```
 
-3. [Edit `cloudflared.yml`](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/do-more-with-tunnels/local-management/configuration-file/) with your tunnel credentials file path and domain:
+5. Setup your `cloudflared.yml` file
+
+Edit it with your tunnel credentials file path and domain:
+
 ```yaml
 tunnel: autosecure
 credentials-file: /home/<user>/.cloudflared/<tunnel-id>.json
@@ -153,7 +150,6 @@ ingress:
 
 ### Set up your domain records
 
-* Port 25 open on your VPS or port fowarding on your router
 * Add these DNS records in your DNS provider:
 
 | Type | Name | Value |

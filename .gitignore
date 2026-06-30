@@ -215,3 +215,4 @@ web/.output/
 web/node_modules/
 web/dist/
 web/.vite/
+config/config.json

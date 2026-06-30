@@ -31,6 +31,7 @@ It uses no selenium or playwright.
 * Support for custom domains for security emails
 * DonutSMP and Hypixel stats checker
 * Claiming system
+* Web dashboard (stats, account viewer, manual securing)
 
 ---
 
@@ -40,33 +41,41 @@ It uses no selenium or playwright.
 
 [Download Python 3.14](https://www.python.org/downloads/release/python-3140/)
 
-#### 2. Install Dependencies
+#### 2. Install Node.js
+
+Required for the web dashboard frontend.
+
+[Download Node.js (LTS)](https://nodejs.org/en/download)
+
+#### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
+cd web && npm install
 ```
 
-#### 3. Create a Discord Bot
+#### 4. Create a Discord Bot
 
 * Go to the [Discord Developer Portal](https://discord.com/developers/applications)
 * Create a new application → Bot
 * Enable **all Privileged Gateway Intents**
 * Copy your bot token
 
-### 4. Get API Keys (Optional)
+#### 5. Get API Keys (Optional)
 
 * **Skytools:** [developer.skytools.app](https://developer.skytools.app/)
 * **DonutSMP:** [api.donutsmp.net](https://api.donutsmp.net/index.html)
 
-#### 5. Configure the Bot
+#### 6. Configure
 
-Edit `cogs/config.json`:
+Edit `config/config.json`:
 
 * Add your Discord ID to the owners list
 * Add your bot token
+* Set your web credentials
 * Optionally add Skytools and DonutSMP keys for stats
 
-**Example Config (`cogs/config.json`):**
+**Example Config (`config/config.json`):**
 
 ```json
 {
@@ -91,35 +100,96 @@ Edit `cogs/config.json`:
         "claims_enabled": false,
         "claim_users": []
     },
-    "domain": "autosecure.lol"
+    "web": {
+        "credentials": {
+            "username": "<YOUR_USERNAME>",
+            "password_hash": "<YOUR_PASSWORD>",
+            "totp_secret": ""
+        }
+    },
+    "domain": "yourdomain.com"
 }
 ```
 
-#### 6. Invite the Bot to Your Server
+#### 7. Invite the Bot to Your Server
 
 * Go to Discord Developer Portal → OAuth2 → URL Generator
 * Select scopes: `bot`, `applications.commands`
 * Select permissions: `Administrator`
 * Copy and open the generated URL
 
-#### 7. Custom Domain Setup (Optional)
+#### 8.Domain Setup
 
-Set `"mail_provider": "domain"` in the config to use your own domain for security emails.
+You need a domain for two things:
+- **Web dashboard** hosted on your domain
+- **Custom mail** to receive security verification emails on your own domain
 
-Requirements:
+##### Buying a Domain
 
-* Update MX and A records to point to your server
-* Add your domain to the `"domain"` field
-* Have port 25 open
+* [Namecheap](https://unstoppabledomains.com) (Accepts Crypto)
+* [Cloudflare Registrar](https://www.cloudflare.com/products/registrar/) (Web Routing)
+et up Web Dashboard
+
+1. Install `cloudflared` from [here](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)
+
+2. Open your console (CMD) and create and a tunnel:
+```bash
+cloudflared tunnel login
+cloudflared tunnel create autosecure
+```
+
+3. [Edit `cloudflared.yml`](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/do-more-with-tunnels/local-management/configuration-file/) with your tunnel credentials file path and domain:
+```yaml
+tunnel: autosecure
+credentials-file: /home/<user>/.cloudflared/<tunnel-id>.json
+ingress:
+  - hostname: yourdomain.com
+    path: /api/*
+    service: http://localhost:8000
+  - hostname: yourdomain.com
+    service: http://localhost:3000
+  - service: http_status:404
+```
+
+### Set up your domain records
+
+* Port 25 open on your VPS or port fowarding on your router
+* Add these DNS records in your DNS provider:
+
+| Type | Name | Value |
+|------|------|-------|
+| A | `mail.domain` | Your server's public IP |
+| MX | `@` | Your domain (e.g. `yourdomain.com`) with priority `10` |
+
+How to setup records [guide](https://www.365i.co.uk/news/2026/02/24/set-up-dns-records-for-your-domain/)
+Cloudflare DNS records [guide](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/)
+
+---
+
+### Running
+
+#### Bot only
+
+```bash
+python bot.py
+```
+
+#### Everything (Bot and Web)
+
+For Linux
+
+```bash
+bash start.sh
+```
+
+For Windows
+
+```bash
+bash start.sh
+```
 
 ---
 
 ### Notes
 
-* You can change mail_provider to `mailtm` or `domain`
 * API keys are optional but needed for Hypixel/DonutSMP commands
-* Keep your bot token private
-
----
-
-"For educational and security research use only. Not for unauthorized access or illegal activity. Users are responsible for compliance with applicable laws."

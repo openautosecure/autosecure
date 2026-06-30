@@ -5,8 +5,6 @@
 * Discord: `raiko899`
 * Server: https://discord.gg/HAtMcWJrBU
 
-**Contributions:** Pull requests are welcome. For major changes, please discuss them on Discord first.
-
 ### Overview
 
 **AutoSecure** is a fully request-based security assessment tool for Microsoft accounts.
@@ -31,6 +29,7 @@ It uses no selenium or playwright.
 * Support for custom domains for security emails
 * DonutSMP and Hypixel stats checker
 * Claiming system
+* Web dashboard (stats, account viewer, manual securing)
 
 ---
 
@@ -40,33 +39,35 @@ It uses no selenium or playwright.
 
 [Download Python 3.14](https://www.python.org/downloads/release/python-3140/)
 
-#### 2. Install Dependencies
+#### 2. Install Node.js
+
+Required for the web dashboard frontend.
+
+[Download Node.js (LTS)](https://nodejs.org/en/download)
+
+#### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
+cd web
+npm install
 ```
 
-#### 3. Create a Discord Bot
+#### 4. Create a Discord Bot
 
 * Go to the [Discord Developer Portal](https://discord.com/developers/applications)
 * Create a new application → Bot
 * Enable **all Privileged Gateway Intents**
 * Copy your bot token
 
-### 4. Get API Keys (Optional)
+#### 5. Get API Keys (Optional)
 
 * **Skytools:** [developer.skytools.app](https://developer.skytools.app/)
 * **DonutSMP:** [api.donutsmp.net](https://api.donutsmp.net/index.html)
 
-#### 5. Configure the Bot
+#### 6. Configure
 
-Edit `cogs/config.json`:
-
-* Add your Discord ID to the owners list
-* Add your bot token
-* Optionally add Skytools and DonutSMP keys for stats
-
-**Example Config (`cogs/config.json`):**
+Edit `config/config.json`:
 
 ```json
 {
@@ -91,35 +92,88 @@ Edit `cogs/config.json`:
         "claims_enabled": false,
         "claim_users": []
     },
-    "domain": "autosecure.lol"
+    "web": {
+        "credentials": {
+            "username": "<YOUR_USERNAME>",
+            "password_hash": "<YOUR_PASSWORD>",
+            "totp_secret": ""
+        }
+    },
+    "domain": "yourdomain.com"
 }
 ```
 
-#### 6. Invite the Bot to Your Server
+#### 7. Invite the Bot to Your Server
 
 * Go to Discord Developer Portal → OAuth2 → URL Generator
 * Select scopes: `bot`, `applications.commands`
 * Select permissions: `Administrator`
 * Copy and open the generated URL
 
-#### 7. Custom Domain Setup (Optional)
+#### 8. Domain Setup
 
-Set `"mail_provider": "domain"` in the config to use your own domain for security emails.
+1. Buy a Domain
 
-Requirements:
+* [Namecheap](https://unstoppabledomains.com) (Accepts Crypto)
+* Make sure you have port 25 open
 
-* Update MX and A records to point to your server
-* Add your domain to the `"domain"` field
-* Have port 25 open
+2. Make a [cloudflare](https://www.cloudflare.com/) account and change your domain registrar to it
+3. Install `cloudflared` from [here](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)
+
+4. Open your console (CMD) on the project folder and create a tunnel:
+```bash
+cloudflared tunnel login
+cloudflared tunnel create autosecure
+```
+
+5. Setup your `cloudflared.yml` file
+
+Edit it with your tunnel credentials file path and domain:
+
+```yaml
+tunnel: autosecure
+credentials-file: /home/<user>/.cloudflared/<tunnel-id>.json
+ingress:
+  - hostname: yourdomain.com
+    path: /api/*
+    service: http://localhost:8000
+  - hostname: yourdomain.com
+    service: http://localhost:3000
+  - service: http_status:404
+```
+
+### Set up your domain records
+
+* Add these DNS records in cloudflare
+
+| Type | Name | Value |
+|------|------|-------|
+| A | `mail.domain` | Your server's public IP |
+| MX | `@` | Your domain (e.g. `yourdomain`) with priority `10` |
+
+How to setup records [guide](https://www.365i.co.uk/news/2026/02/24/set-up-dns-records-for-your-domain/)
+Cloudflare DNS records [guide](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/)
 
 ---
 
-### Notes
+### Running
 
-* You can change mail_provider to `mailtm` or `domain`
-* API keys are optional but needed for Hypixel/DonutSMP commands
-* Keep your bot token private
+#### Bot only
 
----
+```bash
+python bot.py
+```
 
-"For educational and security research use only. Not for unauthorized access or illegal activity. Users are responsible for compliance with applicable laws."
+#### Everything (Bot and Web)
+
+For Linux:
+
+```bash
+bash start.sh
+```
+
+For Windows:
+
+Open start.bat as administrator
+
+

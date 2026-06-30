@@ -1,10 +1,8 @@
-#!/bin/bash
 set -e
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 WEB="$ROOT/web"
 
-# Kill anything already on these ports
 fuser -k 3000/tcp 2>/dev/null || true
 fuser -k 8000/tcp 2>/dev/null || true
 

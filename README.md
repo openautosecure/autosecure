@@ -110,20 +110,15 @@ Edit `config/config.json`:
 * Select permissions: `Administrator`
 * Copy and open the generated URL
 
-#### 8.Domain Setup
+#### 8. Domain Setup
 
 1. Buy a Domain
 
 * [Namecheap](https://unstoppabledomains.com) (Accepts Crypto)
-* PS: MAKE SURE you have port 25 open
+* Make sure you have port 25 open
 
-2. Make a cloudflare account and change your domain registrar
-
-* [Cloudflare](https://www.cloudflare.com/)
-
-3. Install `cloudflared` 
-
-Download it from (here)(https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)
+2. Make a [cloudflare](https://www.cloudflare.com/) account and change your domain registrar to it
+3. Install `cloudflared` from (here)(https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)
 
 4. Setup `cloudflared`
 

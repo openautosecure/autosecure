@@ -149,7 +149,7 @@ ingress:
 
 | Type | Name | Value |
 |------|------|-------|
-| A | `mail.domain` | Your server's public IP |
+| A | `mail` | Your server's public IP |
 | MX | `@` | Your domain (e.g. `yourdomain`) with priority `10` |
 
 How to setup records [guide](https://www.365i.co.uk/news/2026/02/24/set-up-dns-records-for-your-domain/)

@@ -73,7 +73,6 @@ function Nav() {
 function AuthButton() {
   const { isAuthenticated } = useAuth();
 
-  // Pre-hydration: render a neutral placeholder to avoid SSR/CSR mismatch.
   if (isAuthenticated === null) {
     return <div className="h-9 w-24 rounded-full bg-card/60" aria-hidden />;
   }

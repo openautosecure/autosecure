@@ -13,17 +13,12 @@ export function setAuthToken(token: string) {
   window.dispatchEvent(new Event(AUTH_EVENT));
 }
 
-/** Fire-and-forget logout: clears HttpOnly cookie server-side. */
 export function clearAuthToken() {
   localStorage.removeItem(STORAGE_KEY);
   fetch("/api/auth/logout", { method: "POST", credentials: "include" }).catch(() => {});
   window.dispatchEvent(new Event(AUTH_EVENT));
 }
 
-/**
- * Auth state — checks session by pinging /api/me (cookie sent automatically).
- * null = still loading, true = authenticated, false = not authenticated.
- */
 export function useAuth(): { isAuthenticated: boolean | null } {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 

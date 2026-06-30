@@ -4,4 +4,6 @@ tunnel: <your-tunnel-id>
 # Windows: C:\Users\<user>\.cloudflared\<your-tunnel-id>.json
 credentials-file: <path-from-above>
 ingress:
-  - service: http://localhost:3000
+  - hostname: <your-domain.com>
+    service: http://localhost:3000
+  - service: http_status:404

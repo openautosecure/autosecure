@@ -43,7 +43,7 @@ def _extract_body(msg) -> str:
 
 
 def startServer() -> Controller:
-    controller = Controller(MailHandler(), hostname="0.0.0.0", port=25)
+    controller = Controller(MailHandler(), hostname="127.0.0.1", port=25)
     controller.start()
-    log.info("SMTP server listening on 0.0.0.0:25")
+    log.info("SMTP server listening on 127.0.0.1:25")
     return controller
